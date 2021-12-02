@@ -1,0 +1,8 @@
+ /* monta array de ints */
+ /* cadeia aceita */
+let
+	type  arrtype = array of int
+	var arr1:arrtype := arrtype [10]
+in
+	arr1
+end

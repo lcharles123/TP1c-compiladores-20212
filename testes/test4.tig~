@@ -1,0 +1,11 @@
+ /* monta array de ints */
+ /* linguagem nao aceita */
+let
+    type  arrtype = array o f int 
+    var arr1:arrtype := arrtype [10] 
+in
+    (arr1)
+end
+
+
+
