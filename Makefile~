@@ -1,11 +1,11 @@
 p: ajuda
 
 
-teste: compilar
+teste: yacc
 	./analisador.run testes/teste.tig
 
 
-testes: compilar
+testes: yacc
 	for i in `ls -1 testes` ; do echo "<<<<prog $$i>>>>" ; ./analisador.run testes/$$i ; echo "" ; done
 
 clean:
@@ -13,12 +13,7 @@ clean:
 
 
 yacc: 
-	yacc -d tiger.y 
-
-lex:
-	lex tiger.l
-
-compilar: lex yacc
+	lex tiger.l && yacc -d tiger.y 
 	gcc -g -Wall y.tab.c lex.yy.c -o analisador.run
 
 
