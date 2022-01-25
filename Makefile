@@ -24,7 +24,7 @@ compilar: lex yacc
 
 
 ajuda:
-	@echo "\n\tTP1 parte 2 - Compiladores I - UFMG 2021/2"
+	@echo "\n\tTP1 parte 3 - Compiladores I - UFMG 2021/2"
 	@echo "\n\tNomes: Breno Pimenta, Lécio Alves"
 	@echo "\tAnalisador Sintático\n"
 	@echo "\tForma de uso:"

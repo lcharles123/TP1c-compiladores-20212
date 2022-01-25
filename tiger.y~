@@ -155,8 +155,8 @@ int main(int argc, char** argv)
         return -1;
     }
     
-    /*char c = fgetc(yyin);
-    printf("Listagem do código fonte:\n");
+    char c = fgetc(yyin);
+    /*printf("Listagem do código fonte:\n");
     while (c != EOF)
     {
         printf ("%c", c);

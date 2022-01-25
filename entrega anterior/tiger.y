@@ -155,19 +155,19 @@ int main(int argc, char** argv)
         return -1;
     }
     
-    /*char c = fgetc(yyin);
+    char c = fgetc(yyin);
     printf("Listagem do código fonte:\n");
     while (c != EOF)
     {
         printf ("%c", c);
         c = fgetc(yyin);
     }
-    rewind(yyin);*/
+    rewind(yyin);
     
     //while(yylex()) printf("%s\n", yytext); ;
-    /*printf("Listagem das regras de derivação para acompanhamento:\n");
+    printf("Listagem das regras de derivação para acompanhamento:\n");
     yyparse(); //fica chamando o yylex(), vulgo "pedindo tokens"
-    */printf("\nACEITO!\n"); // linguagem reconhecida
+    printf("\nACEITO!\n"); // linguagem reconhecida
     
     fclose(yyin);
     
