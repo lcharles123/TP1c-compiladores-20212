@@ -2,7 +2,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "absyn.h"
+#include "tabela.h"
+
+
 #include "y.tab.h"
+
+
+typedef struct at att;
+
+struct at{int asdf;};
+
+att a;
+
+//typedef int int_t;
+//int_t gg;
 
 /* Declarações para fazer interface entre o lexer e este arquivo, são compartilhadas entre o código do lex e yacc */
 extern int yylex();
@@ -14,6 +28,9 @@ extern int col;      /* conta as colunas */
 extern char* yytext; /* valor do token na entrada */
 extern int yyval;    /* valor de variaveis, atribuído no .l */
 
+Tabela* tab; /** Tabela de simbolos */
+
+
 void yyerror(const char *str)
 {
     fprintf(stderr, "\n*** Erro de sintaxe: linha %i, coluna %lu, token '%s' ***\n\n", lin, col - strlen(yytext), yytext);
@@ -24,7 +41,33 @@ int yywrap() { return 1; }
 
 %}
 
-%token NIL ABREPAR FECHAPAR ABRECHAV FECHACHAV ABRECOL FECHACOL MENOS MAIS VEZES DIVIDIR IGUAL DIFERENTE MENOR MENORIG MAIOR MAIORIG E OU OF ATRIBUI IF THEN ELSE WHILE DO FOR TO BREAK LET IN END TIPO DOISPONTOS VAR FUNCTION PONTO PONTOVIRG VIRG ID NUM STRING ARRAY
+/* 
+https://stackoverflow.com/questions/43882160/bison-grammar-type-and-token
+palavras chave dessa seção
+https://www.ibm.com/docs/en/aix/7.2?topic=information-yacc-grammar-file-declarations
+*/
+%union //tipos dos tokens
+{
+att ddd;
+    //int_t mj;
+    int intVal; //acessível por yyval.intVal 
+    //typedef char* stringVal;
+    //char* idVal;
+}
+
+/*%type 	Identifies the type of nonterminals. Type-checking is performed when this construct is present. */
+/* para checar tipos, usar %type , quando declarado o token na forma
+%type <tag> nome [numero] [...]
+para chegar tipos, o yacc testa se nome é do mesmo tipo de tag: uma variável presente na %union acima
+em %type, a tag é obrigatória ; nas outras %keywords, ela é opcional
+*/
+//%type <intVal> NUM
+/* POSIX yacc reserves %type to nonterminals  protanto para os terminais usar diretamente em %token */
+
+%token <intVal> NUM
+
+%token NIL ABREPAR FECHAPAR ABRECHAV FECHACHAV ABRECOL FECHACOL MENOS MAIS VEZES DIVIDIR IGUAL DIFERENTE MENOR MENORIG MAIOR MAIORIG E OU OF ATRIBUI IF THEN ELSE WHILE DO FOR TO BREAK LET IN END TIPO DOISPONTOS VAR FUNCTION PONTO PONTOVIRG VIRG ID REAL STRING ARRAY
+/*%token ABREPAR FECHAPAR ABRECHAV FECHACHAV ABRECOL FECHACOL MENOS MAIS VEZES DIVIDIR IGUAL DIFERENTE MENOR MENORIG MAIOR MAIORIG E OU OF ATRIBUI IF THEN ELSE WHILE DO FOR TO BREAK LET IN END TIPO DOISPONTOS VAR FUNCTION PONTO PONTOVIRG VIRG ID <intVal> NUM REAL STRING ARRAY*/
 
 %nonassoc OF IF THEN WHILE DO FOR TO ATRIBUI TIPO FUNCTION          /* menor precedencia */
 %nonassoc OU
@@ -42,13 +85,13 @@ int yywrap() { return 1; }
 
 %%
 
-inicio : exp                            { printf("inicio \t-> exp\n");}  ;
+inicio : exp                            { printf("inicio \t-> exp\n");; };
 
 
 exp : lvalue                            { printf("exp \t-> lvalue\n");} 
 |     NIL                               { printf("exp \t-> NIL()\n");/** Term*/}
 |     ABREPAR expseq FECHAPAR           { printf("exp \t-> ( expseq )\n");/** Term*/}
-|     NUM                               { printf("exp \t-> NUM(%i)\n", yyval);/** Term*/}
+|     NUM                               { printf("exp \t-> NUM(%d)\n", yylval.intVal );   /** Term*/}
 |     STRING                            { printf("exp \t-> STRING(%s)\n", yytext);/** Term*/}
 |     MENOS exp                         { printf("exp \t-> - exp\n");}
 |     ID ABREPAR args FECHAPAR          { printf("exp \t-> ID ( args )\n");}
@@ -71,7 +114,7 @@ exp : lvalue                            { printf("exp \t-> lvalue\n");}
 |     WHILE exp DO exp                  { printf("exp \t-> WHILE exp DO exp\n");}
 |     FOR ID ATRIBUI exp TO exp DO exp  { printf("exp \t-> FOR ID := exp TO exp DO exp\n");}
 |     BREAK                             { printf("exp \t-> BREAK\n");}
-|     LET decs IN expseq END	        { printf("exp \t-> LET decs IN expseq END\n");};
+|     LET decs IN expseq END	        { printf("exp \t-> LET decs IN expseq END\n");  };
 
 tid:  
       ABRECHAV ID IGUAL exp idexps FECHACHAV { printf("tid \t-> typeid { ID = exp idexps }\n");}
@@ -116,7 +159,7 @@ lvalue :
 |   lvalue ABRECOL exp FECHACOL         { printf("lvalue \t-> lvalue [ exp ]\n");};
 
 typeid : 
-    ID                                  { printf("typeid \t-> ID\n");};
+    ID                                  { printf("typeid \t-> ID()\n");};
 
 expseq : 
     exp expseq1                         { printf("expseq \t-> exp expseq1\n");}
@@ -155,8 +198,8 @@ int main(int argc, char** argv)
         return -1;
     }
     
-    char c = fgetc(yyin);
-    /*printf("Listagem do código fonte:\n");
+    /*char c = fgetc(yyin);
+    printf("Listagem do código fonte:\n");
     while (c != EOF)
     {
         printf ("%c", c);
@@ -165,12 +208,22 @@ int main(int argc, char** argv)
     rewind(yyin);*/
     
     //while(yylex()) printf("%s\n", yytext); ;
-    /*printf("Listagem das regras de derivação para acompanhamento:\n");
+    printf("Listagem das regras de derivação para acompanhamento:\n");
     yyparse(); //fica chamando o yylex(), vulgo "pedindo tokens"
-    */printf("\nACEITO!\n"); // linguagem reconhecida
+    printf("\nACEITO!\n"); // linguagem reconhecida
     
     fclose(yyin);
-    
+    Tabela* t = T_init(); 
+    T_entrar_bloco(t); //conforme aula 17 min 30 ; slide comp-06
+    T_sair_bloco( t);
+
+    T_checar_existencia(t,  "nome");
+
+ //T_instalar( t, "nome1", 89);
+ //T_instalar( t, "nome2", 55);
+ //T_instalar( t, "nome3", 22);
+//T_imprimir( t);
+T_delete( t);
     return 0;
 }
 

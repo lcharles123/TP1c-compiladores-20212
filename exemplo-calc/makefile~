@@ -1,0 +1,6 @@
+run:
+	yacc calc.y
+	lex calc.l
+	cc y.tab.c lex.yy.c
+	./a.out
+	

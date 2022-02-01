@@ -6,6 +6,7 @@
 
 parsetest:  y.tab.o lex.yy.o errormsg.o absyn.o prabsyn.o symbol.o parse.o table.o util.o 
 	cc -g y.tab.o lex.yy.o errormsg.o absyn.o prabsyn.o symbol.o parse.o table.o util.o -o $@
+	./parsetest teste.txt
 
 absyn.o: absyn.c absyn.h util.h symbol.h
 	cc -g -c absyn.c

@@ -10,7 +10,7 @@ void yyerror(char *s)
 {
 EM_error(EM_tokPos, "%s", s);
 }
-
+int c = 0;
 %}
 
 %union {
@@ -55,6 +55,8 @@ FUNCTION VAR TYPE
 %left TIMES DIVIDE
 %nonassoc TYPE
 %nonassoc FUNCTION
+
+
 %type <exp> exp program
 /* et cetera */
 %type <exp> varExp nilExp intExp stringExp opExp callExp seqExp assignExp recordExp arrayExp ifExp whileExp forExp breakExp letExp
@@ -72,11 +74,11 @@ FUNCTION VAR TYPE
 %type <fieldList> fieldList fieldList_
 %start program
 %%
-program :   exp    {absyn_root=$1;}
+program :   exp    {  absyn_root=$1;printf("abs\n");}
 
 exp :   varExp    {$$=$1;}
 		|   nilExp    {$$=$1;}
-		|   intExp    {$$=$1;}
+		|   intExp    {$$=$1;printf("int %d\n",$1);}
 		|   stringExp {$$=$1;}
 		|   callExp   {$$=$1;}
 		|   opExp     {$$=$1;}
@@ -94,7 +96,7 @@ varExp :  lvalue  {$$=A_VarExp(EM_tokPos,$1);}
 
 nilExp :  NIL     {$$=A_NilExp(EM_tokPos);}
 
-intExp :  INT     {$$=A_IntExp(EM_tokPos,$1);}
+intExp :  INT     {$$=A_IntExp(EM_tokPos,$1);printf("int %d\n",$1);}
 
 stringExp : STRING{$$=A_StringExp(EM_tokPos,$1);}
 

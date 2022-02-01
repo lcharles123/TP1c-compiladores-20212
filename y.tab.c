@@ -71,7 +71,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "absyn.h"
+#include "tabela.h"
+
 #include "y.tab.h"
+
+//typedef int int_t;
+//int_t gg;
 
 /* Declarações para fazer interface entre o lexer e este arquivo, são compartilhadas entre o código do lex e yacc */
 extern int yylex();
@@ -83,6 +89,9 @@ extern int col;      /* conta as colunas */
 extern char* yytext; /* valor do token na entrada */
 extern int yyval;    /* valor de variaveis, atribuído no .l */
 
+Tabela* tab; /** Tabela de simbolos */
+
+
 void yyerror(const char *str)
 {
     fprintf(stderr, "\n*** Erro de sintaxe: linha %i, coluna %lu, token '%s' ***\n\n", lin, col - strlen(yytext), yytext);
@@ -92,7 +101,7 @@ void yyerror(const char *str)
 int yywrap() { return 1; }
 
 
-#line 96 "y.tab.c"
+#line 105 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -140,99 +149,114 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    NIL = 258,
-    ABREPAR = 259,
-    FECHAPAR = 260,
-    ABRECHAV = 261,
-    FECHACHAV = 262,
-    ABRECOL = 263,
-    FECHACOL = 264,
-    MENOS = 265,
-    MAIS = 266,
-    VEZES = 267,
-    DIVIDIR = 268,
-    IGUAL = 269,
-    DIFERENTE = 270,
-    MENOR = 271,
-    MENORIG = 272,
-    MAIOR = 273,
-    MAIORIG = 274,
-    E = 275,
-    OU = 276,
-    OF = 277,
-    ATRIBUI = 278,
-    IF = 279,
-    THEN = 280,
-    ELSE = 281,
-    WHILE = 282,
-    DO = 283,
-    FOR = 284,
-    TO = 285,
-    BREAK = 286,
-    LET = 287,
-    IN = 288,
-    END = 289,
-    TIPO = 290,
-    DOISPONTOS = 291,
-    VAR = 292,
-    FUNCTION = 293,
-    PONTO = 294,
-    PONTOVIRG = 295,
-    VIRG = 296,
-    ID = 297,
-    NUM = 298,
-    STRING = 299,
-    ARRAY = 300
+    NUM = 258,
+    NIL = 259,
+    ABREPAR = 260,
+    FECHAPAR = 261,
+    ABRECHAV = 262,
+    FECHACHAV = 263,
+    ABRECOL = 264,
+    FECHACOL = 265,
+    MENOS = 266,
+    MAIS = 267,
+    VEZES = 268,
+    DIVIDIR = 269,
+    IGUAL = 270,
+    DIFERENTE = 271,
+    MENOR = 272,
+    MENORIG = 273,
+    MAIOR = 274,
+    MAIORIG = 275,
+    E = 276,
+    OU = 277,
+    OF = 278,
+    ATRIBUI = 279,
+    IF = 280,
+    THEN = 281,
+    ELSE = 282,
+    WHILE = 283,
+    DO = 284,
+    FOR = 285,
+    TO = 286,
+    BREAK = 287,
+    LET = 288,
+    IN = 289,
+    END = 290,
+    TIPO = 291,
+    DOISPONTOS = 292,
+    VAR = 293,
+    FUNCTION = 294,
+    PONTO = 295,
+    PONTOVIRG = 296,
+    VIRG = 297,
+    ID = 298,
+    REAL = 299,
+    STRING = 300,
+    ARRAY = 301
   };
 #endif
 /* Tokens.  */
-#define NIL 258
-#define ABREPAR 259
-#define FECHAPAR 260
-#define ABRECHAV 261
-#define FECHACHAV 262
-#define ABRECOL 263
-#define FECHACOL 264
-#define MENOS 265
-#define MAIS 266
-#define VEZES 267
-#define DIVIDIR 268
-#define IGUAL 269
-#define DIFERENTE 270
-#define MENOR 271
-#define MENORIG 272
-#define MAIOR 273
-#define MAIORIG 274
-#define E 275
-#define OU 276
-#define OF 277
-#define ATRIBUI 278
-#define IF 279
-#define THEN 280
-#define ELSE 281
-#define WHILE 282
-#define DO 283
-#define FOR 284
-#define TO 285
-#define BREAK 286
-#define LET 287
-#define IN 288
-#define END 289
-#define TIPO 290
-#define DOISPONTOS 291
-#define VAR 292
-#define FUNCTION 293
-#define PONTO 294
-#define PONTOVIRG 295
-#define VIRG 296
-#define ID 297
-#define NUM 298
-#define STRING 299
-#define ARRAY 300
+#define NUM 258
+#define NIL 259
+#define ABREPAR 260
+#define FECHAPAR 261
+#define ABRECHAV 262
+#define FECHACHAV 263
+#define ABRECOL 264
+#define FECHACOL 265
+#define MENOS 266
+#define MAIS 267
+#define VEZES 268
+#define DIVIDIR 269
+#define IGUAL 270
+#define DIFERENTE 271
+#define MENOR 272
+#define MENORIG 273
+#define MAIOR 274
+#define MAIORIG 275
+#define E 276
+#define OU 277
+#define OF 278
+#define ATRIBUI 279
+#define IF 280
+#define THEN 281
+#define ELSE 282
+#define WHILE 283
+#define DO 284
+#define FOR 285
+#define TO 286
+#define BREAK 287
+#define LET 288
+#define IN 289
+#define END 290
+#define TIPO 291
+#define DOISPONTOS 292
+#define VAR 293
+#define FUNCTION 294
+#define PONTO 295
+#define PONTOVIRG 296
+#define VIRG 297
+#define ID 298
+#define REAL 299
+#define STRING 300
+#define ARRAY 301
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+union YYSTYPE
+{
+#line 42 "tiger.y"
+
+
+    //int_t mj;
+    int intVal; //acessível por yyval.intVal 
+    //typedef char* stringVal;
+    //char* idVal;
+
+#line 257 "y.tab.c"
+
+};
+typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif
@@ -551,7 +575,7 @@ union yyalloc
 #define YYLAST   316
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  46
+#define YYNTOKENS  47
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  19
 /* YYNRULES -- Number of rules.  */
@@ -560,7 +584,7 @@ union yyalloc
 #define YYNSTATES  147
 
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   300
+#define YYMAXUTOK   301
 
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
@@ -602,20 +626,20 @@ static const yytype_int8 yytranslate[] =
       15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
       25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
       35,    36,    37,    38,    39,    40,    41,    42,    43,    44,
-      45
+      45,    46
 };
 
 #if YYDEBUG
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    45,    45,    48,    49,    50,    51,    52,    53,    54,
-      55,    56,    57,    58,    59,    60,    61,    62,    63,    64,
-      65,    66,    67,    68,    69,    70,    71,    72,    73,    74,
-      77,    78,    81,    82,    85,    86,    87,    90,    93,    94,
-      95,    98,    99,   102,   103,   106,   107,   110,   111,   114,
-     115,   116,   119,   122,   123,   126,   127,   130,   131,   134,
-     135,   138,   139
+       0,    80,    80,    83,    84,    85,    86,    87,    88,    89,
+      90,    91,    92,    93,    94,    95,    96,    97,    98,    99,
+     100,   101,   102,   103,   104,   105,   106,   107,   108,   109,
+     112,   113,   116,   117,   120,   121,   122,   125,   128,   129,
+     130,   133,   134,   137,   138,   141,   142,   145,   146,   149,
+     150,   151,   154,   157,   158,   161,   162,   165,   166,   169,
+     170,   173,   174
 };
 #endif
 
@@ -624,15 +648,15 @@ static const yytype_uint8 yyrline[] =
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
 {
-  "$end", "error", "$undefined", "NIL", "ABREPAR", "FECHAPAR", "ABRECHAV",
-  "FECHACHAV", "ABRECOL", "FECHACOL", "MENOS", "MAIS", "VEZES", "DIVIDIR",
-  "IGUAL", "DIFERENTE", "MENOR", "MENORIG", "MAIOR", "MAIORIG", "E", "OU",
-  "OF", "ATRIBUI", "IF", "THEN", "ELSE", "WHILE", "DO", "FOR", "TO",
-  "BREAK", "LET", "IN", "END", "TIPO", "DOISPONTOS", "VAR", "FUNCTION",
-  "PONTO", "PONTOVIRG", "VIRG", "ID", "NUM", "STRING", "ARRAY", "$accept",
-  "inicio", "exp", "tid", "decs", "dec", "tydec", "ty", "tyfields",
-  "tyfields1", "vardec", "fundec", "lvalue", "typeid", "expseq", "expseq1",
-  "args", "args1", "idexps", YY_NULLPTR
+  "$end", "error", "$undefined", "NUM", "NIL", "ABREPAR", "FECHAPAR",
+  "ABRECHAV", "FECHACHAV", "ABRECOL", "FECHACOL", "MENOS", "MAIS", "VEZES",
+  "DIVIDIR", "IGUAL", "DIFERENTE", "MENOR", "MENORIG", "MAIOR", "MAIORIG",
+  "E", "OU", "OF", "ATRIBUI", "IF", "THEN", "ELSE", "WHILE", "DO", "FOR",
+  "TO", "BREAK", "LET", "IN", "END", "TIPO", "DOISPONTOS", "VAR",
+  "FUNCTION", "PONTO", "PONTOVIRG", "VIRG", "ID", "REAL", "STRING",
+  "ARRAY", "$accept", "inicio", "exp", "tid", "decs", "dec", "tydec", "ty",
+  "tyfields", "tyfields1", "vardec", "fundec", "lvalue", "typeid",
+  "expseq", "expseq1", "args", "args1", "idexps", YY_NULLPTR
 };
 #endif
 
@@ -645,11 +669,11 @@ static const yytype_int16 yytoknum[] =
      265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
      275,   276,   277,   278,   279,   280,   281,   282,   283,   284,
      285,   286,   287,   288,   289,   290,   291,   292,   293,   294,
-     295,   296,   297,   298,   299,   300
+     295,   296,   297,   298,   299,   300,   301
 };
 # endif
 
-#define YYPACT_NINF (-126)
+#define YYPACT_NINF (-79)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -663,21 +687,21 @@ static const yytype_int16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int16 yypact[] =
 {
-      62,  -126,    62,   -41,    62,    62,    62,    62,   -32,  -126,
-     -26,    51,  -126,  -126,    15,   262,  -126,    -6,   132,    55,
-      47,   237,     6,   220,   165,    39,    21,    25,    29,    40,
-     -26,  -126,  -126,  -126,    62,  -126,    62,    62,    62,    62,
-      62,    62,    62,    62,    62,    62,    62,    62,    62,    62,
-      32,    62,  -126,  -126,    62,    53,    62,    62,    62,    63,
-     -20,    72,    62,  -126,    11,    73,     6,     6,  -126,  -126,
-     297,   297,   297,   297,   297,   297,   286,   274,   250,   262,
-    -126,   132,    97,    62,   203,   262,   144,     8,    62,    37,
-      38,    50,    62,  -126,  -126,  -126,  -126,    43,    74,   262,
-      62,    62,    45,  -126,    68,  -126,   262,  -126,    75,    59,
-      91,  -126,    11,    83,  -126,  -126,   184,    66,    57,    62,
-      37,    -1,  -126,    62,    62,    37,  -126,   262,    79,    62,
-      37,    97,   262,    79,    61,  -126,   262,   107,  -126,   115,
-      89,    62,  -126,    37,   262,    79,  -126
+      61,   -79,   -79,    61,   -42,    61,    61,    61,    61,   -39,
+     -79,   -27,    15,   -79,    59,   261,   -79,    -7,   131,     4,
+      45,   236,     5,   219,   164,    -9,    18,    19,    20,    35,
+     -27,   -79,   -79,   -79,    61,   -79,    61,    61,    61,    61,
+      61,    61,    61,    61,    61,    61,    61,    61,    61,    61,
+      28,    61,   -79,   -79,    61,    50,    61,    61,    61,    60,
+     -21,    71,    61,   -79,    10,    72,     5,     5,   -79,   -79,
+     296,   296,   296,   296,   296,   296,   285,   273,   249,   261,
+     -79,   131,    96,    61,   202,   261,   143,     7,    61,    34,
+      37,    46,    61,   -79,   -79,   -79,   -79,    39,    77,   261,
+      61,    61,    44,   -79,    67,   -79,   261,   -79,    74,    58,
+      90,   -79,    10,    84,   -79,   -79,   183,    65,    62,    61,
+      34,    -2,   -79,    61,    61,    34,   -79,   261,    78,    61,
+      34,    96,   261,    78,    79,   -79,   261,    88,   -79,   113,
+      89,    61,   -79,    34,   261,    78,   -79
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -685,8 +709,8 @@ static const yytype_int16 yypact[] =
      means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     4,    54,     0,     0,     0,     0,     0,     0,    28,
-      33,    49,     6,     7,     0,     2,    22,     3,    56,     0,
+       0,     6,     4,    54,     0,     0,     0,     0,     0,     0,
+      28,    33,    49,     7,     0,     2,    22,     3,    56,     0,
        0,     0,     8,     0,     0,     0,     0,     0,     0,     0,
       33,    34,    35,    36,    58,     1,     0,     0,     0,     0,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
@@ -705,8 +729,8 @@ static const yytype_int8 yydefact[] =
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-    -126,  -126,     0,  -126,    96,  -126,  -126,  -126,  -126,  -125,
-    -126,  -126,  -126,   -61,    65,    49,  -126,    16,     1
+     -79,   -79,     0,   -79,    95,   -79,   -79,   -79,   -79,   -78,
+     -79,   -79,   -79,   -46,    66,    49,   -79,    21,    -4
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
@@ -721,20 +745,20 @@ static const yytype_int16 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int16 yytable[] =
 {
-      15,    20,    48,    88,    21,    22,    23,    24,   139,    26,
-      25,    27,    28,   129,   102,    35,    89,    49,    38,    39,
-     146,    36,    37,    38,    39,    40,    41,    42,    43,    44,
+      15,    20,    48,    88,    25,    21,    22,    23,    24,    26,
+      53,    27,    28,   129,   102,    58,    89,    49,    38,    39,
+      34,    36,    37,    38,    39,    40,    41,    42,    43,    44,
       45,    46,    47,    50,    64,   130,    66,    67,    68,    69,
       70,    71,    72,    73,    74,    75,    76,    77,    78,    79,
-     103,    81,    92,   104,    82,    34,    84,    85,    86,   128,
-      53,    54,    58,    59,   133,     1,     2,    60,     3,   137,
-       4,    61,     5,    62,    80,    83,    90,    87,    94,   107,
-     109,   114,   145,    99,   111,   113,     6,   117,   106,     7,
-     118,     8,   112,     9,    10,   120,   121,   123,   119,   126,
-     115,   116,   125,   140,    11,    12,    13,    36,    37,    38,
+     103,    81,    92,   104,    82,   139,    84,    85,    86,    35,
+      54,    59,    60,    61,     1,     2,     3,   146,     4,    62,
+       5,    80,     6,    83,   128,    87,    90,   107,    94,   133,
+     109,   111,   113,    99,   137,   114,     7,   117,   106,     8,
+     118,     9,   112,    10,    11,   120,   121,   145,   119,   123,
+     115,   116,   125,   141,    12,   126,    13,    36,    37,    38,
       39,    40,    41,    42,    43,    44,    45,    46,    47,   127,
-     134,   141,   142,   131,   132,   143,    63,    91,   122,   136,
-      96,     0,   138,     0,     0,     0,     0,     0,    97,     0,
+     134,   142,   140,   131,   132,    63,   143,   138,    91,   136,
+      96,     0,     0,   122,     0,     0,     0,     0,    97,     0,
        0,   144,    36,    37,    38,    39,    40,    41,    42,    43,
       44,    45,    46,    47,    36,    37,    38,    39,    40,    41,
       42,    43,    44,    45,    46,    47,     0,     0,     0,     0,
@@ -757,71 +781,71 @@ static const yytype_int16 yytable[] =
 
 static const yytype_int16 yycheck[] =
 {
-       0,    42,     8,    23,     4,     5,     6,     7,   133,    35,
-      42,    37,    38,    14,     6,     0,    36,    23,    12,    13,
-     145,    10,    11,    12,    13,    14,    15,    16,    17,    18,
-      19,    20,    21,    39,    34,    36,    36,    37,    38,    39,
+       0,    43,     9,    24,    43,     5,     6,     7,     8,    36,
+       6,    38,    39,    15,     7,    24,    37,    24,    13,    14,
+       5,    11,    12,    13,    14,    15,    16,    17,    18,    19,
+      20,    21,    22,    40,    34,    37,    36,    37,    38,    39,
       40,    41,    42,    43,    44,    45,    46,    47,    48,    49,
-      42,    51,    41,    45,    54,     4,    56,    57,    58,   120,
-       5,    14,    23,    42,   125,     3,     4,    42,     6,   130,
-       8,    42,    10,    33,    42,    22,     4,    14,     5,    42,
-      42,     7,   143,    83,    34,    42,    24,    42,    88,    27,
-      22,    29,    92,    31,    32,    36,     5,    14,    23,    42,
-     100,   101,    36,    42,    42,    43,    44,    10,    11,    12,
-      13,    14,    15,    16,    17,    18,    19,    20,    21,   119,
-      41,    14,     7,   123,   124,    36,    30,    62,   112,   129,
-      81,    -1,   131,    -1,    -1,    -1,    -1,    -1,    41,    -1,
-      -1,   141,    10,    11,    12,    13,    14,    15,    16,    17,
-      18,    19,    20,    21,    10,    11,    12,    13,    14,    15,
-      16,    17,    18,    19,    20,    21,    -1,    -1,    -1,    -1,
-      -1,    -1,    40,    -1,    30,    10,    11,    12,    13,    14,
-      15,    16,    17,    18,    19,    20,    21,    -1,    -1,    -1,
-      -1,    -1,    -1,    28,    10,    11,    12,    13,    14,    15,
-      16,    17,    18,    19,    20,    21,    -1,    -1,    -1,    -1,
-      -1,    -1,    28,    10,    11,    12,    13,    14,    15,    16,
-      17,    18,    19,    20,    21,    -1,    -1,    -1,    -1,    26,
-      10,    11,    12,    13,    14,    15,    16,    17,    18,    19,
-      20,    21,    -1,    -1,    -1,    25,     9,    10,    11,    12,
-      13,    14,    15,    16,    17,    18,    19,    20,    21,     9,
-      10,    11,    12,    13,    14,    15,    16,    17,    18,    19,
-      20,    21,    10,    11,    12,    13,    14,    15,    16,    17,
-      18,    19,    20,    21,    10,    11,    12,    13,    14,    15,
-      16,    17,    18,    19,    20,    21,    10,    11,    12,    13,
-      14,    15,    16,    17,    18,    19,    20,    10,    11,    12,
-      13,    14,    15,    16,    17,    18,    19
+      43,    51,    42,    46,    54,   133,    56,    57,    58,     0,
+      15,    43,    43,    43,     3,     4,     5,   145,     7,    34,
+       9,    43,    11,    23,   120,    15,     5,    43,     6,   125,
+      43,    35,    43,    83,   130,     8,    25,    43,    88,    28,
+      23,    30,    92,    32,    33,    37,     6,   143,    24,    15,
+     100,   101,    37,    15,    43,    43,    45,    11,    12,    13,
+      14,    15,    16,    17,    18,    19,    20,    21,    22,   119,
+      42,     8,    43,   123,   124,    30,    37,   131,    62,   129,
+      81,    -1,    -1,   112,    -1,    -1,    -1,    -1,    42,    -1,
+      -1,   141,    11,    12,    13,    14,    15,    16,    17,    18,
+      19,    20,    21,    22,    11,    12,    13,    14,    15,    16,
+      17,    18,    19,    20,    21,    22,    -1,    -1,    -1,    -1,
+      -1,    -1,    41,    -1,    31,    11,    12,    13,    14,    15,
+      16,    17,    18,    19,    20,    21,    22,    -1,    -1,    -1,
+      -1,    -1,    -1,    29,    11,    12,    13,    14,    15,    16,
+      17,    18,    19,    20,    21,    22,    -1,    -1,    -1,    -1,
+      -1,    -1,    29,    11,    12,    13,    14,    15,    16,    17,
+      18,    19,    20,    21,    22,    -1,    -1,    -1,    -1,    27,
+      11,    12,    13,    14,    15,    16,    17,    18,    19,    20,
+      21,    22,    -1,    -1,    -1,    26,    10,    11,    12,    13,
+      14,    15,    16,    17,    18,    19,    20,    21,    22,    10,
+      11,    12,    13,    14,    15,    16,    17,    18,    19,    20,
+      21,    22,    11,    12,    13,    14,    15,    16,    17,    18,
+      19,    20,    21,    22,    11,    12,    13,    14,    15,    16,
+      17,    18,    19,    20,    21,    22,    11,    12,    13,    14,
+      15,    16,    17,    18,    19,    20,    21,    11,    12,    13,
+      14,    15,    16,    17,    18,    19,    20
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
      symbol of state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     3,     4,     6,     8,    10,    24,    27,    29,    31,
-      32,    42,    43,    44,    47,    48,    49,    58,    48,    60,
-      42,    48,    48,    48,    48,    42,    35,    37,    38,    50,
-      51,    52,    56,    57,     4,     0,    10,    11,    12,    13,
-      14,    15,    16,    17,    18,    19,    20,    21,     8,    23,
-      39,    40,    61,     5,    14,     9,    25,    28,    23,    42,
-      42,    42,    33,    50,    48,    62,    48,    48,    48,    48,
-      48,    48,    48,    48,    48,    48,    48,    48,    48,    48,
-      42,    48,    48,    22,    48,    48,    48,    14,    23,    36,
-       4,    60,    41,    63,     5,     9,    61,    41,    64,    48,
-      26,    30,     6,    42,    45,    53,    48,    42,    59,    42,
-      54,    34,    48,    42,     7,    48,    48,    42,    22,    23,
-      36,     5,    63,    14,    28,    36,    42,    48,    59,    14,
-      36,    48,    48,    59,    41,    55,    48,    59,    64,    55,
-      42,    14,     7,    36,    48,    59,    55
+       0,     3,     4,     5,     7,     9,    11,    25,    28,    30,
+      32,    33,    43,    45,    48,    49,    50,    59,    49,    61,
+      43,    49,    49,    49,    49,    43,    36,    38,    39,    51,
+      52,    53,    57,    58,     5,     0,    11,    12,    13,    14,
+      15,    16,    17,    18,    19,    20,    21,    22,     9,    24,
+      40,    41,    62,     6,    15,    10,    26,    29,    24,    43,
+      43,    43,    34,    51,    49,    63,    49,    49,    49,    49,
+      49,    49,    49,    49,    49,    49,    49,    49,    49,    49,
+      43,    49,    49,    23,    49,    49,    49,    15,    24,    37,
+       5,    61,    42,    64,     6,    10,    62,    42,    65,    49,
+      27,    31,     7,    43,    46,    54,    49,    43,    60,    43,
+      55,    35,    49,    43,     8,    49,    49,    43,    23,    24,
+      37,     6,    64,    15,    29,    37,    43,    49,    60,    15,
+      37,    49,    49,    60,    42,    56,    49,    60,    65,    56,
+      43,    15,     8,    37,    49,    60,    56
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    46,    47,    48,    48,    48,    48,    48,    48,    48,
-      48,    48,    48,    48,    48,    48,    48,    48,    48,    48,
-      48,    48,    48,    48,    48,    48,    48,    48,    48,    48,
-      49,    49,    50,    50,    51,    51,    51,    52,    53,    53,
-      53,    54,    54,    55,    55,    56,    56,    57,    57,    58,
-      58,    58,    59,    60,    60,    61,    61,    62,    62,    63,
-      63,    64,    64
+       0,    47,    48,    49,    49,    49,    49,    49,    49,    49,
+      49,    49,    49,    49,    49,    49,    49,    49,    49,    49,
+      49,    49,    49,    49,    49,    49,    49,    49,    49,    49,
+      50,    50,    51,    51,    52,    52,    52,    53,    54,    54,
+      54,    55,    55,    56,    56,    57,    57,    58,    58,    59,
+      59,    59,    60,    61,    61,    62,    62,    63,    63,    64,
+      64,    65,    65
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
@@ -1529,373 +1553,373 @@ yyreduce:
   switch (yyn)
     {
   case 2:
-#line 45 "tiger.y"
-                                        { printf("inicio \t-> exp\n");}
-#line 1535 "y.tab.c"
-    break;
-
-  case 3:
-#line 48 "tiger.y"
-                                        { printf("exp \t-> lvalue\n");}
-#line 1541 "y.tab.c"
-    break;
-
-  case 4:
-#line 49 "tiger.y"
-                                        { printf("exp \t-> NIL()\n");/** Term*/}
-#line 1547 "y.tab.c"
-    break;
-
-  case 5:
-#line 50 "tiger.y"
-                                        { printf("exp \t-> ( expseq )\n");/** Term*/}
-#line 1553 "y.tab.c"
-    break;
-
-  case 6:
-#line 51 "tiger.y"
-                                        { printf("exp \t-> NUM(%i)\n", yyval);/** Term*/}
+#line 80 "tiger.y"
+                                        { printf("inicio \t-> exp\n");; }
 #line 1559 "y.tab.c"
     break;
 
-  case 7:
-#line 52 "tiger.y"
-                                        { printf("exp \t-> STRING(%s)\n", yytext);/** Term*/}
+  case 3:
+#line 83 "tiger.y"
+                                        { printf("exp \t-> lvalue\n");}
 #line 1565 "y.tab.c"
     break;
 
-  case 8:
-#line 53 "tiger.y"
-                                        { printf("exp \t-> - exp\n");}
+  case 4:
+#line 84 "tiger.y"
+                                        { printf("exp \t-> NIL()\n");/** Term*/}
 #line 1571 "y.tab.c"
     break;
 
-  case 9:
-#line 54 "tiger.y"
-                                        { printf("exp \t-> ID ( args )\n");}
+  case 5:
+#line 85 "tiger.y"
+                                        { printf("exp \t-> ( expseq )\n");/** Term*/}
 #line 1577 "y.tab.c"
     break;
 
-  case 10:
-#line 55 "tiger.y"
-                                        { printf("exp \t-> exp + exp\n");}
+  case 6:
+#line 86 "tiger.y"
+                                        { printf("exp \t-> NUM(%d)\n", yylval.intVal );   /** Term*/}
 #line 1583 "y.tab.c"
     break;
 
-  case 11:
-#line 56 "tiger.y"
-                                        { printf("exp \t-> exp - exp\n");}
+  case 7:
+#line 87 "tiger.y"
+                                        { printf("exp \t-> STRING(%s)\n", yytext);/** Term*/}
 #line 1589 "y.tab.c"
     break;
 
-  case 12:
-#line 57 "tiger.y"
-                                        { printf("exp \t-> exp * exp\n");}
+  case 8:
+#line 88 "tiger.y"
+                                        { printf("exp \t-> - exp\n");}
 #line 1595 "y.tab.c"
     break;
 
-  case 13:
-#line 58 "tiger.y"
-                                        { printf("exp \t-> exp / exp\n");}
+  case 9:
+#line 89 "tiger.y"
+                                        { printf("exp \t-> ID ( args )\n");}
 #line 1601 "y.tab.c"
     break;
 
-  case 14:
-#line 59 "tiger.y"
-                                        { printf("exp \t-> exp = exp\n");}
+  case 10:
+#line 90 "tiger.y"
+                                        { printf("exp \t-> exp + exp\n");}
 #line 1607 "y.tab.c"
     break;
 
-  case 15:
-#line 60 "tiger.y"
-                                        { printf("exp \t-> exp <> exp\n");}
+  case 11:
+#line 91 "tiger.y"
+                                        { printf("exp \t-> exp - exp\n");}
 #line 1613 "y.tab.c"
     break;
 
-  case 16:
-#line 61 "tiger.y"
-                                        { printf("exp \t-> exp < exp\n");}
+  case 12:
+#line 92 "tiger.y"
+                                        { printf("exp \t-> exp * exp\n");}
 #line 1619 "y.tab.c"
     break;
 
-  case 17:
-#line 62 "tiger.y"
-                                        { printf("exp \t-> exp > exp\n");}
+  case 13:
+#line 93 "tiger.y"
+                                        { printf("exp \t-> exp / exp\n");}
 #line 1625 "y.tab.c"
     break;
 
-  case 18:
-#line 63 "tiger.y"
-                                        { printf("exp \t-> exp <= exp\n");}
+  case 14:
+#line 94 "tiger.y"
+                                        { printf("exp \t-> exp = exp\n");}
 #line 1631 "y.tab.c"
     break;
 
-  case 19:
-#line 64 "tiger.y"
-                                        { printf("exp \t-> exp >= exp\n");}
+  case 15:
+#line 95 "tiger.y"
+                                        { printf("exp \t-> exp <> exp\n");}
 #line 1637 "y.tab.c"
     break;
 
-  case 20:
-#line 65 "tiger.y"
-                                        { printf("exp \t-> exp & exp\n");}
+  case 16:
+#line 96 "tiger.y"
+                                        { printf("exp \t-> exp < exp\n");}
 #line 1643 "y.tab.c"
     break;
 
-  case 21:
-#line 66 "tiger.y"
-                                        { printf("exp \t-> exp | exp\n");}
+  case 17:
+#line 97 "tiger.y"
+                                        { printf("exp \t-> exp > exp\n");}
 #line 1649 "y.tab.c"
     break;
 
-  case 22:
-#line 67 "tiger.y"
-                                        { printf("exp \t-> tid\n");}
+  case 18:
+#line 98 "tiger.y"
+                                        { printf("exp \t-> exp <= exp\n");}
 #line 1655 "y.tab.c"
     break;
 
-  case 23:
-#line 68 "tiger.y"
-                                        { printf("exp \t-> lvalue := exp\n");}
+  case 19:
+#line 99 "tiger.y"
+                                        { printf("exp \t-> exp >= exp\n");}
 #line 1661 "y.tab.c"
     break;
 
-  case 24:
-#line 69 "tiger.y"
-                                        { printf("exp \t-> IF exp THEN exp ELSE exp\n");}
+  case 20:
+#line 100 "tiger.y"
+                                        { printf("exp \t-> exp & exp\n");}
 #line 1667 "y.tab.c"
     break;
 
-  case 25:
-#line 70 "tiger.y"
-                                        { printf("exp \t-> IF exp THEN exp\n");}
+  case 21:
+#line 101 "tiger.y"
+                                        { printf("exp \t-> exp | exp\n");}
 #line 1673 "y.tab.c"
     break;
 
-  case 26:
-#line 71 "tiger.y"
-                                        { printf("exp \t-> WHILE exp DO exp\n");}
+  case 22:
+#line 102 "tiger.y"
+                                        { printf("exp \t-> tid\n");}
 #line 1679 "y.tab.c"
     break;
 
-  case 27:
-#line 72 "tiger.y"
-                                        { printf("exp \t-> FOR ID := exp TO exp DO exp\n");}
+  case 23:
+#line 103 "tiger.y"
+                                        { printf("exp \t-> lvalue := exp\n");}
 #line 1685 "y.tab.c"
     break;
 
-  case 28:
-#line 73 "tiger.y"
-                                        { printf("exp \t-> BREAK\n");}
+  case 24:
+#line 104 "tiger.y"
+                                        { printf("exp \t-> IF exp THEN exp ELSE exp\n");}
 #line 1691 "y.tab.c"
     break;
 
-  case 29:
-#line 74 "tiger.y"
-                                        { printf("exp \t-> LET decs IN expseq END\n");}
+  case 25:
+#line 105 "tiger.y"
+                                        { printf("exp \t-> IF exp THEN exp\n");}
 #line 1697 "y.tab.c"
     break;
 
-  case 30:
-#line 77 "tiger.y"
-                                             { printf("tid \t-> typeid { ID = exp idexps }\n");}
+  case 26:
+#line 106 "tiger.y"
+                                        { printf("exp \t-> WHILE exp DO exp\n");}
 #line 1703 "y.tab.c"
     break;
 
-  case 31:
-#line 78 "tiger.y"
-                                        { printf("tid \t-> typeid [ exp ] OF exp\n");}
+  case 27:
+#line 107 "tiger.y"
+                                        { printf("exp \t-> FOR ID := exp TO exp DO exp\n");}
 #line 1709 "y.tab.c"
     break;
 
-  case 32:
-#line 81 "tiger.y"
-                                        { printf("decs \t-> dec decs\n");}
+  case 28:
+#line 108 "tiger.y"
+                                        { printf("exp \t-> BREAK\n");}
 #line 1715 "y.tab.c"
     break;
 
-  case 33:
-#line 82 "tiger.y"
-                                        { printf("decs \t-> ''\n");}
+  case 29:
+#line 109 "tiger.y"
+                                        { printf("exp \t-> LET decs IN expseq END\n");  }
 #line 1721 "y.tab.c"
     break;
 
-  case 34:
-#line 85 "tiger.y"
-                                        { printf("dec \t-> tydec\n");}
+  case 30:
+#line 112 "tiger.y"
+                                             { printf("tid \t-> typeid { ID = exp idexps }\n");}
 #line 1727 "y.tab.c"
     break;
 
-  case 35:
-#line 86 "tiger.y"
-                                        { printf("dec \t-> vardec\n");}
+  case 31:
+#line 113 "tiger.y"
+                                        { printf("tid \t-> typeid [ exp ] OF exp\n");}
 #line 1733 "y.tab.c"
     break;
 
-  case 36:
-#line 87 "tiger.y"
-                                        { printf("dec \t-> fundec\n");}
+  case 32:
+#line 116 "tiger.y"
+                                        { printf("decs \t-> dec decs\n");}
 #line 1739 "y.tab.c"
     break;
 
-  case 37:
-#line 90 "tiger.y"
-                                        { printf("tydec \t-> TYPE ID = ty\n");}
+  case 33:
+#line 117 "tiger.y"
+                                        { printf("decs \t-> ''\n");}
 #line 1745 "y.tab.c"
     break;
 
-  case 38:
-#line 93 "tiger.y"
-                                        { printf("ty \t-> ID\n");}
+  case 34:
+#line 120 "tiger.y"
+                                        { printf("dec \t-> tydec\n");}
 #line 1751 "y.tab.c"
     break;
 
-  case 39:
-#line 94 "tiger.y"
-                                                        { printf("{ ty \t-> ID : typeid tyfields1 }\n");}
+  case 35:
+#line 121 "tiger.y"
+                                        { printf("dec \t-> vardec\n");}
 #line 1757 "y.tab.c"
     break;
 
-  case 40:
-#line 95 "tiger.y"
-                                        { printf("ty \t-> ARRAY OF ID = ty\n");}
+  case 36:
+#line 122 "tiger.y"
+                                        { printf("dec \t-> fundec\n");}
 #line 1763 "y.tab.c"
     break;
 
-  case 41:
-#line 98 "tiger.y"
-                                        { printf("tyfields \t-> ID : typeid tyfields1\n");}
+  case 37:
+#line 125 "tiger.y"
+                                        { printf("tydec \t-> TYPE ID = ty\n");}
 #line 1769 "y.tab.c"
     break;
 
-  case 42:
-#line 99 "tiger.y"
-                                        { printf("tyfields \t-> ''\n");}
+  case 38:
+#line 128 "tiger.y"
+                                        { printf("ty \t-> ID\n");}
 #line 1775 "y.tab.c"
     break;
 
-  case 43:
-#line 102 "tiger.y"
-                                        { printf("tyfields1 \t-> , ID : typeid tyfields1\n");}
+  case 39:
+#line 129 "tiger.y"
+                                                        { printf("{ ty \t-> ID : typeid tyfields1 }\n");}
 #line 1781 "y.tab.c"
     break;
 
-  case 44:
-#line 103 "tiger.y"
-                                        { printf("tyfields1 \t-> ''\n");}
+  case 40:
+#line 130 "tiger.y"
+                                        { printf("ty \t-> ARRAY OF ID = ty\n");}
 #line 1787 "y.tab.c"
     break;
 
-  case 45:
-#line 106 "tiger.y"
-                                        { printf("vardec \t-> VAR ID := exp\n");}
+  case 41:
+#line 133 "tiger.y"
+                                        { printf("tyfields \t-> ID : typeid tyfields1\n");}
 #line 1793 "y.tab.c"
     break;
 
-  case 46:
-#line 107 "tiger.y"
-                                          { printf("vardec \t-> VAR ID : typeid := exp\n");}
+  case 42:
+#line 134 "tiger.y"
+                                        { printf("tyfields \t-> ''\n");}
 #line 1799 "y.tab.c"
     break;
 
-  case 47:
-#line 110 "tiger.y"
-                                                    { printf("fundec \t-> FUNCTION ID ( tyfields ) = exp\n");}
+  case 43:
+#line 137 "tiger.y"
+                                        { printf("tyfields1 \t-> , ID : typeid tyfields1\n");}
 #line 1805 "y.tab.c"
     break;
 
-  case 48:
-#line 111 "tiger.y"
-                                                                      { printf("fundec \t-> FUNCTION ID ( tyfields ) : typeid = exp\n");}
+  case 44:
+#line 138 "tiger.y"
+                                        { printf("tyfields1 \t-> ''\n");}
 #line 1811 "y.tab.c"
     break;
 
-  case 49:
-#line 114 "tiger.y"
-                                        { printf("lvalue \t-> ID\n");}
+  case 45:
+#line 141 "tiger.y"
+                                        { printf("vardec \t-> VAR ID := exp\n");}
 #line 1817 "y.tab.c"
     break;
 
-  case 50:
-#line 115 "tiger.y"
-                                        { printf("lvalue \t-> lvalue . ID\n");}
+  case 46:
+#line 142 "tiger.y"
+                                          { printf("vardec \t-> VAR ID : typeid := exp\n");}
 #line 1823 "y.tab.c"
     break;
 
-  case 51:
-#line 116 "tiger.y"
-                                        { printf("lvalue \t-> lvalue [ exp ]\n");}
+  case 47:
+#line 145 "tiger.y"
+                                                    { printf("fundec \t-> FUNCTION ID ( tyfields ) = exp\n");}
 #line 1829 "y.tab.c"
     break;
 
-  case 52:
-#line 119 "tiger.y"
-                                        { printf("typeid \t-> ID\n");}
+  case 48:
+#line 146 "tiger.y"
+                                                                      { printf("fundec \t-> FUNCTION ID ( tyfields ) : typeid = exp\n");}
 #line 1835 "y.tab.c"
     break;
 
-  case 53:
-#line 122 "tiger.y"
-                                        { printf("expseq \t-> exp expseq1\n");}
+  case 49:
+#line 149 "tiger.y"
+                                        { printf("lvalue \t-> ID\n");}
 #line 1841 "y.tab.c"
     break;
 
-  case 54:
-#line 123 "tiger.y"
-                                        { printf("expseq \t-> ''\n");}
+  case 50:
+#line 150 "tiger.y"
+                                        { printf("lvalue \t-> lvalue . ID\n");}
 #line 1847 "y.tab.c"
     break;
 
-  case 55:
-#line 126 "tiger.y"
-                                        { printf("expseq1 \t-> ; exp expseq1\n");}
+  case 51:
+#line 151 "tiger.y"
+                                        { printf("lvalue \t-> lvalue [ exp ]\n");}
 #line 1853 "y.tab.c"
     break;
 
-  case 56:
-#line 127 "tiger.y"
-                                        { printf("expseq1 \t-> ''\n");}
+  case 52:
+#line 154 "tiger.y"
+                                        { printf("typeid \t-> ID()\n");}
 #line 1859 "y.tab.c"
     break;
 
-  case 57:
-#line 130 "tiger.y"
-                                        { printf("args \t-> exp args1\n");}
+  case 53:
+#line 157 "tiger.y"
+                                        { printf("expseq \t-> exp expseq1\n");}
 #line 1865 "y.tab.c"
     break;
 
-  case 58:
-#line 131 "tiger.y"
-                                        { printf("args \t-> ''\n");}
+  case 54:
+#line 158 "tiger.y"
+                                        { printf("expseq \t-> ''\n");}
 #line 1871 "y.tab.c"
     break;
 
-  case 59:
-#line 134 "tiger.y"
-                                        { printf("args1 \t-> , exp args1\n");}
+  case 55:
+#line 161 "tiger.y"
+                                        { printf("expseq1 \t-> ; exp expseq1\n");}
 #line 1877 "y.tab.c"
     break;
 
-  case 60:
-#line 135 "tiger.y"
-                                        { printf("args1 \t-> ''\n");}
+  case 56:
+#line 162 "tiger.y"
+                                        { printf("expseq1 \t-> ''\n");}
 #line 1883 "y.tab.c"
     break;
 
-  case 61:
-#line 138 "tiger.y"
-                                        { printf("idexps \t-> , ID = exp idexps\n");}
+  case 57:
+#line 165 "tiger.y"
+                                        { printf("args \t-> exp args1\n");}
 #line 1889 "y.tab.c"
     break;
 
-  case 62:
-#line 139 "tiger.y"
-                                        { printf("idexps \t-> ''\n");}
+  case 58:
+#line 166 "tiger.y"
+                                        { printf("args \t-> ''\n");}
 #line 1895 "y.tab.c"
     break;
 
+  case 59:
+#line 169 "tiger.y"
+                                        { printf("args1 \t-> , exp args1\n");}
+#line 1901 "y.tab.c"
+    break;
 
-#line 1899 "y.tab.c"
+  case 60:
+#line 170 "tiger.y"
+                                        { printf("args1 \t-> ''\n");}
+#line 1907 "y.tab.c"
+    break;
+
+  case 61:
+#line 173 "tiger.y"
+                                        { printf("idexps \t-> , ID = exp idexps\n");}
+#line 1913 "y.tab.c"
+    break;
+
+  case 62:
+#line 174 "tiger.y"
+                                        { printf("idexps \t-> ''\n");}
+#line 1919 "y.tab.c"
+    break;
+
+
+#line 1923 "y.tab.c"
 
       default: break;
     }
@@ -2127,7 +2151,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 141 "tiger.y"
+#line 176 "tiger.y"
 
 
 int main(int argc, char** argv)
@@ -2155,12 +2179,22 @@ int main(int argc, char** argv)
     rewind(yyin);*/
     
     //while(yylex()) printf("%s\n", yytext); ;
-    /*printf("Listagem das regras de derivação para acompanhamento:\n");
+    printf("Listagem das regras de derivação para acompanhamento:\n");
     yyparse(); //fica chamando o yylex(), vulgo "pedindo tokens"
-    */printf("\nACEITO!\n"); // linguagem reconhecida
+    printf("\nACEITO!\n"); // linguagem reconhecida
     
     fclose(yyin);
-    
+    Tabela* t = T_init(); 
+    T_entrar_bloco(t); //conforme aula 17 min 30 ; slide comp-06
+    T_sair_bloco( t);
+
+    T_checar_existencia(t,  "nome");
+
+ //T_instalar( t, "nome1", 89);
+ //T_instalar( t, "nome2", 55);
+ //T_instalar( t, "nome3", 22);
+//T_imprimir( t);
+T_delete( t);
     return 0;
 }
 

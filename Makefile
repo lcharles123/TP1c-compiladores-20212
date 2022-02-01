@@ -1,15 +1,15 @@
-p: ajuda
+p: teste
 
 
 teste: compilar
-	./analisador.run testes/teste.tig
+	./analisador.run teste.tig
 
 
 testes: compilar
 	for i in `ls -1 testes` ; do echo "<<<<prog $$i>>>>" ; ./analisador.run testes/$$i ; echo "" ; done
 
 clean:
-	rm -rf *.o *.c *.h *.run *.output
+	rm -rf *.o y.tab* lex.yy* *.run *.output
 
 
 yacc: 
@@ -19,7 +19,7 @@ lex:
 	lex tiger.l
 
 compilar: lex yacc
-	gcc -g -Wall y.tab.c lex.yy.c -o analisador.run
+	gcc -g -Wall tabela.c absyn.c lex.yy.c y.tab.c -o analisador.run
 
 
 
