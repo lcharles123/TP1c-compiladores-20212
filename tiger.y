@@ -7,8 +7,6 @@
 
 #include "y.tab.h"
 
-//typedef int int_t;
-//int_t gg;
 
 /* Declarações para fazer interface entre o lexer e este arquivo, são compartilhadas entre o código do lex e yacc */
 extern int yylex();
@@ -19,6 +17,7 @@ extern int lin;      /* conta as linhas */
 extern int col;      /* conta as colunas */
 extern char* yytext; /* valor do token na entrada */
 extern int yyval;    /* valor de variaveis, atribuído no .l */
+
 
 Tabela* tab; /** Tabela de simbolos */
 
@@ -41,7 +40,7 @@ https://www.ibm.com/docs/en/aix/7.2?topic=information-yacc-grammar-file-declarat
 %union //tipos dos tokens
 {
 
-    //int_t mj;
+    int pos;
     int intVal; //acessível por yyval.intVal 
     //typedef char* stringVal;
     //char* idVal;
@@ -77,13 +76,13 @@ em %type, a tag é obrigatória ; nas outras %keywords, ela é opcional
 
 %%
 
-inicio : exp                            { printf("inicio \t-> exp\n");; };
+inicio : exp                            { printf("inicio \t-> exp\n"); };
 
 
 exp : lvalue                            { printf("exp \t-> lvalue\n");} 
 |     NIL                               { printf("exp \t-> NIL()\n");/** Term*/}
 |     ABREPAR expseq FECHAPAR           { printf("exp \t-> ( expseq )\n");/** Term*/}
-|     NUM                               { printf("exp \t-> NUM(%d)\n", yylval.intVal );   /** Term*/}
+|     NUM                               { printf("exp \t-> NUM(%d)\n", yylval.intVal);   /** Term*/}
 |     STRING                            { printf("exp \t-> STRING(%s)\n", yytext);/** Term*/}
 |     MENOS exp                         { printf("exp \t-> - exp\n");}
 |     ID ABREPAR args FECHAPAR          { printf("exp \t-> ID ( args )\n");}

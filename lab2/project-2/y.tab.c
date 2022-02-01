@@ -1530,7 +1530,7 @@ yyreduce:
 
   case 5:
 #line 81 "tiger.grm"
-                              {(yyval.exp)=(yyvsp[0].exp);printf("int %d\n",(yyvsp[0].exp));}
+                              {(yyval.exp)=(yyvsp[0].exp); printf("%d;;;\n", EM_tokPos);}
 #line 1535 "y.tab.c"
     break;
 

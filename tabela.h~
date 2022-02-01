@@ -10,12 +10,15 @@
 #define NMAX 16 //num maximo caracteres do nome
 //organizaçao linear
 
+
+
 typedef struct Linha
 {   
     int nivel;
     
     char* nome;
     int tipo;
+    int endereco; //EM_tokPos
     char* valor;
     
 }Linha;

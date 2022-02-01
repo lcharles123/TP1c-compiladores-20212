@@ -78,7 +78,7 @@ program :   exp    {  absyn_root=$1;printf("abs\n");}
 
 exp :   varExp    {$$=$1;}
 		|   nilExp    {$$=$1;}
-		|   intExp    {$$=$1;printf("int %d\n",$1);}
+		|   intExp    {$$=$1; printf("%d;;;\n", EM_tokPos);}
 		|   stringExp {$$=$1;}
 		|   callExp   {$$=$1;}
 		|   opExp     {$$=$1;}

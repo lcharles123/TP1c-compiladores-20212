@@ -1084,7 +1084,7 @@ YY_RULE_SETUP
 case 50:
 YY_RULE_SETUP
 #line 84 "tiger.l"
-{ yylval.intVal = atoi(yytext); col += yyleng; return NUM; }
+{ yylval.pos = posAtual; yylval.intVal = atoi(yytext); col += yyleng; return NUM; }
 	YY_BREAK
 case 51:
 /* rule 51 can match eol */
