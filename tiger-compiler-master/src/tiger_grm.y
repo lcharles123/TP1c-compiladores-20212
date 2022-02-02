@@ -30,15 +30,13 @@ yyerror (char *s)
    This struct is necessary for getting in typeidsubscript
    rule two types through reduce step
 */
-struct
-typeid_subscript
+struct typeid_subscript
 {
     sym_symbol *sym;
     absyn_exp  *exp;
 };
 
-struct typeid_subscript*
-new_typeid_subscript (sym_symbol *sym_ptr,
+struct typeid_subscript* new_typeid_subscript (sym_symbol *sym_ptr,
                       absyn_exp  *exp_ptr)
 {
     struct typeid_subscript *t  = new (sizeof (*t));

@@ -81,7 +81,7 @@ nil     { col += yyleng; return NIL;}
 
 [0-9]+\.[0-9]+ { col += yyleng; return NUM; } //nao existe float na linguagem
 
-[0-9]+        { yylval.pos = posAtual; yylval.intVal = atoi(yytext); col += yyleng; return NUM; }
+[0-9]+        { yylval.intVal = atoi(yytext); col += yyleng; return NUM; }
 \"[^\"]*\"  { col += yyleng; return STRING;}
 
 .           { printf("*** ERRO: Símbolo desconhecido. Linha %i, Coluna %i, Símbolo: '%s'\n", lin, col, yytext); exit(EXIT_FAILURE);  } // erro se chegar até aqui

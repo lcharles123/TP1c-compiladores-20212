@@ -535,6 +535,7 @@ char *yytext;
 #line 1 "tiger.l"
 #line 2 "tiger.l"
 #include <stdio.h>
+#include "absyn.h"
 #include "y.tab.h"
 
 int pos = 0; /* contador de caracteres */
@@ -549,13 +550,13 @@ int lin = 1;
 int col = 1;
 int inicioComentario;
 
-#line 553 "lex.yy.c"
+#line 554 "lex.yy.c"
 /* ler apenas um arquivo */
 /*%option noyywrap*/
 #define YY_NO_INPUT 1
 /* sub-estado para ignorar os comentários */
 
-#line 559 "lex.yy.c"
+#line 560 "lex.yy.c"
 
 #define INITIAL 0
 #define COMMENTARIO 1
@@ -771,9 +772,9 @@ YY_DECL
 		}
 
 	{
-#line 27 "tiger.l"
+#line 28 "tiger.l"
 
-#line 777 "lex.yy.c"
+#line 778 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -832,277 +833,277 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 28 "tiger.l"
+#line 29 "tiger.l"
 { col+=4; /* assumindo tab com 4 espaços */ }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 29 "tiger.l"
+#line 30 "tiger.l"
 { col++; }
 	YY_BREAK
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 30 "tiger.l"
+#line 31 "tiger.l"
 { lin++; col=1; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 32 "tiger.l"
+#line 33 "tiger.l"
 { inicioComentario = lin ; BEGIN(COMMENTARIO); }
 	YY_BREAK
 case 5:
 /* rule 5 can match eol */
 YY_RULE_SETUP
-#line 33 "tiger.l"
+#line 34 "tiger.l"
 { lin++; } 
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 34 "tiger.l"
+#line 35 "tiger.l"
 { BEGIN(INITIAL); }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 35 "tiger.l"
+#line 36 "tiger.l"
 { ; }
 	YY_BREAK
 case YY_STATE_EOF(COMMENTARIO):
-#line 36 "tiger.l"
+#line 37 "tiger.l"
 { printf("*** ERRO: linha %i : Comentário sem fim ***\n", inicioComentario); exit(EXIT_FAILURE); }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 38 "tiger.l"
+#line 39 "tiger.l"
 { col += yyleng; return WHILE;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 39 "tiger.l"
+#line 40 "tiger.l"
 { col += yyleng; return FOR;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 40 "tiger.l"
+#line 41 "tiger.l"
 { col += yyleng; return TO;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 41 "tiger.l"
+#line 42 "tiger.l"
 { col += yyleng; return BREAK;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 42 "tiger.l"
+#line 43 "tiger.l"
 { col += yyleng; return LET;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 43 "tiger.l"
+#line 44 "tiger.l"
 { col += yyleng; return IN;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 44 "tiger.l"
+#line 45 "tiger.l"
 { col += yyleng; return END;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 45 "tiger.l"
+#line 46 "tiger.l"
 {col += yyleng; return FUNCTION;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 46 "tiger.l"
+#line 47 "tiger.l"
 { col += yyleng; return VAR;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 47 "tiger.l"
+#line 48 "tiger.l"
 { col += yyleng; return TIPO;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 48 "tiger.l"
+#line 49 "tiger.l"
 { col += yyleng; return ARRAY;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 49 "tiger.l"
+#line 50 "tiger.l"
 { col += yyleng; return IF;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 50 "tiger.l"
+#line 51 "tiger.l"
 { col += yyleng; return THEN;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 51 "tiger.l"
+#line 52 "tiger.l"
 { col += yyleng; return ELSE;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 52 "tiger.l"
+#line 53 "tiger.l"
 { col += yyleng; return DO;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 53 "tiger.l"
+#line 54 "tiger.l"
 { col += yyleng; return OF;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 54 "tiger.l"
+#line 55 "tiger.l"
 { col += yyleng; return NIL;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 56 "tiger.l"
+#line 57 "tiger.l"
 { col += yyleng; return VIRG;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 57 "tiger.l"
+#line 58 "tiger.l"
 { col += yyleng; return DOISPONTOS;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 58 "tiger.l"
+#line 59 "tiger.l"
 { col += yyleng; return PONTOVIRG;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 59 "tiger.l"
+#line 60 "tiger.l"
 { col += yyleng; return ABREPAR;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 60 "tiger.l"
+#line 61 "tiger.l"
 { col += yyleng; return FECHAPAR;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 61 "tiger.l"
+#line 62 "tiger.l"
 { col += yyleng; return ABRECOL;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 62 "tiger.l"
+#line 63 "tiger.l"
 { col += yyleng; return FECHACOL;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 63 "tiger.l"
+#line 64 "tiger.l"
 { col += yyleng; return ABRECHAV;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 64 "tiger.l"
+#line 65 "tiger.l"
 { col += yyleng; return FECHACHAV;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 65 "tiger.l"
+#line 66 "tiger.l"
 { col += yyleng; return PONTO;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 66 "tiger.l"
+#line 67 "tiger.l"
 { col += yyleng; return MAIS;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 67 "tiger.l"
+#line 68 "tiger.l"
 { col += yyleng; return MENOS;}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 68 "tiger.l"
+#line 69 "tiger.l"
 { col += yyleng; return VEZES;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 69 "tiger.l"
+#line 70 "tiger.l"
 { col += yyleng; return DIVIDIR;}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 70 "tiger.l"
+#line 71 "tiger.l"
 { col += yyleng; return IGUAL;}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 71 "tiger.l"
+#line 72 "tiger.l"
 { col += yyleng; return DIFERENTE;}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 72 "tiger.l"
+#line 73 "tiger.l"
 { col += yyleng; return MENOR;}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 73 "tiger.l"
+#line 74 "tiger.l"
 { col += yyleng; return MENORIG;}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 74 "tiger.l"
+#line 75 "tiger.l"
 { col += yyleng; return MAIOR;}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 75 "tiger.l"
+#line 76 "tiger.l"
 { col += yyleng; return MAIORIG;}
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 76 "tiger.l"
+#line 77 "tiger.l"
 { col += yyleng; return E;}
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 77 "tiger.l"
+#line 78 "tiger.l"
 { col += yyleng; return OU;}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 78 "tiger.l"
+#line 79 "tiger.l"
 { col += yyleng; return ATRIBUI;}
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 80 "tiger.l"
+#line 81 "tiger.l"
 {  col += yyleng; return ID;}
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 82 "tiger.l"
+#line 83 "tiger.l"
 { col += yyleng; return NUM; } //nao existe float na linguagem
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 84 "tiger.l"
-{ yylval.pos = posAtual; yylval.intVal = atoi(yytext); col += yyleng; return NUM; }
+#line 85 "tiger.l"
+{ yylval.intVal = atoi(yytext); col += yyleng; return NUM; }
 	YY_BREAK
 case 51:
 /* rule 51 can match eol */
 YY_RULE_SETUP
-#line 85 "tiger.l"
+#line 86 "tiger.l"
 { col += yyleng; return STRING;}
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 87 "tiger.l"
+#line 88 "tiger.l"
 { printf("*** ERRO: Símbolo desconhecido. Linha %i, Coluna %i, Símbolo: '%s'\n", lin, col, yytext); exit(EXIT_FAILURE);  } // erro se chegar até aqui
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 90 "tiger.l"
+#line 91 "tiger.l"
 ECHO;
 	YY_BREAK
-#line 1106 "lex.yy.c"
+#line 1107 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2070,4 +2071,4 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 90 "tiger.l"
+#line 91 "tiger.l"

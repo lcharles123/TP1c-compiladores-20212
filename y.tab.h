@@ -145,9 +145,9 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 41 "tiger.y"
+#line 43 "tiger.y"
 
-
+    Exp_n exp;
     int pos;
     int intVal; //acessível por yyval.intVal 
     //typedef char* stringVal;

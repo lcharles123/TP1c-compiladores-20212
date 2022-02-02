@@ -9,17 +9,18 @@ testes: compilar
 	for i in `ls -1 testes` ; do echo "<<<<prog $$i>>>>" ; ./analisador.run testes/$$i ; echo "" ; done
 
 clean:
-	rm -rf *.o y.tab* *.run *.output
+	rm -rf *.o y.tab* lex.yy* *.run *.output
 
 
 yacc: 
-	yacc -d tiger.y 
+	#yacc -d tiger.y 
+	yacc -v tiger.y 
 
 lex:
 	lex tiger.l
 
 compilar: lex yacc
-	gcc -g -Wall y.tab.c lex.yy.c tabela.c absyn.c -o analisador.run
+	gcc -g -Wall tabela.c absyn.c lex.yy.c y.tab.c -o analisador.run
 
 
 

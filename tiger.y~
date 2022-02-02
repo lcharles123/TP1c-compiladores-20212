@@ -2,11 +2,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "absyn.h"
+
 #include "tabela.h"
+#include "absyn.h"
 
 #include "y.tab.h"
-
+int yydebug=1; 
+//absyn_exp* ast;
 
 /* Declarações para fazer interface entre o lexer e este arquivo, são compartilhadas entre o código do lex e yacc */
 extern int yylex();
@@ -18,7 +20,7 @@ extern int col;      /* conta as colunas */
 extern char* yytext; /* valor do token na entrada */
 extern int yyval;    /* valor de variaveis, atribuído no .l */
 
-
+Exp_n astRaiz;
 Tabela* tab; /** Tabela de simbolos */
 
 
@@ -39,7 +41,7 @@ https://www.ibm.com/docs/en/aix/7.2?topic=information-yacc-grammar-file-declarat
 */
 %union //tipos dos tokens
 {
-
+    Exp_n exp;
     int pos;
     int intVal; //acessível por yyval.intVal 
     //typedef char* stringVal;
@@ -54,6 +56,8 @@ em %type, a tag é obrigatória ; nas outras %keywords, ela é opcional
 */
 //%type <intVal> NUM
 /* POSIX yacc reserves %type to nonterminals  protanto para os terminais usar diretamente em %token */
+//tipos retornados pelos não terminais em $n através de $$
+%type <exp> exp inicio
 
 %token <intVal> NUM
 
@@ -76,17 +80,17 @@ em %type, a tag é obrigatória ; nas outras %keywords, ela é opcional
 
 %%
 
-inicio : exp                            { printf("inicio \t-> exp\n"); };
+inicio : exp                            { printf("inicio \t-> exp\n"); astRaiz=$1 ;};
 
 
 exp : lvalue                            { printf("exp \t-> lvalue\n");} 
 |     NIL                               { printf("exp \t-> NIL()\n");/** Term*/}
 |     ABREPAR expseq FECHAPAR           { printf("exp \t-> ( expseq )\n");/** Term*/}
-|     NUM                               { printf("exp \t-> NUM(%d)\n", yylval.pos );   /** Term*/}
+|     NUM                               { printf("exp \t-> NUM(%d)\n", yylval.intVal); $$=$1 ; /** Term*/}
 |     STRING                            { printf("exp \t-> STRING(%s)\n", yytext);/** Term*/}
 |     MENOS exp                         { printf("exp \t-> - exp\n");}
-|     ID ABREPAR args FECHAPAR          { printf("exp \t-> ID ( args )\n");}
-|     exp MAIS exp                      { printf("exp \t-> exp + exp\n");}
+|     ID ABREPAR args FECHAPAR          { printf("exp \t-> ID ( args )\n");} //call
+|     exp MAIS exp                      { printf("exp \t-> exp + exp\n");$$ = $1;}
 |     exp MENOS exp                     { printf("exp \t-> exp - exp\n");}
 |     exp VEZES exp                     { printf("exp \t-> exp * exp\n");}
 |     exp DIVIDIR exp                   { printf("exp \t-> exp / exp\n");}
@@ -109,7 +113,7 @@ exp : lvalue                            { printf("exp \t-> lvalue\n");}
 
 tid:  
       ABRECHAV ID IGUAL exp idexps FECHACHAV { printf("tid \t-> typeid { ID = exp idexps }\n");}
-|     ABRECOL exp FECHACOL OF exp       { printf("tid \t-> typeid [ exp ] OF exp\n");};
+|     ABRECOL exp FECHACOL OF exp     { printf("tid \t-> typeid [ exp ] OF exp\n");};
 
 decs :
     dec decs                            { printf("decs \t-> dec decs\n");}
@@ -147,7 +151,9 @@ fundec :
 lvalue : 
     ID                                  { printf("lvalue \t-> ID\n");}
 |   lvalue PONTO ID                     { printf("lvalue \t-> lvalue . ID\n");}
-|   lvalue ABRECOL exp FECHACOL         { printf("lvalue \t-> lvalue [ exp ]\n");};
+|   lvalue ABRECOL exp FECHACOL        { printf("lvalue \t-> lvalue [ exp ]\n");}
+;
+
 
 typeid : 
     ID                                  { printf("typeid \t-> ID()\n");};
@@ -218,4 +224,15 @@ T_delete( t);
     return 0;
 }
 
+/*
+Fez a análise Semântica completa [S, N, Mais ou Menos] (4 pontos)
+• Gerou código intermediário para declarações [S, N, Mais ou Menos] (3 pontos)
+• Gerou código intermediáriopara comandos [S, N, Mais ou Menos] (3 pontos)
+• Gerou código intermediário para expresses [S, N, Mais ou Menos] (2 pontos)
+• EXTRA - 3 pontos
+• Apresentou os resultados da execução do(s) programas testes (convincentes) submetido(s) ao Com-
+pilador [S, N, Mais ou Menos] (2 pontos)
+• Apresentou as listagens dos programas fontes submetido(s) ao Compilador? [S, N, Mais ou Menos]
+(1 pontos
 
+*/

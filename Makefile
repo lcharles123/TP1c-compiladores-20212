@@ -14,6 +14,7 @@ clean:
 
 yacc: 
 	yacc -d tiger.y 
+	#yacc -v tiger.y 
 
 lex:
 	lex tiger.l
