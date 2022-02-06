@@ -9,7 +9,7 @@ testes: compilar
 	for i in `ls -1 testes` ; do echo "<<<<prog $$i>>>>" ; ./analisador.run testes/$$i ; echo "" ; done
 
 clean:
-	rm -rf *.o y.tab* lex.yy* *.run *.output
+	rm -rf *.o tiger.tab* lex.yy* *.run *.output
 
 
 yacc: 

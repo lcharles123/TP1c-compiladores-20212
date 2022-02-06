@@ -1,7 +1,7 @@
  /* monta array de ints */
  /* cadeia nao aceita */
 let
-    type  arrtype = array o f int 
+    type  arrtype = array of "aaa" 
     var arr1:arrtype := arrtype [10] 
 in
     (arr1)

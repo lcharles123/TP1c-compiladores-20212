@@ -79,7 +79,8 @@
 #include "y.tab.h"
 int yydebug = 1; 
 //absyn_exp* ast;
-
+extern int tokpos;
+extern int col;
 /* Declarações para fazer interface entre o lexer e este arquivo, são compartilhadas entre o código do lex e yacc */
 extern int yylex();
 extern int yyparse();
@@ -90,7 +91,7 @@ extern int col;      /* conta as colunas */
 extern char* yytext; /* valor do token na entrada */
 extern int yyval;    /* valor de variaveis, atribuído no .l */
 
-Exp_n* astRaiz; /** Árvore de derivação */
+Exp_n* astRoot; /** Árvore de derivação */
 
 Tabela* tab; /** Tabela de simbolos */
 
@@ -104,7 +105,7 @@ void yyerror(const char *str)
 int yywrap() { return 1; }
 
 
-#line 108 "y.tab.c"
+#line 109 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -135,10 +136,7 @@ int yywrap() { return 1; }
 # define YYERROR_VERBOSE 0
 #endif
 
-/* Use api.header.include to #include this header
-   instead of duplicating it here.  */
-#ifndef YY_YY_Y_TAB_H_INCLUDED
-# define YY_YY_Y_TAB_H_INCLUDED
+
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -246,7 +244,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 45 "tiger.y"
+#line 46 "tiger.y"
 
     int intVal; //acessível por yyval.intVal 
     char* strVal;
@@ -257,7 +255,7 @@ union YYSTYPE
     Dec_n* dec, decList, varDec, tyDec, funDec, argsDec;
     Tipo_n* tid, ty, tyList;
 
-#line 261 "y.tab.c"
+#line 259 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -270,7 +268,7 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-#endif /* !YY_YY_Y_TAB_H_INCLUDED  */
+
 
 
 
@@ -637,13 +635,13 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,   103,   103,   106,   107,   108,   109,   110,   111,   112,
-     113,   114,   115,   116,   117,   118,   119,   120,   121,   122,
-     123,   124,   125,   127,   128,   129,   130,   131,   132,   133,
-     136,   137,   142,   143,   146,   147,   148,   151,   154,   155,
-     156,   159,   160,   163,   164,   167,   168,   171,   172,   175,
-     176,   177,   182,   185,   186,   189,   190,   193,   194,   197,
-     198,   201,   202
+       0,   105,   105,   108,   109,   110,   111,   112,   113,   114,
+     115,   116,   117,   118,   119,   120,   121,   122,   123,   124,
+     125,   126,   127,   128,   129,   130,   131,   132,   133,   134,
+     137,   138,   143,   144,   147,   148,   149,   152,   155,   156,
+     157,   160,   161,   164,   165,   168,   169,   172,   173,   176,
+     177,   178,   183,   186,   187,   190,   191,   194,   195,   198,
+     199,   202,   203
 };
 #endif
 
@@ -1557,373 +1555,373 @@ yyreduce:
   switch (yyn)
     {
   case 2:
-#line 103 "tiger.y"
-                                        { printf("inicio \t-> exp\n"); ;}
-#line 1563 "y.tab.c"
+#line 105 "tiger.y"
+                                        { printf("inicio \t-> exp\n"); chk_Exp((yyvsp[0].exp), 1, tokpos); astRoot=(yyvsp[0].exp); }
+#line 1561 "y.tab.c"
     break;
 
   case 3:
-#line 106 "tiger.y"
-                                        { printf("exp \t-> lvalue\n");}
-#line 1569 "y.tab.c"
+#line 108 "tiger.y"
+                                        { printf("exp \t-> lvalue\n"); chk_Var((yyvsp[0].var), 1, tokpos);  }
+#line 1567 "y.tab.c"
     break;
 
   case 4:
-#line 107 "tiger.y"
-                                        { printf("exp \t-> NIL()\n");/** Term*/}
-#line 1575 "y.tab.c"
+#line 109 "tiger.y"
+                                        { printf("exp \t-> NIL()\n"); chk_Exp((yyvsp[0].exp), 1, tokpos);  /** Term*/}
+#line 1573 "y.tab.c"
     break;
 
   case 5:
-#line 108 "tiger.y"
-                                        { printf("exp \t-> ( expseq )\n");/** Term*/}
-#line 1581 "y.tab.c"
+#line 110 "tiger.y"
+                                        { printf("exp \t-> ( expseq )\n");  /** Term*/}
+#line 1579 "y.tab.c"
     break;
 
   case 6:
-#line 109 "tiger.y"
-                                        { printf("exp \t-> NUM(%d)\n", yylval.intVal); ; /** Term*/}
-#line 1587 "y.tab.c"
+#line 111 "tiger.y"
+                                        { printf("exp \t-> NUM(%d)\n", yylval.intVal); chk_Const(&((yyvsp[0].intVal)), int_t, tokpos); /** Term*/}
+#line 1585 "y.tab.c"
     break;
 
   case 7:
-#line 110 "tiger.y"
-                                        { printf("exp \t-> STRING(%s)\n", yytext);/** Term*/}
-#line 1593 "y.tab.c"
+#line 112 "tiger.y"
+                                        { printf("exp \t-> STRING(%s)\n", yytext);   /** Term*/}
+#line 1591 "y.tab.c"
     break;
 
   case 8:
-#line 111 "tiger.y"
-                                        { printf("exp \t-> - exp\n");}
-#line 1599 "y.tab.c"
+#line 113 "tiger.y"
+                                        { printf("exp \t-> - exp\n"); }
+#line 1597 "y.tab.c"
     break;
 
   case 9:
-#line 112 "tiger.y"
-                                        { printf("exp \t-> ID ( args )\n");}
-#line 1605 "y.tab.c"
+#line 114 "tiger.y"
+                                        { printf("exp \t-> ID ( args )\n"); }
+#line 1603 "y.tab.c"
     break;
 
   case 10:
-#line 113 "tiger.y"
-                                        { printf("exp \t-> exp + exp\n");;}
-#line 1611 "y.tab.c"
+#line 115 "tiger.y"
+                                        { printf("exp \t-> exp + exp\n"); }
+#line 1609 "y.tab.c"
     break;
 
   case 11:
-#line 114 "tiger.y"
-                                        { printf("exp \t-> exp - exp\n");}
-#line 1617 "y.tab.c"
+#line 116 "tiger.y"
+                                        { printf("exp \t-> exp - exp\n"); }
+#line 1615 "y.tab.c"
     break;
 
   case 12:
-#line 115 "tiger.y"
-                                        { printf("exp \t-> exp * exp\n");}
-#line 1623 "y.tab.c"
+#line 117 "tiger.y"
+                                        { printf("exp \t-> exp * exp\n"); }
+#line 1621 "y.tab.c"
     break;
 
   case 13:
-#line 116 "tiger.y"
-                                        { printf("exp \t-> exp / exp\n");}
-#line 1629 "y.tab.c"
+#line 118 "tiger.y"
+                                        { printf("exp \t-> exp / exp\n"); }
+#line 1627 "y.tab.c"
     break;
 
   case 14:
-#line 117 "tiger.y"
-                                        { printf("exp \t-> exp = exp\n");}
-#line 1635 "y.tab.c"
+#line 119 "tiger.y"
+                                        { printf("exp \t-> exp = exp\n"); }
+#line 1633 "y.tab.c"
     break;
 
   case 15:
-#line 118 "tiger.y"
-                                        { printf("exp \t-> exp <> exp\n");}
-#line 1641 "y.tab.c"
+#line 120 "tiger.y"
+                                        { printf("exp \t-> exp <> exp\n"); }
+#line 1639 "y.tab.c"
     break;
 
   case 16:
-#line 119 "tiger.y"
-                                        { printf("exp \t-> exp < exp\n");}
-#line 1647 "y.tab.c"
+#line 121 "tiger.y"
+                                        { printf("exp \t-> exp < exp\n"); }
+#line 1645 "y.tab.c"
     break;
 
   case 17:
-#line 120 "tiger.y"
-                                        { printf("exp \t-> exp > exp\n");}
-#line 1653 "y.tab.c"
+#line 122 "tiger.y"
+                                        { printf("exp \t-> exp > exp\n"); }
+#line 1651 "y.tab.c"
     break;
 
   case 18:
-#line 121 "tiger.y"
-                                        { printf("exp \t-> exp <= exp\n");}
-#line 1659 "y.tab.c"
+#line 123 "tiger.y"
+                                        { printf("exp \t-> exp <= exp\n"); }
+#line 1657 "y.tab.c"
     break;
 
   case 19:
-#line 122 "tiger.y"
-                                        { printf("exp \t-> exp >= exp\n");}
-#line 1665 "y.tab.c"
+#line 124 "tiger.y"
+                                        { printf("exp \t-> exp >= exp\n"); }
+#line 1663 "y.tab.c"
     break;
 
   case 20:
-#line 123 "tiger.y"
-                                        { printf("exp \t-> exp & exp\n");}
-#line 1671 "y.tab.c"
+#line 125 "tiger.y"
+                                        { printf("exp \t-> exp & exp\n"); }
+#line 1669 "y.tab.c"
     break;
 
   case 21:
-#line 124 "tiger.y"
-                                        { printf("exp \t-> exp | exp\n");}
-#line 1677 "y.tab.c"
+#line 126 "tiger.y"
+                                        { printf("exp \t-> exp | exp\n"); }
+#line 1675 "y.tab.c"
     break;
 
   case 22:
-#line 125 "tiger.y"
-                                        { printf("exp \t-> tid\n");}
-#line 1683 "y.tab.c"
+#line 127 "tiger.y"
+                                        { printf("exp \t-> tid\n"); }
+#line 1681 "y.tab.c"
     break;
 
   case 23:
-#line 127 "tiger.y"
-                                        { printf("exp \t-> lvalue := exp\n");}
-#line 1689 "y.tab.c"
+#line 128 "tiger.y"
+                                        { printf("exp \t-> lvalue := exp\n"); }
+#line 1687 "y.tab.c"
     break;
 
   case 24:
-#line 128 "tiger.y"
-                                        { printf("exp \t-> IF exp THEN exp ELSE exp\n");}
-#line 1695 "y.tab.c"
+#line 129 "tiger.y"
+                                        { printf("exp \t-> IF exp THEN exp ELSE exp\n"); }
+#line 1693 "y.tab.c"
     break;
 
   case 25:
-#line 129 "tiger.y"
-                                        { printf("exp \t-> IF exp THEN exp\n");}
-#line 1701 "y.tab.c"
+#line 130 "tiger.y"
+                                        { printf("exp \t-> IF exp THEN exp\n"); }
+#line 1699 "y.tab.c"
     break;
 
   case 26:
-#line 130 "tiger.y"
-                                        { printf("exp \t-> WHILE exp DO exp\n");}
-#line 1707 "y.tab.c"
+#line 131 "tiger.y"
+                                        { printf("exp \t-> WHILE exp DO exp\n"); }
+#line 1705 "y.tab.c"
     break;
 
   case 27:
-#line 131 "tiger.y"
-                                        { printf("exp \t-> FOR ID := exp TO exp DO exp\n");}
-#line 1713 "y.tab.c"
+#line 132 "tiger.y"
+                                        { printf("exp \t-> FOR ID := exp TO exp DO exp\n"); }
+#line 1711 "y.tab.c"
     break;
 
   case 28:
-#line 132 "tiger.y"
-                                        { printf("exp \t-> BREAK\n");}
-#line 1719 "y.tab.c"
+#line 133 "tiger.y"
+                                        { printf("exp \t-> BREAK\n"); }
+#line 1717 "y.tab.c"
     break;
 
   case 29:
-#line 133 "tiger.y"
+#line 134 "tiger.y"
                                         { printf("exp \t-> LET decs IN expseq END\n");  }
-#line 1725 "y.tab.c"
+#line 1723 "y.tab.c"
     break;
 
   case 30:
-#line 136 "tiger.y"
+#line 137 "tiger.y"
                                               { printf("tid \t-> typeid { ID = exp idexps }\n");}
-#line 1731 "y.tab.c"
+#line 1729 "y.tab.c"
     break;
 
   case 31:
-#line 137 "tiger.y"
+#line 138 "tiger.y"
                                        { printf("tid \t-> typeid [ exp ] OF exp\n");}
-#line 1737 "y.tab.c"
+#line 1735 "y.tab.c"
     break;
 
   case 32:
-#line 142 "tiger.y"
+#line 143 "tiger.y"
                                         { printf("decs \t-> dec decs\n");}
-#line 1743 "y.tab.c"
+#line 1741 "y.tab.c"
     break;
 
   case 33:
-#line 143 "tiger.y"
+#line 144 "tiger.y"
                                         { printf("decs \t-> ''\n");}
-#line 1749 "y.tab.c"
+#line 1747 "y.tab.c"
     break;
 
   case 34:
-#line 146 "tiger.y"
+#line 147 "tiger.y"
                                         { printf("dec \t-> tydec\n");}
-#line 1755 "y.tab.c"
+#line 1753 "y.tab.c"
     break;
 
   case 35:
-#line 147 "tiger.y"
+#line 148 "tiger.y"
                                         { printf("dec \t-> vardec\n");}
-#line 1761 "y.tab.c"
+#line 1759 "y.tab.c"
     break;
 
   case 36:
-#line 148 "tiger.y"
+#line 149 "tiger.y"
                                         { printf("dec \t-> fundec\n");}
-#line 1767 "y.tab.c"
+#line 1765 "y.tab.c"
     break;
 
   case 37:
-#line 151 "tiger.y"
+#line 152 "tiger.y"
                                         { printf("tydec \t-> TYPE ID = ty\n");}
-#line 1773 "y.tab.c"
+#line 1771 "y.tab.c"
     break;
 
   case 38:
-#line 154 "tiger.y"
+#line 155 "tiger.y"
                                         { printf("ty \t-> ID\n");}
-#line 1779 "y.tab.c"
+#line 1777 "y.tab.c"
     break;
 
   case 39:
-#line 155 "tiger.y"
+#line 156 "tiger.y"
                                                         { printf("{ ty \t-> ID : typeid tyfields1 }\n");}
-#line 1785 "y.tab.c"
+#line 1783 "y.tab.c"
     break;
 
   case 40:
-#line 156 "tiger.y"
+#line 157 "tiger.y"
                                         { printf("ty \t-> ARRAY OF ID = ty\n");}
-#line 1791 "y.tab.c"
+#line 1789 "y.tab.c"
     break;
 
   case 41:
-#line 159 "tiger.y"
+#line 160 "tiger.y"
                                         { printf("tyfields \t-> ID : typeid tyfields1\n");}
-#line 1797 "y.tab.c"
+#line 1795 "y.tab.c"
     break;
 
   case 42:
-#line 160 "tiger.y"
+#line 161 "tiger.y"
                                         { printf("tyfields \t-> ''\n");}
-#line 1803 "y.tab.c"
+#line 1801 "y.tab.c"
     break;
 
   case 43:
-#line 163 "tiger.y"
+#line 164 "tiger.y"
                                         { printf("tyfields1 \t-> , ID : typeid tyfields1\n");}
-#line 1809 "y.tab.c"
+#line 1807 "y.tab.c"
     break;
 
   case 44:
-#line 164 "tiger.y"
+#line 165 "tiger.y"
                                         { printf("tyfields1 \t-> ''\n");}
-#line 1815 "y.tab.c"
+#line 1813 "y.tab.c"
     break;
 
   case 45:
-#line 167 "tiger.y"
+#line 168 "tiger.y"
                                         { printf("vardec \t-> VAR ID := exp\n");}
-#line 1821 "y.tab.c"
+#line 1819 "y.tab.c"
     break;
 
   case 46:
-#line 168 "tiger.y"
+#line 169 "tiger.y"
                                           { printf("vardec \t-> VAR ID : typeid := exp\n");}
-#line 1827 "y.tab.c"
+#line 1825 "y.tab.c"
     break;
 
   case 47:
-#line 171 "tiger.y"
+#line 172 "tiger.y"
                                                     { printf("fundec \t-> FUNCTION ID ( tyfields ) = exp\n");}
-#line 1833 "y.tab.c"
+#line 1831 "y.tab.c"
     break;
 
   case 48:
-#line 172 "tiger.y"
+#line 173 "tiger.y"
                                                                       { printf("fundec \t-> FUNCTION ID ( tyfields ) : typeid = exp\n");}
-#line 1839 "y.tab.c"
+#line 1837 "y.tab.c"
     break;
 
   case 49:
-#line 175 "tiger.y"
+#line 176 "tiger.y"
                                         { printf("lvalue \t-> ID\n");}
-#line 1845 "y.tab.c"
+#line 1843 "y.tab.c"
     break;
 
   case 50:
-#line 176 "tiger.y"
+#line 177 "tiger.y"
                                         { printf("lvalue \t-> lvalue . ID\n");}
-#line 1851 "y.tab.c"
+#line 1849 "y.tab.c"
     break;
 
   case 51:
-#line 177 "tiger.y"
+#line 178 "tiger.y"
                                        { printf("lvalue \t-> lvalue [ exp ]\n");}
-#line 1857 "y.tab.c"
+#line 1855 "y.tab.c"
     break;
 
   case 52:
-#line 182 "tiger.y"
+#line 183 "tiger.y"
                                         { printf("typeid \t-> ID()\n");}
-#line 1863 "y.tab.c"
+#line 1861 "y.tab.c"
     break;
 
   case 53:
-#line 185 "tiger.y"
+#line 186 "tiger.y"
                                         { printf("expseq \t-> exp expseq1\n");}
-#line 1869 "y.tab.c"
+#line 1867 "y.tab.c"
     break;
 
   case 54:
-#line 186 "tiger.y"
+#line 187 "tiger.y"
                                         { printf("expseq \t-> ''\n");}
-#line 1875 "y.tab.c"
+#line 1873 "y.tab.c"
     break;
 
   case 55:
-#line 189 "tiger.y"
+#line 190 "tiger.y"
                                         { printf("expseq1 \t-> ; exp expseq1\n");}
-#line 1881 "y.tab.c"
+#line 1879 "y.tab.c"
     break;
 
   case 56:
-#line 190 "tiger.y"
+#line 191 "tiger.y"
                                         { printf("expseq1 \t-> ''\n");}
-#line 1887 "y.tab.c"
+#line 1885 "y.tab.c"
     break;
 
   case 57:
-#line 193 "tiger.y"
+#line 194 "tiger.y"
                                         { printf("args \t-> exp args1\n");}
-#line 1893 "y.tab.c"
+#line 1891 "y.tab.c"
     break;
 
   case 58:
-#line 194 "tiger.y"
+#line 195 "tiger.y"
                                         { printf("args \t-> ''\n");}
-#line 1899 "y.tab.c"
+#line 1897 "y.tab.c"
     break;
 
   case 59:
-#line 197 "tiger.y"
+#line 198 "tiger.y"
                                         { printf("args1 \t-> , exp args1\n");}
-#line 1905 "y.tab.c"
+#line 1903 "y.tab.c"
     break;
 
   case 60:
-#line 198 "tiger.y"
+#line 199 "tiger.y"
                                         { printf("args1 \t-> ''\n");}
-#line 1911 "y.tab.c"
+#line 1909 "y.tab.c"
     break;
 
   case 61:
-#line 201 "tiger.y"
+#line 202 "tiger.y"
                                         { printf("idexps \t-> , ID = exp idexps\n");}
-#line 1917 "y.tab.c"
+#line 1915 "y.tab.c"
     break;
 
   case 62:
-#line 202 "tiger.y"
+#line 203 "tiger.y"
                                         { printf("idexps \t-> ''\n");}
-#line 1923 "y.tab.c"
+#line 1921 "y.tab.c"
     break;
 
 
-#line 1927 "y.tab.c"
+#line 1925 "y.tab.c"
 
       default: break;
     }
@@ -2155,7 +2153,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 204 "tiger.y"
+#line 205 "tiger.y"
 
 
 int main(int argc, char** argv)

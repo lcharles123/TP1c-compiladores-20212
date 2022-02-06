@@ -3,16 +3,18 @@
 #include "absyn.h"
 #include "y.tab.h"
 
+int tokpos = 0;
 int pos = 0; /* contador de caracteres */
 int prox(int inc) /* retorna a posiçao do token atual e incrementa o contador de caracteres */
 { 
     int atual = pos; 
+    //yylval.pos = pos;
     pos += inc; 
     return atual;
 }
 int posAtual = 0; //posição do token atual
-int lin = 1;
-int col = 1;
+int lin = 0;
+int col = 0;
 int inicioComentario;
 
 %}
@@ -27,7 +29,7 @@ int inicioComentario;
 
 %%
 [\t]      { col+=4; /* assumindo tab com 4 espaços */ }
-[\r ]     { col++; }
+[\r ]     { col++; tokpos = prox(yyleng);}
 \n        { lin++; col=1; }
 
 "/*"                { inicioComentario = lin ; BEGIN(COMMENTARIO); }
@@ -64,7 +66,7 @@ nil     { col += yyleng; return NIL;}
 "{"     { col += yyleng; return ABRECHAV;}
 "}"     { col += yyleng; return FECHACHAV;}
 "."     { col += yyleng; return PONTO;}
-"+"     { col += yyleng; return MAIS;}
+"+"     { col += yyleng; tokpos = prox(yyleng); return MAIS;}
 "-"     { col += yyleng; return MENOS;}
 "*"     { col += yyleng; return VEZES;}
 "/"     { col += yyleng; return DIVIDIR;}
@@ -82,7 +84,7 @@ nil     { col += yyleng; return NIL;}
 
 [0-9]+\.[0-9]+ { col += yyleng; return NUM; } //nao existe float na linguagem
 
-[0-9]+        { yylval.intVal = atoi(yytext); col += yyleng; return NUM; }
+[0-9]+        { yylval.intVal = atoi(yytext); col += yyleng; tokpos = prox(yyleng); return NUM; }
 \"[^\"]*\"  { col += yyleng; return STRING;}
 
 .           { printf("*** ERRO: Símbolo desconhecido. Linha %i, Coluna %i, Símbolo: '%s'\n", lin, col, yytext); exit(EXIT_FAILURE);  } // erro se chegar até aqui

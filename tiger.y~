@@ -10,7 +10,8 @@
 #include "y.tab.h"
 int yydebug = 1; 
 //absyn_exp* ast;
-
+extern int tokpos;
+extern int col;
 /* Declarações para fazer interface entre o lexer e este arquivo, são compartilhadas entre o código do lex e yacc */
 extern int yylex();
 extern int yyparse();
@@ -21,7 +22,7 @@ extern int col;      /* conta as colunas */
 extern char* yytext; /* valor do token na entrada */
 extern int yyval;    /* valor de variaveis, atribuído no .l */
 
-Exp_n* astRaiz; /** Árvore de derivação */
+Exp_n* astRoot; /** Árvore de derivação */
 
 Tabela* tab; /** Tabela de simbolos */
 
@@ -65,8 +66,9 @@ em %type, a tag é obrigatória ; nas outras %keywords, ela é opcional
 
 %token <intVal> NUM
 %token <strVal> STRING
+%token <exp> NIL
 // tipos de nao terminais 
-/*
+
 %type <exp> exp
 %type <expList> expseq expseq1
 %type <var> lvalue typeid
@@ -79,9 +81,9 @@ em %type, a tag é obrigatória ; nas outras %keywords, ela é opcional
 %type <tid> tid
 %type <ty> ty
 %type <tyList> tyfields tyfields1 
-*/
 
-%token NIL ABREPAR FECHAPAR ABRECHAV FECHACHAV ABRECOL FECHACOL MENOS MAIS VEZES DIVIDIR IGUAL DIFERENTE MENOR MENORIG MAIOR MAIORIG E OU OF ATRIBUI IF THEN ELSE WHILE DO FOR TO BREAK LET IN END TIPO DOISPONTOS VAR FUNCTION PONTO PONTOVIRG VIRG ID ARRAY
+
+%token ABREPAR FECHAPAR ABRECHAV FECHACHAV ABRECOL FECHACOL MENOS MAIS VEZES DIVIDIR IGUAL DIFERENTE MENOR MENORIG MAIOR MAIORIG E OU OF ATRIBUI IF THEN ELSE WHILE DO FOR TO BREAK LET IN END TIPO DOISPONTOS VAR FUNCTION PONTO PONTOVIRG VIRG ID ARRAY
 /*%token ABREPAR FECHAPAR ABRECHAV FECHACHAV ABRECOL FECHACOL MENOS MAIS VEZES DIVIDIR IGUAL DIFERENTE MENOR MENORIG MAIOR MAIORIG E OU OF ATRIBUI IF THEN ELSE WHILE DO FOR TO BREAK LET IN END TIPO DOISPONTOS VAR FUNCTION PONTO PONTOVIRG VIRG ID <intVal> NUM STRING ARRAY*/
 
 %nonassoc OF IF THEN WHILE DO FOR TO ATRIBUI TIPO FUNCTION          /* menor precedencia */
@@ -100,42 +102,40 @@ em %type, a tag é obrigatória ; nas outras %keywords, ela é opcional
 
 %%
 
-inicio : exp                            { printf("inicio \t-> exp\n"); ;};
+inicio : exp                            { printf("inicio \t-> exp\n"); chk_Exp($1, 1); astRoot=$1; };
 
 
-exp : lvalue                            { printf("exp \t-> lvalue\n");} 
-|     NIL                               { printf("exp \t-> NIL()\n");/** Term*/}
-|     ABREPAR expseq FECHAPAR           { printf("exp \t-> ( expseq )\n");/** Term*/}
-|     NUM                               { printf("exp \t-> NUM(%d)\n", yylval.intVal); ; /** Term*/}
-|     STRING                            { printf("exp \t-> STRING(%s)\n", yytext);/** Term*/}
-|     MENOS exp                         { printf("exp \t-> - exp\n");}
-|     ID ABREPAR args FECHAPAR          { printf("exp \t-> ID ( args )\n");} //call
-|     exp MAIS exp                      { printf("exp \t-> exp + exp\n");;} //op inicio
-|     exp MENOS exp                     { printf("exp \t-> exp - exp\n");}
-|     exp VEZES exp                     { printf("exp \t-> exp * exp\n");}
-|     exp DIVIDIR exp                   { printf("exp \t-> exp / exp\n");}
-|     exp IGUAL exp                     { printf("exp \t-> exp = exp\n");}
-|     exp DIFERENTE exp                 { printf("exp \t-> exp <> exp\n");}
-|     exp MENOR exp                     { printf("exp \t-> exp < exp\n");}
-|     exp MAIOR exp                     { printf("exp \t-> exp > exp\n");}
-|     exp MENORIG exp                   { printf("exp \t-> exp <= exp\n");}
-|     exp MAIORIG exp                   { printf("exp \t-> exp >= exp\n");}
-|     exp E exp                         { printf("exp \t-> exp & exp\n");}
-|     exp OU exp                        { printf("exp \t-> exp | exp\n");}      //op fim
-//|     tid                               { printf("exp \t-> tid\n");} /*modificação aqui*/
-|typeid ABRECHAV tid
-|typeid ABRECOL tid
-|     lvalue ATRIBUI exp                { printf("exp \t-> lvalue := exp\n");}
-|     IF exp THEN exp ELSE exp          { printf("exp \t-> IF exp THEN exp ELSE exp\n");}
-|     IF exp THEN exp                   { printf("exp \t-> IF exp THEN exp\n");}
-|     WHILE exp DO exp                  { printf("exp \t-> WHILE exp DO exp\n");}
-|     FOR ID ATRIBUI exp TO exp DO exp  { printf("exp \t-> FOR ID := exp TO exp DO exp\n");}
-|     BREAK                             { printf("exp \t-> BREAK\n");}
+exp : lvalue                            { printf("exp \t-> lvalue\n"); chk_Var($1, 1);  } 
+|     NIL                               { printf("exp \t-> NIL()\n"); chk_Exp($1, 1);  /** Term*/}
+|     ABREPAR expseq FECHAPAR           { printf("exp \t-> ( expseq )\n");  /** Term*/}
+|     NUM                               { printf("exp \t-> NUM(%d)\n", yylval.intVal); chk_Const(&($1), int_t, col); /** Term*/}
+|     STRING                            { printf("exp \t-> STRING(%s)\n", yytext);   /** Term*/}
+|     MENOS exp                         { printf("exp \t-> - exp\n"); }
+|     ID ABREPAR args FECHAPAR          { printf("exp \t-> ID ( args )\n"); } //call
+|     exp MAIS exp                      { printf("exp \t-> exp + exp\n"); } //op inicio
+|     exp MENOS exp                     { printf("exp \t-> exp - exp\n"); }
+|     exp VEZES exp                     { printf("exp \t-> exp * exp\n"); }
+|     exp DIVIDIR exp                   { printf("exp \t-> exp / exp\n"); }
+|     exp IGUAL exp                     { printf("exp \t-> exp = exp\n"); }
+|     exp DIFERENTE exp                 { printf("exp \t-> exp <> exp\n"); }
+|     exp MENOR exp                     { printf("exp \t-> exp < exp\n"); }
+|     exp MAIOR exp                     { printf("exp \t-> exp > exp\n"); }
+|     exp MENORIG exp                   { printf("exp \t-> exp <= exp\n"); }
+|     exp MAIORIG exp                   { printf("exp \t-> exp >= exp\n"); }
+|     exp E exp                         { printf("exp \t-> exp & exp\n"); }
+|     exp OU exp                        { printf("exp \t-> exp | exp\n"); }      //op fim
+|     tid                               { printf("exp \t-> tid\n"); } /*modificação aqui*/
+|     lvalue ATRIBUI exp                { printf("exp \t-> lvalue := exp\n"); }
+|     IF exp THEN exp ELSE exp          { printf("exp \t-> IF exp THEN exp ELSE exp\n"); }
+|     IF exp THEN exp                   { printf("exp \t-> IF exp THEN exp\n"); }
+|     WHILE exp DO exp                  { printf("exp \t-> WHILE exp DO exp\n"); }
+|     FOR ID ATRIBUI exp TO exp DO exp  { printf("exp \t-> FOR ID := exp TO exp DO exp\n"); }
+|     BREAK                             { printf("exp \t-> BREAK\n"); }
 |     LET decs IN expseq END	        { printf("exp \t-> LET decs IN expseq END\n");  };
 
 tid:  
-       ID IGUAL exp idexps FECHACHAV { printf("tid \t-> typeid { ID = exp idexps }\n");}
-|      exp FECHACOL OF exp     { printf("tid \t-> typeid [ exp ] OF exp\n");};
+      ABRECHAV  ID IGUAL exp idexps FECHACHAV { printf("tid \t-> typeid { ID = exp idexps }\n");}
+|     ABRECOL  exp FECHACOL OF exp     { printf("tid \t-> typeid [ exp ] OF exp\n");};
 
 
 

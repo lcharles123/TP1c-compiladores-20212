@@ -20,31 +20,53 @@ typedef struct Var_n Var_n;
 typedef struct Dec_n Dec_n;
 typedef struct Tipo_n Tipo_n;
 
+typedef enum //usar esse enum para diferenciar entre os diversos tipos
+{
+    //exp
+    exp_t = 1,
+    lvalue_t, //exp
+    nil_t,
+    expseq_t,
+    net_t,
+
+    int_t,
+    str_t,
+    
+    call_t,
+    op_t,
+    
+    record_t, //tid
+    atribui_t,
+    if_t,
+    while_t,
+    for_t,
+    break_t,
+    let_t,
+    
+    mais_op, menos_op, //operadores exp 
+    vezes_op, dividir_op, 
+    igual_op, diferente_op, 
+    menor_op, maior_op, 
+    menorig_op, maiorig_op, 
+    e_op, ou_op,
+    
+    ty_nome, //nomes de tipos
+    ty_record,
+    ty_arranjo,
+    
+    normal_t, //tipo de variavel
+    func_t,
+    arranjo_t,
+    
+    fundec_t, //decs
+    vardec_t,
+    tydec
+} Tipo_e;
+
 typedef struct Exp_n //estrutura para os tipos derivados do nao terminal exp
 {
     int pos; //posiçao no código
-    
-    enum 
-    {
-        lvalue_t,
-        nil_t,
-        expseq_t,
-        net_t,
-
-        int_t,
-        str_t,
-        
-        call_t,
-        op_t,
-        
-        record_t, //tid
-        atribui_t,
-        if_t,
-        while_t,
-        for_t,
-        break_t,
-        let_t,
-    } tipoExp ;
+    Tipo_e tipoExp;
 
     Var_n *var;
     int nil;
@@ -59,10 +81,10 @@ typedef struct Exp_n //estrutura para os tipos derivados do nao terminal exp
 
     struct
     {
-        enum { mais, menos, vezes, dividir, igual, diferente, menor, maior, menorig, maiorig, e, ou } tipoOp;
-      
-      Exp_n* opEsq;
-      Exp_n* opDir;
+        Tipo_e tipoOp;
+
+        Exp_n* opEsq;
+        Exp_n* opDir;
     } oper;
 
     struct
@@ -119,12 +141,7 @@ typedef struct Exp_n //estrutura para os tipos derivados do nao terminal exp
 typedef struct Var_n
 {
     int pos;
-    enum
-    {
-        normal_t,
-        func_t,
-        arranjo_t
-    } tipoVar;
+    Tipo_e tipoVar;
     
     struct
     {
@@ -146,12 +163,7 @@ typedef struct Var_n
 typedef struct Dec_n
 {
     int pos;
-    enum
-    {
-        fundec_t,
-        vardec_t,
-        tydec
-    }tipoDec;
+    Tipo_e tipoDec;
     
     Dec_n* funDecList;
     Tipo_n* tylist;
@@ -181,12 +193,7 @@ typedef struct Dec_n
 typedef struct Tipo_n
 {
     int pos;
-    enum
-    {
-        ty_nome,
-        ty_record,
-        ty_arranjo
-    }tipoTipo;
+    Tipo_e tipoTipo;
     
     struct
     {
