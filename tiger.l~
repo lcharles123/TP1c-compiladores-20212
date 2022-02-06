@@ -1,5 +1,6 @@
 %{
 #include <stdio.h>
+#include "absyn.h"
 #include "y.tab.h"
 
 int pos = 0; /* contador de caracteres */

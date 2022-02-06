@@ -50,110 +50,111 @@ extern int yydebug;
   enum yytokentype
   {
     NUM = 258,
-    NIL = 259,
-    ABREPAR = 260,
-    FECHAPAR = 261,
-    ABRECHAV = 262,
-    FECHACHAV = 263,
-    ABRECOL = 264,
-    FECHACOL = 265,
-    MENOS = 266,
-    MAIS = 267,
-    VEZES = 268,
-    DIVIDIR = 269,
-    IGUAL = 270,
-    DIFERENTE = 271,
-    MENOR = 272,
-    MENORIG = 273,
-    MAIOR = 274,
-    MAIORIG = 275,
-    E = 276,
-    OU = 277,
-    OF = 278,
-    ATRIBUI = 279,
-    IF = 280,
-    THEN = 281,
-    ELSE = 282,
-    WHILE = 283,
-    DO = 284,
-    FOR = 285,
-    TO = 286,
-    BREAK = 287,
-    LET = 288,
-    IN = 289,
-    END = 290,
-    TIPO = 291,
-    DOISPONTOS = 292,
-    VAR = 293,
-    FUNCTION = 294,
-    PONTO = 295,
-    PONTOVIRG = 296,
-    VIRG = 297,
-    ID = 298,
-    REAL = 299,
-    STRING = 300,
-    ARRAY = 301
+    STRING = 259,
+    NIL = 260,
+    ABREPAR = 261,
+    FECHAPAR = 262,
+    ABRECHAV = 263,
+    FECHACHAV = 264,
+    ABRECOL = 265,
+    FECHACOL = 266,
+    MENOS = 267,
+    MAIS = 268,
+    VEZES = 269,
+    DIVIDIR = 270,
+    IGUAL = 271,
+    DIFERENTE = 272,
+    MENOR = 273,
+    MENORIG = 274,
+    MAIOR = 275,
+    MAIORIG = 276,
+    E = 277,
+    OU = 278,
+    OF = 279,
+    ATRIBUI = 280,
+    IF = 281,
+    THEN = 282,
+    ELSE = 283,
+    WHILE = 284,
+    DO = 285,
+    FOR = 286,
+    TO = 287,
+    BREAK = 288,
+    LET = 289,
+    IN = 290,
+    END = 291,
+    TIPO = 292,
+    DOISPONTOS = 293,
+    VAR = 294,
+    FUNCTION = 295,
+    PONTO = 296,
+    PONTOVIRG = 297,
+    VIRG = 298,
+    ID = 299,
+    ARRAY = 300
   };
 #endif
 /* Tokens.  */
 #define NUM 258
-#define NIL 259
-#define ABREPAR 260
-#define FECHAPAR 261
-#define ABRECHAV 262
-#define FECHACHAV 263
-#define ABRECOL 264
-#define FECHACOL 265
-#define MENOS 266
-#define MAIS 267
-#define VEZES 268
-#define DIVIDIR 269
-#define IGUAL 270
-#define DIFERENTE 271
-#define MENOR 272
-#define MENORIG 273
-#define MAIOR 274
-#define MAIORIG 275
-#define E 276
-#define OU 277
-#define OF 278
-#define ATRIBUI 279
-#define IF 280
-#define THEN 281
-#define ELSE 282
-#define WHILE 283
-#define DO 284
-#define FOR 285
-#define TO 286
-#define BREAK 287
-#define LET 288
-#define IN 289
-#define END 290
-#define TIPO 291
-#define DOISPONTOS 292
-#define VAR 293
-#define FUNCTION 294
-#define PONTO 295
-#define PONTOVIRG 296
-#define VIRG 297
-#define ID 298
-#define REAL 299
-#define STRING 300
-#define ARRAY 301
+#define STRING 259
+#define NIL 260
+#define ABREPAR 261
+#define FECHAPAR 262
+#define ABRECHAV 263
+#define FECHACHAV 264
+#define ABRECOL 265
+#define FECHACOL 266
+#define MENOS 267
+#define MAIS 268
+#define VEZES 269
+#define DIVIDIR 270
+#define IGUAL 271
+#define DIFERENTE 272
+#define MENOR 273
+#define MENORIG 274
+#define MAIOR 275
+#define MAIORIG 276
+#define E 277
+#define OU 278
+#define OF 279
+#define ATRIBUI 280
+#define IF 281
+#define THEN 282
+#define ELSE 283
+#define WHILE 284
+#define DO 285
+#define FOR 286
+#define TO 287
+#define BREAK 288
+#define LET 289
+#define IN 290
+#define END 291
+#define TIPO 292
+#define DOISPONTOS 293
+#define VAR 294
+#define FUNCTION 295
+#define PONTO 296
+#define PONTOVIRG 297
+#define VIRG 298
+#define ID 299
+#define ARRAY 300
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 43 "tiger.y"
+#line 45 "tiger.y"
 
-    Exp_n exp;
-    int pos;
     int intVal; //acessível por yyval.intVal 
-    //typedef char* stringVal;
-    //char* idVal;
+    char* strVal;
+    
+    Exp_n* exp, expList;
+    
+    Var_n* var;
+    Dec_n* dec, decList, varDec, tyDec, funDec, argsDec;
+    Tipo_n* tid, ty, tyList;
 
-#line 157 "y.tab.h"
+#line 158 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

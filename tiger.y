@@ -5,9 +5,10 @@
 
 #include "tabela.h"
 #include "absyn.h"
+#include "semantico.h"
 
 #include "y.tab.h"
-int yydebug=1; 
+int yydebug = 1; 
 //absyn_exp* ast;
 
 /* Declarações para fazer interface entre o lexer e este arquivo, são compartilhadas entre o código do lex e yacc */
@@ -20,7 +21,8 @@ extern int col;      /* conta as colunas */
 extern char* yytext; /* valor do token na entrada */
 extern int yyval;    /* valor de variaveis, atribuído no .l */
 
-Exp_n astRaiz;
+Exp_n* astRaiz; /** Árvore de derivação */
+
 Tabela* tab; /** Tabela de simbolos */
 
 
@@ -41,11 +43,14 @@ https://www.ibm.com/docs/en/aix/7.2?topic=information-yacc-grammar-file-declarat
 */
 %union //tipos dos tokens
 {
-    Exp_n exp;
-    int pos;
     int intVal; //acessível por yyval.intVal 
-    //typedef char* stringVal;
-    //char* idVal;
+    char* strVal;
+    
+    Exp_n* exp, expList;
+    
+    Var_n* var;
+    Dec_n* dec, decList, varDec, tyDec, funDec, argsDec;
+    Tipo_n* tid, ty, tyList;
 }
 
 /*%type 	Identifies the type of nonterminals. Type-checking is performed when this construct is present. */
@@ -54,15 +59,30 @@ https://www.ibm.com/docs/en/aix/7.2?topic=information-yacc-grammar-file-declarat
 para chegar tipos, o yacc testa se nome é do mesmo tipo de tag: uma variável presente na %union acima
 em %type, a tag é obrigatória ; nas outras %keywords, ela é opcional
 */
-//%type <intVal> NUM
+
 /* POSIX yacc reserves %type to nonterminals  protanto para os terminais usar diretamente em %token */
 //tipos retornados pelos não terminais em $n através de $$
-%type <exp> exp inicio
 
 %token <intVal> NUM
+%token <strVal> STRING
+// tipos de nao terminais 
+/*
+%type <exp> exp
+%type <expList> expseq expseq1
+%type <var> lvalue typeid
+%type <dec> dec
+%type <decList> decs 
+%type <varDec> vardec
+%type <tyDec> tydec
+%type <funDec> fundec
+%type <argsDec> args args1
+%type <tid> tid
+%type <ty> ty
+%type <tyList> tyfields tyfields1 
+*/
 
-%token NIL ABREPAR FECHAPAR ABRECHAV FECHACHAV ABRECOL FECHACOL MENOS MAIS VEZES DIVIDIR IGUAL DIFERENTE MENOR MENORIG MAIOR MAIORIG E OU OF ATRIBUI IF THEN ELSE WHILE DO FOR TO BREAK LET IN END TIPO DOISPONTOS VAR FUNCTION PONTO PONTOVIRG VIRG ID REAL STRING ARRAY
-/*%token ABREPAR FECHAPAR ABRECHAV FECHACHAV ABRECOL FECHACOL MENOS MAIS VEZES DIVIDIR IGUAL DIFERENTE MENOR MENORIG MAIOR MAIORIG E OU OF ATRIBUI IF THEN ELSE WHILE DO FOR TO BREAK LET IN END TIPO DOISPONTOS VAR FUNCTION PONTO PONTOVIRG VIRG ID <intVal> NUM REAL STRING ARRAY*/
+%token NIL ABREPAR FECHAPAR ABRECHAV FECHACHAV ABRECOL FECHACOL MENOS MAIS VEZES DIVIDIR IGUAL DIFERENTE MENOR MENORIG MAIOR MAIORIG E OU OF ATRIBUI IF THEN ELSE WHILE DO FOR TO BREAK LET IN END TIPO DOISPONTOS VAR FUNCTION PONTO PONTOVIRG VIRG ID ARRAY
+/*%token ABREPAR FECHAPAR ABRECHAV FECHACHAV ABRECOL FECHACOL MENOS MAIS VEZES DIVIDIR IGUAL DIFERENTE MENOR MENORIG MAIOR MAIORIG E OU OF ATRIBUI IF THEN ELSE WHILE DO FOR TO BREAK LET IN END TIPO DOISPONTOS VAR FUNCTION PONTO PONTOVIRG VIRG ID <intVal> NUM STRING ARRAY*/
 
 %nonassoc OF IF THEN WHILE DO FOR TO ATRIBUI TIPO FUNCTION          /* menor precedencia */
 %nonassoc OU
@@ -80,17 +100,17 @@ em %type, a tag é obrigatória ; nas outras %keywords, ela é opcional
 
 %%
 
-inicio : exp                            { printf("inicio \t-> exp\n"); astRaiz=$1 ;};
+inicio : exp                            { printf("inicio \t-> exp\n"); ;};
 
 
 exp : lvalue                            { printf("exp \t-> lvalue\n");} 
 |     NIL                               { printf("exp \t-> NIL()\n");/** Term*/}
 |     ABREPAR expseq FECHAPAR           { printf("exp \t-> ( expseq )\n");/** Term*/}
-|     NUM                               { printf("exp \t-> NUM(%d)\n", yylval.intVal); $$=$1 ; /** Term*/}
+|     NUM                               { printf("exp \t-> NUM(%d)\n", yylval.intVal); ; /** Term*/}
 |     STRING                            { printf("exp \t-> STRING(%s)\n", yytext);/** Term*/}
 |     MENOS exp                         { printf("exp \t-> - exp\n");}
 |     ID ABREPAR args FECHAPAR          { printf("exp \t-> ID ( args )\n");} //call
-|     exp MAIS exp                      { printf("exp \t-> exp + exp\n");$$ = $1;} //op inicio
+|     exp MAIS exp                      { printf("exp \t-> exp + exp\n");;} //op inicio
 |     exp MENOS exp                     { printf("exp \t-> exp - exp\n");}
 |     exp VEZES exp                     { printf("exp \t-> exp * exp\n");}
 |     exp DIVIDIR exp                   { printf("exp \t-> exp / exp\n");}
@@ -103,6 +123,7 @@ exp : lvalue                            { printf("exp \t-> lvalue\n");}
 |     exp E exp                         { printf("exp \t-> exp & exp\n");}
 |     exp OU exp                        { printf("exp \t-> exp | exp\n");}      //op fim
 |     tid                               { printf("exp \t-> tid\n");} /*modificação aqui*/
+
 |     lvalue ATRIBUI exp                { printf("exp \t-> lvalue := exp\n");}
 |     IF exp THEN exp ELSE exp          { printf("exp \t-> IF exp THEN exp ELSE exp\n");}
 |     IF exp THEN exp                   { printf("exp \t-> IF exp THEN exp\n");}
@@ -112,8 +133,10 @@ exp : lvalue                            { printf("exp \t-> lvalue\n");}
 |     LET decs IN expseq END	        { printf("exp \t-> LET decs IN expseq END\n");  };
 
 tid:  
-      ABRECHAV ID IGUAL exp idexps FECHACHAV { printf("tid \t-> typeid { ID = exp idexps }\n");}
-|     ABRECOL exp FECHACOL OF exp     { printf("tid \t-> typeid [ exp ] OF exp\n");};
+      ABRECHAV  ID IGUAL exp idexps FECHACHAV { printf("tid \t-> typeid { ID = exp idexps }\n");}
+|     ABRECOL  exp FECHACOL OF exp     { printf("tid \t-> typeid [ exp ] OF exp\n");};
+
+
 
 decs :
     dec decs                            { printf("decs \t-> dec decs\n");}
@@ -205,9 +228,9 @@ int main(int argc, char** argv)
     rewind(yyin);*/
     
     //while(yylex()) printf("%s\n", yytext); ;
-    printf("Listagem das regras de derivação para acompanhamento:\n");
+    //printf("Listagem das regras de derivação para acompanhamento:\n");
     yyparse(); //fica chamando o yylex(), vulgo "pedindo tokens"
-    printf("\nACEITO!\n"); // linguagem reconhecida
+    //printf("\nACEITO!\n"); // linguagem reconhecida
     
     fclose(yyin);
     Tabela* t = T_init(); 

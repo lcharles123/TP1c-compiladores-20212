@@ -6,107 +6,195 @@
 #include <string.h>
 #include <assert.h>
 
-typedef struct Exp Exp_n; //Exp_nó é uma estrutura que será um nó na árvore
+#include "tabela.h"
 
-typedef struct Var var_n;
-typedef struct Dec dec_n;
-typedef struct Tipo tipo_n;
-typedef struct Const const_n;
+/*
+typedef struct Exp *Exp_n; //Exp_nó é uma estrutura que será um nó na árvore
 
-struct Exp //estrutura para os tipos derivados do nao terminal exp
+typedef struct Var *var_n;
+typedef struct Dec *dec_n;
+typedef struct Tipo *tipo_n;
+typedef struct Const *const_n;*/
+typedef struct Exp_n Exp_n; //necessario para tipos recursivos
+typedef struct Var_n Var_n;
+typedef struct Dec_n Dec_n;
+typedef struct Tipo_n Tipo_n;
+
+typedef struct Exp_n //estrutura para os tipos derivados do nao terminal exp
 {
     int pos; //posiçao no código
     
     enum 
     {
-      var_t,
-      nil_t,
-      int_t,
-      str_t,
-      call_t,
-      op_t,
-      record_t,
-      seq_t,
-      assign_t,
-      if_t,
-      while_t,
-      for_t,
-      break_t,
-      let_t,
-      array_t
-    } tipo;
-    
-    Var *var;
+        lvalue_t,
+        nil_t,
+        expseq_t,
+        net_t,
+
+        int_t,
+        str_t,
+        
+        call_t,
+        op_t,
+        
+        record_t, //tid
+        atribui_t,
+        if_t,
+        while_t,
+        for_t,
+        break_t,
+        let_t,
+    } tipoExp ;
+
+    Var_n *var;
     int nil;
-    int intt;
-    char *str;
+    int int_n;
+    char *str_n;
 
     struct
     {
       char* id;
-      Exp *args; //args eh um vetor do tipo Exp
-    } func;
+      Exp_n *args; //args eh um vetor do tipo Exp
+    } call; //chamada proc
 
     struct
     {
-      ABSYN_OP   op;
-      absyn_exp *left;
-      absyn_exp *right;
-    } op;
+        enum { mais, menos, vezes, dividir, igual, diferente, menor, maior, menorig, maiorig, e, ou } tipoOp;
+      
+      Exp_n* opEsq;
+      Exp_n* opDir;
+    } oper;
 
     struct
     {
-      sym_symbol        *typ;
-      absyn_efield_list *fields;
+      Tipo_n* tipo;
+      Exp_n* expList;
     } record;
 
-    absyn_exp_list *seq;
+    struct
+    {
+      Var_n *var;
+      Exp_n *exp;
+    } atribui;
 
     struct
     {
-      absyn_var *var;
-      absyn_exp *exp;
-    } assign;
+      Exp_n *test;
+      Exp_n *then;
+      Exp_n *cc;
+    } se;
 
     struct
     {
-      absyn_exp *test;
-      absyn_exp *then;
-      absyn_exp *elsee;
-    } iff;
+      Exp_n *test;
+      Exp_n *body;
+    } enquanto;
 
     struct
     {
-      absyn_exp *test;
-      absyn_exp *body;
-    } whilee;
+      Var_n *var; //symbol?
+      Exp_n *lo;
+      Exp_n *hi;
+      Exp_n *body;
+      int escape;
+    } para;
+    
+    struct
+    { }quebrar; //precisa apenas de pos
 
     struct
     {
-      sym_symbol *var;
-      absyn_exp  *lo;
-      absyn_exp  *hi;
-      absyn_exp  *body;
-      bool              escape;
-    } forr;
-    /* breakk; - need only pos */
-    struct
-    {
-      absyn_dec_list *decs;
-      absyn_exp      *body;
+      Dec_n* decs;
+      Exp_n* body;
     } let;
 
     struct
     {
-      sym_symbol *typ;
-      absyn_exp  *size;
-      absyn_exp  *init;
-    } array;
+      Tipo_n *typ;//sym
+      int tamanho;
+      Exp_n *init;
+    } arranjo;
+}Exp_n;
 
-  
-};
+typedef struct Var_n
+{
+    int pos;
+    enum
+    {
+        normal_t,
+        func_t,
+        arranjo_t
+    } tipoVar;
+    
+    struct
+    {
+        Tabela* tab; //simbolo
+    }normalVar;
+    
+    struct
+    {
+        Tabela* tab; //simbolo
+    }funcVar;
+    
+    struct
+    {
+        Var_n* var; //simbolo
+        Exp_n* exp;
+    }arranjoVar;
+}Var_n;
 
+typedef struct Dec_n
+{
+    int pos;
+    enum
+    {
+        fundec_t,
+        vardec_t,
+        tydec
+    }tipoDec;
+    
+    Dec_n* funDecList;
+    Tipo_n* tylist;
+    struct
+    {
+        Tabela tab;
+        Exp_n init;
+        int escape;
+    }varDec;
+    struct
+    {
+        Tabela tab;
+        Exp_n init;
+        int escape;
+    }funDec;
+    struct
+    {
+        Tabela tab;
+        Exp_n init;
+        int escape;
+    }tyDec;
+    
+    
 
+}Dec_n;
+
+typedef struct Tipo_n
+{
+    int pos;
+    enum
+    {
+        ty_nome,
+        ty_record,
+        ty_arranjo
+    }tipoTipo;
+    
+    struct
+    {
+        Dec_n* tydec;
+        Tabela*  tab;
+    } tipo;
+
+}Tipo_n;
 
 
 

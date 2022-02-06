@@ -99,15 +99,13 @@ yyerror (char *s)
    This struct is necessary for getting in typeidsubscript
    rule two types through reduce step
 */
-struct
-typeid_subscript
+struct typeid_subscript
 {
     sym_symbol *sym;
     absyn_exp  *exp;
 };
 
-struct typeid_subscript*
-new_typeid_subscript (sym_symbol *sym_ptr,
+struct typeid_subscript* new_typeid_subscript (sym_symbol *sym_ptr,
                       absyn_exp  *exp_ptr)
 {
     struct typeid_subscript *t  = new (sizeof (*t));
@@ -118,7 +116,7 @@ new_typeid_subscript (sym_symbol *sym_ptr,
     return t;
 }
 
-#line 122 "y.tab.c"
+#line 120 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -262,7 +260,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 55 "tiger_grm.y"
+#line 53 "tiger_grm.y"
 
 	int                        pos;
 	int                        ival;
@@ -286,7 +284,7 @@ union YYSTYPE
     struct typeid_subscript   *typeid_sub;
 	
 
-#line 290 "y.tab.c"
+#line 288 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -666,17 +664,17 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,   141,   141,   146,   149,   154,   159,   167,   170,   175,
-     180,   188,   191,   194,   197,   200,   203,   206,   209,   212,
-     215,   218,   221,   224,   227,   230,   233,   236,   242,   245,
-     251,   261,   264,   270,   273,   276,   279,   282,   290,   298,
-     301,   304,   307,   310,   313,   319,   322,   325,   328,   339,
-     344,   348,   352,   355,   361,   366,   371,   376,   384,   389,
-     394,   397,   400,   403,   409,   412,   418,   421,   427,   430,
-     433,   436,   442,   449,   456,   459,   462,   465,   471,   476,
-     481,   489,   492,   495,   501,   506,   513,   518,   526,   531,
-     534,   537,   543,   548,   551,   557,   560,   565,   570,   578,
-     583,   586,   592,   595,   598,   601,   607
+       0,   138,   138,   141,   142,   143,   144,   147,   148,   149,
+     150,   153,   154,   155,   156,   157,   158,   159,   160,   161,
+     162,   163,   164,   165,   166,   167,   168,   169,   171,   172,
+     175,   177,   178,   182,   183,   184,   185,   186,   189,   195,
+     198,   201,   204,   207,   210,   216,   219,   222,   225,   236,
+     241,   245,   249,   252,   258,   263,   268,   273,   281,   286,
+     291,   294,   297,   300,   306,   309,   315,   318,   324,   327,
+     330,   333,   339,   346,   353,   356,   359,   362,   368,   373,
+     378,   386,   389,   392,   398,   403,   410,   415,   423,   428,
+     431,   434,   440,   445,   448,   454,   457,   462,   467,   475,
+     480,   483,   489,   492,   495,   498,   504
 };
 #endif
 
@@ -1706,705 +1704,683 @@ yyreduce:
   switch (yyn)
     {
   case 2:
-#line 142 "tiger_grm.y"
-    {absyn_root = (yyvsp[0].exp);}
-#line 1712 "y.tab.c"
+#line 138 "tiger_grm.y"
+                       {absyn_root = (yyvsp[0].exp);}
+#line 1710 "y.tab.c"
     break;
 
   case 3:
-#line 147 "tiger_grm.y"
-    {(yyval.explist) = NULL;}
-#line 1718 "y.tab.c"
+#line 141 "tiger_grm.y"
+                 {(yyval.explist) = NULL;}
+#line 1716 "y.tab.c"
     break;
 
   case 4:
-#line 150 "tiger_grm.y"
-    {
-      (yyval.explist) = absyn_new_exp_list ((yyvsp[0].exp), NULL);
-    }
-#line 1726 "y.tab.c"
+#line 142 "tiger_grm.y"
+              {         (yyval.explist) = absyn_new_exp_list ((yyvsp[0].exp), NULL);       }
+#line 1722 "y.tab.c"
     break;
 
   case 5:
-#line 155 "tiger_grm.y"
-    {
-      (yyval.explist) = absyn_new_exp_list ((yyvsp[-2].exp), (yyvsp[0].explist));
-    }
-#line 1734 "y.tab.c"
+#line 143 "tiger_grm.y"
+                                  {         (yyval.explist) = absyn_new_exp_list ((yyvsp[-2].exp), (yyvsp[0].explist));       }
+#line 1728 "y.tab.c"
     break;
 
   case 6:
-#line 160 "tiger_grm.y"
-    {
-      (yyval.explist) = absyn_new_exp_list (NULL, (yyvsp[0].explist));
-    }
-#line 1742 "y.tab.c"
+#line 144 "tiger_grm.y"
+                                    {         (yyval.explist) = absyn_new_exp_list (NULL, (yyvsp[0].explist));       }
+#line 1734 "y.tab.c"
     break;
 
   case 7:
-#line 168 "tiger_grm.y"
-    {(yyval.explist) = NULL;}
-#line 1748 "y.tab.c"
+#line 147 "tiger_grm.y"
+                 {(yyval.explist) = NULL;}
+#line 1740 "y.tab.c"
     break;
 
   case 8:
-#line 171 "tiger_grm.y"
-    {
-      (yyval.explist) = absyn_new_exp_list ((yyvsp[0].exp), NULL);
-    }
-#line 1756 "y.tab.c"
+#line 148 "tiger_grm.y"
+              {         (yyval.explist) = absyn_new_exp_list ((yyvsp[0].exp), NULL);       }
+#line 1746 "y.tab.c"
     break;
 
   case 9:
-#line 176 "tiger_grm.y"
-    {
-      (yyval.explist) = absyn_new_exp_list ((yyvsp[-2].exp), (yyvsp[0].explist));
-    }
-#line 1764 "y.tab.c"
+#line 149 "tiger_grm.y"
+                                    {         (yyval.explist) = absyn_new_exp_list ((yyvsp[-2].exp), (yyvsp[0].explist));       }
+#line 1752 "y.tab.c"
     break;
 
   case 10:
-#line 181 "tiger_grm.y"
-    {
-      (yyval.explist) = absyn_new_exp_list (NULL, (yyvsp[0].explist));
-    }
-#line 1772 "y.tab.c"
+#line 150 "tiger_grm.y"
+                                      {         (yyval.explist) = absyn_new_exp_list (NULL, (yyvsp[0].explist));       }
+#line 1758 "y.tab.c"
     break;
 
   case 11:
-#line 189 "tiger_grm.y"
-    {(yyval.exp) = absyn_new_var_exp (errm_tok_pos, (yyvsp[0].var));}
-#line 1778 "y.tab.c"
+#line 153 "tiger_grm.y"
+                        {(yyval.exp) = absyn_new_var_exp (errm_tok_pos, (yyvsp[0].var));}
+#line 1764 "y.tab.c"
     break;
 
   case 12:
-#line 192 "tiger_grm.y"
-    {(yyval.exp) = absyn_new_nil_exp (errm_tok_pos);}
-#line 1784 "y.tab.c"
+#line 154 "tiger_grm.y"
+              {(yyval.exp) = absyn_new_nil_exp (errm_tok_pos);}
+#line 1770 "y.tab.c"
     break;
 
   case 13:
-#line 195 "tiger_grm.y"
-    {(yyval.exp) = absyn_new_int_exp (errm_tok_pos, (yyvsp[0].ival));}
-#line 1790 "y.tab.c"
+#line 155 "tiger_grm.y"
+              {(yyval.exp) = absyn_new_int_exp (errm_tok_pos, (yyvsp[0].ival));}
+#line 1776 "y.tab.c"
     break;
 
   case 14:
-#line 198 "tiger_grm.y"
-    {(yyval.exp) = absyn_new_str_exp (errm_tok_pos, (yyvsp[0].sval));}
-#line 1796 "y.tab.c"
+#line 156 "tiger_grm.y"
+                 {(yyval.exp) = absyn_new_str_exp (errm_tok_pos, (yyvsp[0].sval));}
+#line 1782 "y.tab.c"
     break;
 
   case 15:
-#line 201 "tiger_grm.y"
-    {(yyval.exp) = (yyvsp[0].exp);}
-#line 1802 "y.tab.c"
+#line 157 "tiger_grm.y"
+                   {(yyval.exp) = (yyvsp[0].exp);}
+#line 1788 "y.tab.c"
     break;
 
   case 16:
-#line 204 "tiger_grm.y"
-    {(yyval.exp) = (yyvsp[0].exp);}
-#line 1808 "y.tab.c"
+#line 158 "tiger_grm.y"
+                   {(yyval.exp) = (yyvsp[0].exp);}
+#line 1794 "y.tab.c"
     break;
 
   case 17:
-#line 207 "tiger_grm.y"
-    {(yyval.exp) = (yyvsp[0].exp);}
-#line 1814 "y.tab.c"
+#line 159 "tiger_grm.y"
+                  {(yyval.exp) = (yyvsp[0].exp);}
+#line 1800 "y.tab.c"
     break;
 
   case 18:
-#line 210 "tiger_grm.y"
-    {(yyval.exp) = (yyvsp[0].exp);}
-#line 1820 "y.tab.c"
+#line 160 "tiger_grm.y"
+                {(yyval.exp) = (yyvsp[0].exp);}
+#line 1806 "y.tab.c"
     break;
 
   case 19:
-#line 213 "tiger_grm.y"
-    {(yyval.exp) = (yyvsp[0].exp);}
-#line 1826 "y.tab.c"
+#line 161 "tiger_grm.y"
+                    {(yyval.exp) = (yyvsp[0].exp);}
+#line 1812 "y.tab.c"
     break;
 
   case 20:
-#line 216 "tiger_grm.y"
-    {(yyval.exp) = (yyvsp[0].exp);}
-#line 1832 "y.tab.c"
+#line 162 "tiger_grm.y"
+                    {(yyval.exp) = (yyvsp[0].exp);}
+#line 1818 "y.tab.c"
     break;
 
   case 21:
-#line 219 "tiger_grm.y"
-    {(yyval.exp) = (yyvsp[0].exp);}
-#line 1838 "y.tab.c"
+#line 163 "tiger_grm.y"
+                 {(yyval.exp) = (yyvsp[0].exp);}
+#line 1824 "y.tab.c"
     break;
 
   case 22:
-#line 222 "tiger_grm.y"
-    {(yyval.exp) = (yyvsp[0].exp);}
-#line 1844 "y.tab.c"
+#line 164 "tiger_grm.y"
+                     {(yyval.exp) = (yyvsp[0].exp);}
+#line 1830 "y.tab.c"
     break;
 
   case 23:
-#line 225 "tiger_grm.y"
-    {(yyval.exp) = (yyvsp[0].exp);}
-#line 1850 "y.tab.c"
+#line 165 "tiger_grm.y"
+                 {(yyval.exp) = (yyvsp[0].exp);}
+#line 1836 "y.tab.c"
     break;
 
   case 24:
-#line 228 "tiger_grm.y"
-    {(yyval.exp) = (yyvsp[0].exp);}
-#line 1856 "y.tab.c"
+#line 166 "tiger_grm.y"
+                {(yyval.exp) = (yyvsp[0].exp);}
+#line 1842 "y.tab.c"
     break;
 
   case 25:
-#line 231 "tiger_grm.y"
-    {(yyval.exp) = (yyvsp[0].exp);}
-#line 1862 "y.tab.c"
+#line 167 "tiger_grm.y"
+              {(yyval.exp) = (yyvsp[0].exp);}
+#line 1848 "y.tab.c"
     break;
 
   case 26:
-#line 234 "tiger_grm.y"
-    {(yyval.exp) = absyn_new_break_exp (errm_tok_pos);}
-#line 1868 "y.tab.c"
+#line 168 "tiger_grm.y"
+                {(yyval.exp) = absyn_new_break_exp (errm_tok_pos);}
+#line 1854 "y.tab.c"
     break;
 
   case 27:
-#line 237 "tiger_grm.y"
-    {(yyval.exp) = (yyvsp[0].exp);}
-#line 1874 "y.tab.c"
+#line 169 "tiger_grm.y"
+              {(yyval.exp) = (yyvsp[0].exp);}
+#line 1860 "y.tab.c"
     break;
 
   case 28:
-#line 243 "tiger_grm.y"
-    {(yyval.exp) = absyn_new_seq_exp (errm_tok_pos, (yyvsp[-1].explist));}
-#line 1880 "y.tab.c"
+#line 171 "tiger_grm.y"
+                                                        {(yyval.exp) = absyn_new_seq_exp (errm_tok_pos, (yyvsp[-1].explist));}
+#line 1866 "y.tab.c"
     break;
 
   case 29:
-#line 246 "tiger_grm.y"
-    {(yyval.exp) = absyn_new_seq_exp (errm_tok_pos, NULL);}
-#line 1886 "y.tab.c"
+#line 172 "tiger_grm.y"
+                                 {(yyval.exp) = absyn_new_seq_exp (errm_tok_pos, NULL);}
+#line 1872 "y.tab.c"
     break;
 
   case 30:
-#line 252 "tiger_grm.y"
-    {
-      (yyval.exp) = absyn_new_op_exp (errm_tok_pos,
-                             ABSYN_MINUS_OP,
-                             absyn_new_int_exp (errm_tok_pos, 0),
-                             (yyvsp[0].exp));
-    }
-#line 1897 "y.tab.c"
+#line 175 "tiger_grm.y"
+                                 {         (yyval.exp) = absyn_new_op_exp (errm_tok_pos,                                ABSYN_MINUS_OP,                                absyn_new_int_exp (errm_tok_pos, 0),                                (yyvsp[0].exp));       }
+#line 1878 "y.tab.c"
     break;
 
   case 31:
-#line 262 "tiger_grm.y"
-    {(yyval.exp) = absyn_new_call_exp (errm_tok_pos, (yyvsp[-3].symbol), (yyvsp[-1].explist));}
-#line 1903 "y.tab.c"
+#line 177 "tiger_grm.y"
+                                                          {(yyval.exp) = absyn_new_call_exp (errm_tok_pos, (yyvsp[-3].symbol), (yyvsp[-1].explist));}
+#line 1884 "y.tab.c"
     break;
 
   case 32:
-#line 265 "tiger_grm.y"
-    {(yyval.exp) = absyn_new_call_exp (errm_tok_pos, (yyvsp[-3].symbol), NULL);}
-#line 1909 "y.tab.c"
+#line 178 "tiger_grm.y"
+                                     {(yyval.exp) = absyn_new_call_exp (errm_tok_pos, (yyvsp[-3].symbol), NULL);}
+#line 1890 "y.tab.c"
     break;
 
   case 33:
-#line 271 "tiger_grm.y"
-    {(yyval.exp) = absyn_new_op_exp (errm_tok_pos, ABSYN_PLUS_OP, (yyvsp[-2].exp), (yyvsp[0].exp));}
-#line 1915 "y.tab.c"
+#line 182 "tiger_grm.y"
+                       {(yyval.exp) = absyn_new_op_exp (errm_tok_pos, ABSYN_PLUS_OP, (yyvsp[-2].exp), (yyvsp[0].exp));}
+#line 1896 "y.tab.c"
     break;
 
   case 34:
-#line 274 "tiger_grm.y"
-    {(yyval.exp) = absyn_new_op_exp (errm_tok_pos, ABSYN_MINUS_OP, (yyvsp[-2].exp), (yyvsp[0].exp));}
-#line 1921 "y.tab.c"
+#line 183 "tiger_grm.y"
+                        {(yyval.exp) = absyn_new_op_exp (errm_tok_pos, ABSYN_MINUS_OP, (yyvsp[-2].exp), (yyvsp[0].exp));}
+#line 1902 "y.tab.c"
     break;
 
   case 35:
-#line 277 "tiger_grm.y"
-    {(yyval.exp) = absyn_new_op_exp (errm_tok_pos, ABSYN_TIMES_OP, (yyvsp[-2].exp), (yyvsp[0].exp));}
-#line 1927 "y.tab.c"
+#line 184 "tiger_grm.y"
+                        {(yyval.exp) = absyn_new_op_exp (errm_tok_pos, ABSYN_TIMES_OP, (yyvsp[-2].exp), (yyvsp[0].exp));}
+#line 1908 "y.tab.c"
     break;
 
   case 36:
-#line 280 "tiger_grm.y"
-    {(yyval.exp) = absyn_new_op_exp (errm_tok_pos, ABSYN_DIVIDE_OP, (yyvsp[-2].exp), (yyvsp[0].exp));}
-#line 1933 "y.tab.c"
+#line 185 "tiger_grm.y"
+                         {(yyval.exp) = absyn_new_op_exp (errm_tok_pos, ABSYN_DIVIDE_OP, (yyvsp[-2].exp), (yyvsp[0].exp));}
+#line 1914 "y.tab.c"
     break;
 
   case 37:
-#line 283 "tiger_grm.y"
-    {
-      (yyval.exp) = absyn_new_if_exp (errm_tok_pos,
-                             (yyvsp[-2].exp),
-                             (yyvsp[0].exp),
-                             absyn_new_int_exp (errm_tok_pos, 0));
-    }
-#line 1944 "y.tab.c"
+#line 186 "tiger_grm.y"
+                      {         (yyval.exp) = absyn_new_if_exp (errm_tok_pos,
+                             (yyvsp[-2].exp),                                (yyvsp[0].exp),
+                             absyn_new_int_exp (errm_tok_pos, 0));       }
+#line 1922 "y.tab.c"
     break;
 
   case 38:
-#line 291 "tiger_grm.y"
-    {
-      (yyval.exp) = absyn_new_if_exp (errm_tok_pos,
-                             (yyvsp[-2].exp),
+#line 190 "tiger_grm.y"
+    {         (yyval.exp) = absyn_new_if_exp (errm_tok_pos,                                (yyvsp[-2].exp),
                              absyn_new_int_exp (errm_tok_pos, 1),
                              (yyvsp[0].exp));
     }
-#line 1955 "y.tab.c"
+#line 1931 "y.tab.c"
     break;
 
   case 39:
-#line 299 "tiger_grm.y"
+#line 196 "tiger_grm.y"
     {(yyval.exp) = absyn_new_op_exp (errm_tok_pos, ABSYN_EQ_OP, (yyvsp[-2].exp), (yyvsp[0].exp));}
-#line 1961 "y.tab.c"
+#line 1937 "y.tab.c"
     break;
 
   case 40:
-#line 302 "tiger_grm.y"
+#line 199 "tiger_grm.y"
     {(yyval.exp) = absyn_new_op_exp (errm_tok_pos, ABSYN_NEQ_OP, (yyvsp[-2].exp), (yyvsp[0].exp));}
-#line 1967 "y.tab.c"
+#line 1943 "y.tab.c"
     break;
 
   case 41:
-#line 305 "tiger_grm.y"
+#line 202 "tiger_grm.y"
     {(yyval.exp) = absyn_new_op_exp (errm_tok_pos, ABSYN_GE_OP, (yyvsp[-2].exp), (yyvsp[0].exp));}
-#line 1973 "y.tab.c"
+#line 1949 "y.tab.c"
     break;
 
   case 42:
-#line 308 "tiger_grm.y"
+#line 205 "tiger_grm.y"
     {(yyval.exp) = absyn_new_op_exp (errm_tok_pos, ABSYN_GT_OP, (yyvsp[-2].exp), (yyvsp[0].exp));}
-#line 1979 "y.tab.c"
+#line 1955 "y.tab.c"
     break;
 
   case 43:
-#line 311 "tiger_grm.y"
+#line 208 "tiger_grm.y"
     {(yyval.exp) = absyn_new_op_exp (errm_tok_pos, ABSYN_LE_OP, (yyvsp[-2].exp), (yyvsp[0].exp));}
-#line 1985 "y.tab.c"
+#line 1961 "y.tab.c"
     break;
 
   case 44:
-#line 314 "tiger_grm.y"
+#line 211 "tiger_grm.y"
     {(yyval.exp) = absyn_new_op_exp (errm_tok_pos, ABSYN_LT_OP, (yyvsp[-2].exp), (yyvsp[0].exp));}
-#line 1991 "y.tab.c"
+#line 1967 "y.tab.c"
     break;
 
   case 45:
-#line 320 "tiger_grm.y"
+#line 217 "tiger_grm.y"
     {(yyval.var) = absyn_new_simple_var (errm_tok_pos, (yyvsp[0].symbol));}
-#line 1997 "y.tab.c"
+#line 1973 "y.tab.c"
     break;
 
   case 46:
-#line 323 "tiger_grm.y"
+#line 220 "tiger_grm.y"
     {(yyval.var) = absyn_new_subscript_var (errm_tok_pos, (yyvsp[-1].var), (yyvsp[0].exp));}
-#line 2003 "y.tab.c"
+#line 1979 "y.tab.c"
     break;
 
   case 47:
-#line 326 "tiger_grm.y"
+#line 223 "tiger_grm.y"
     {(yyval.var) = absyn_new_field_var (errm_tok_pos, (yyvsp[-2].var), (yyvsp[0].symbol));}
-#line 2009 "y.tab.c"
+#line 1985 "y.tab.c"
     break;
 
   case 48:
-#line 329 "tiger_grm.y"
+#line 226 "tiger_grm.y"
     {
       (yyval.var) = absyn_new_subscript_var (errm_tok_pos,
                                      absyn_new_simple_var (errm_tok_pos,
                                                            (yyvsp[0].typeid_sub)->sym),
                                      (yyvsp[0].typeid_sub)->exp);
     }
-#line 2020 "y.tab.c"
+#line 1996 "y.tab.c"
     break;
 
   case 49:
-#line 340 "tiger_grm.y"
+#line 237 "tiger_grm.y"
     {(yyval.exp) = absyn_new_array_exp (errm_tok_pos, (yyvsp[-2].typeid_sub)->sym, (yyvsp[-2].typeid_sub)->exp, (yyvsp[0].exp));}
-#line 2026 "y.tab.c"
+#line 2002 "y.tab.c"
     break;
 
   case 50:
-#line 345 "tiger_grm.y"
+#line 242 "tiger_grm.y"
     {(yyval.typeid_sub) = new_typeid_subscript ((yyvsp[-1].symbol), (yyvsp[0].exp));}
-#line 2032 "y.tab.c"
+#line 2008 "y.tab.c"
     break;
 
   case 51:
-#line 349 "tiger_grm.y"
+#line 246 "tiger_grm.y"
     {(yyval.exp) = (yyvsp[-1].exp);}
-#line 2038 "y.tab.c"
+#line 2014 "y.tab.c"
     break;
 
   case 52:
-#line 353 "tiger_grm.y"
+#line 250 "tiger_grm.y"
     {(yyval.exp) = absyn_new_record_exp (errm_tok_pos, (yyvsp[-3].symbol), (yyvsp[-1].efieldlist));}
-#line 2044 "y.tab.c"
+#line 2020 "y.tab.c"
     break;
 
   case 53:
-#line 356 "tiger_grm.y"
+#line 253 "tiger_grm.y"
     {(yyval.exp) = absyn_new_record_exp (errm_tok_pos, (yyvsp[-3].symbol), NULL);}
-#line 2050 "y.tab.c"
+#line 2026 "y.tab.c"
     break;
 
   case 54:
-#line 362 "tiger_grm.y"
+#line 259 "tiger_grm.y"
     {
       (yyval.efieldlist) = NULL;
+    }
+#line 2034 "y.tab.c"
+    break;
+
+  case 55:
+#line 264 "tiger_grm.y"
+    {
+      (yyval.efieldlist) = absyn_new_efield_list ((yyvsp[0].efield), NULL);
+    }
+#line 2042 "y.tab.c"
+    break;
+
+  case 56:
+#line 269 "tiger_grm.y"
+    {
+      (yyval.efieldlist) = absyn_new_efield_list ((yyvsp[-2].efield), (yyvsp[0].efieldlist));
+    }
+#line 2050 "y.tab.c"
+    break;
+
+  case 57:
+#line 274 "tiger_grm.y"
+    {
+      (yyval.efieldlist) = absyn_new_efield_list (NULL, (yyvsp[0].efieldlist));
     }
 #line 2058 "y.tab.c"
     break;
 
-  case 55:
-#line 367 "tiger_grm.y"
-    {
-      (yyval.efieldlist) = absyn_new_efield_list ((yyvsp[0].efield), NULL);
-    }
-#line 2066 "y.tab.c"
-    break;
-
-  case 56:
-#line 372 "tiger_grm.y"
-    {
-      (yyval.efieldlist) = absyn_new_efield_list ((yyvsp[-2].efield), (yyvsp[0].efieldlist));
-    }
-#line 2074 "y.tab.c"
-    break;
-
-  case 57:
-#line 377 "tiger_grm.y"
-    {
-      (yyval.efieldlist) = absyn_new_efield_list (NULL, (yyvsp[0].efieldlist));
-    }
-#line 2082 "y.tab.c"
-    break;
-
   case 58:
-#line 385 "tiger_grm.y"
+#line 282 "tiger_grm.y"
     {(yyval.efield) = absyn_new_efield ((yyvsp[-2].symbol), (yyvsp[0].exp));}
-#line 2088 "y.tab.c"
+#line 2064 "y.tab.c"
     break;
 
   case 59:
-#line 390 "tiger_grm.y"
+#line 287 "tiger_grm.y"
     {(yyval.exp) = absyn_new_assign_exp (errm_tok_pos, (yyvsp[-2].var), (yyvsp[0].exp));}
-#line 2094 "y.tab.c"
+#line 2070 "y.tab.c"
     break;
 
   case 60:
-#line 395 "tiger_grm.y"
+#line 292 "tiger_grm.y"
     {(yyval.exp) = absyn_new_if_exp (errm_tok_pos, (yyvsp[-4].exp), (yyvsp[-2].exp), (yyvsp[0].exp));}
-#line 2100 "y.tab.c"
+#line 2076 "y.tab.c"
     break;
 
   case 61:
-#line 398 "tiger_grm.y"
+#line 295 "tiger_grm.y"
     {(yyval.exp) = absyn_new_if_exp (errm_tok_pos, (yyvsp[-4].exp), NULL, (yyvsp[0].exp));}
-#line 2106 "y.tab.c"
+#line 2082 "y.tab.c"
     break;
 
   case 62:
-#line 401 "tiger_grm.y"
+#line 298 "tiger_grm.y"
     {(yyval.exp) = absyn_new_if_exp (errm_tok_pos, NULL, (yyvsp[-2].exp), (yyvsp[0].exp));}
-#line 2112 "y.tab.c"
+#line 2088 "y.tab.c"
     break;
 
   case 63:
-#line 404 "tiger_grm.y"
+#line 301 "tiger_grm.y"
     {(yyval.exp) = absyn_new_if_exp (errm_tok_pos, NULL, NULL, (yyvsp[0].exp));}
-#line 2118 "y.tab.c"
+#line 2094 "y.tab.c"
     break;
 
   case 64:
-#line 410 "tiger_grm.y"
+#line 307 "tiger_grm.y"
     {(yyval.exp) = absyn_new_if_exp (errm_tok_pos, (yyvsp[-2].exp), (yyvsp[0].exp), NULL);}
-#line 2124 "y.tab.c"
+#line 2100 "y.tab.c"
     break;
 
   case 65:
-#line 413 "tiger_grm.y"
+#line 310 "tiger_grm.y"
     {(yyval.exp) = absyn_new_if_exp (errm_tok_pos, NULL, (yyvsp[0].exp), NULL);}
-#line 2130 "y.tab.c"
+#line 2106 "y.tab.c"
     break;
 
   case 66:
-#line 419 "tiger_grm.y"
+#line 316 "tiger_grm.y"
     {(yyval.exp) = absyn_new_while_exp (errm_tok_pos, (yyvsp[-2].exp), (yyvsp[0].exp));}
-#line 2136 "y.tab.c"
+#line 2112 "y.tab.c"
     break;
 
   case 67:
-#line 422 "tiger_grm.y"
+#line 319 "tiger_grm.y"
     {(yyval.exp) = absyn_new_while_exp (errm_tok_pos, NULL, (yyvsp[0].exp));}
-#line 2142 "y.tab.c"
+#line 2118 "y.tab.c"
     break;
 
   case 68:
-#line 428 "tiger_grm.y"
+#line 325 "tiger_grm.y"
     {(yyval.exp) = absyn_new_for_exp (errm_tok_pos, (yyvsp[-6].symbol), (yyvsp[-4].exp), (yyvsp[-2].exp), (yyvsp[0].exp));}
-#line 2148 "y.tab.c"
+#line 2124 "y.tab.c"
     break;
 
   case 69:
-#line 431 "tiger_grm.y"
+#line 328 "tiger_grm.y"
     {(yyval.exp) = absyn_new_for_exp (errm_tok_pos, (yyvsp[-6].symbol), NULL, (yyvsp[-2].exp), (yyvsp[0].exp));}
-#line 2154 "y.tab.c"
+#line 2130 "y.tab.c"
     break;
 
   case 70:
-#line 434 "tiger_grm.y"
+#line 331 "tiger_grm.y"
     {(yyval.exp) = absyn_new_for_exp (errm_tok_pos, (yyvsp[-6].symbol), (yyvsp[-4].exp), NULL, (yyvsp[0].exp));}
-#line 2160 "y.tab.c"
+#line 2136 "y.tab.c"
     break;
 
   case 71:
-#line 437 "tiger_grm.y"
+#line 334 "tiger_grm.y"
     {(yyval.exp) = absyn_new_for_exp (errm_tok_pos, (yyvsp[-6].symbol), NULL, NULL, (yyvsp[0].exp));}
-#line 2166 "y.tab.c"
+#line 2142 "y.tab.c"
     break;
 
   case 72:
-#line 443 "tiger_grm.y"
+#line 340 "tiger_grm.y"
     {
       (yyval.exp) = absyn_new_let_exp (errm_tok_pos,
                               (yyvsp[-3].declist),
                               absyn_new_seq_exp(errm_tok_pos, (yyvsp[-1].explist)));
     }
-#line 2176 "y.tab.c"
+#line 2152 "y.tab.c"
     break;
 
   case 73:
-#line 450 "tiger_grm.y"
+#line 347 "tiger_grm.y"
     {
       (yyval.exp) = absyn_new_let_exp (errm_tok_pos,
                               NULL,
                               absyn_new_seq_exp (errm_tok_pos, (yyvsp[-1].explist)));
     }
-#line 2186 "y.tab.c"
+#line 2162 "y.tab.c"
     break;
 
   case 74:
-#line 457 "tiger_grm.y"
+#line 354 "tiger_grm.y"
     {(yyval.exp) = absyn_new_let_exp (errm_tok_pos, (yyvsp[-3].declist), NULL);}
-#line 2192 "y.tab.c"
+#line 2168 "y.tab.c"
     break;
 
   case 75:
-#line 460 "tiger_grm.y"
+#line 357 "tiger_grm.y"
     {(yyval.exp) = absyn_new_let_exp (errm_tok_pos, NULL, NULL);}
-#line 2198 "y.tab.c"
+#line 2174 "y.tab.c"
     break;
 
   case 76:
-#line 463 "tiger_grm.y"
+#line 360 "tiger_grm.y"
     {(yyval.exp) = absyn_new_let_exp (errm_tok_pos, (yyvsp[-2].declist), NULL);}
-#line 2204 "y.tab.c"
+#line 2180 "y.tab.c"
     break;
 
   case 77:
-#line 466 "tiger_grm.y"
+#line 363 "tiger_grm.y"
     {(yyval.exp) = absyn_new_let_exp (errm_tok_pos, NULL, NULL);}
-#line 2210 "y.tab.c"
+#line 2186 "y.tab.c"
     break;
 
   case 78:
-#line 472 "tiger_grm.y"
+#line 369 "tiger_grm.y"
     {
       (yyval.declist) = absyn_new_dec_list ((yyvsp[0].dec), NULL);
     }
-#line 2218 "y.tab.c"
+#line 2194 "y.tab.c"
     break;
 
   case 79:
-#line 477 "tiger_grm.y"
+#line 374 "tiger_grm.y"
     {
       (yyval.declist) = absyn_new_dec_list ((yyvsp[-1].dec), (yyvsp[0].declist));
     }
-#line 2226 "y.tab.c"
+#line 2202 "y.tab.c"
     break;
 
   case 80:
-#line 482 "tiger_grm.y"
+#line 379 "tiger_grm.y"
     {
        (yyval.declist) = absyn_new_dec_list (NULL, (yyvsp[0].declist));
     }
-#line 2234 "y.tab.c"
+#line 2210 "y.tab.c"
     break;
 
   case 81:
-#line 490 "tiger_grm.y"
+#line 387 "tiger_grm.y"
     {(yyval.dec) = absyn_new_type_dec (errm_tok_pos, (yyvsp[0].nametylist));}
-#line 2240 "y.tab.c"
+#line 2216 "y.tab.c"
     break;
 
   case 82:
-#line 493 "tiger_grm.y"
+#line 390 "tiger_grm.y"
     {(yyval.dec) = (yyvsp[0].dec);}
-#line 2246 "y.tab.c"
+#line 2222 "y.tab.c"
     break;
 
   case 83:
-#line 496 "tiger_grm.y"
+#line 393 "tiger_grm.y"
     {(yyval.dec) = absyn_new_function_dec (errm_tok_pos, (yyvsp[0].fundeclist));}
-#line 2252 "y.tab.c"
+#line 2228 "y.tab.c"
     break;
 
   case 84:
-#line 502 "tiger_grm.y"
+#line 399 "tiger_grm.y"
     {
        (yyval.fundeclist) = absyn_new_fundec_list ((yyvsp[0].fundec), NULL);
+    }
+#line 2236 "y.tab.c"
+    break;
+
+  case 85:
+#line 404 "tiger_grm.y"
+    {
+       (yyval.fundeclist) = absyn_new_fundec_list ((yyvsp[-1].fundec), (yyvsp[0].fundeclist));
+    }
+#line 2244 "y.tab.c"
+    break;
+
+  case 86:
+#line 411 "tiger_grm.y"
+    {
+      (yyval.nametylist) = absyn_new_name_ty_list ((yyvsp[0].namety), NULL);
+    }
+#line 2252 "y.tab.c"
+    break;
+
+  case 87:
+#line 416 "tiger_grm.y"
+    {
+      (yyval.nametylist) = absyn_new_name_ty_list ((yyvsp[-1].namety), (yyvsp[0].nametylist));
     }
 #line 2260 "y.tab.c"
     break;
 
-  case 85:
-#line 507 "tiger_grm.y"
-    {
-       (yyval.fundeclist) = absyn_new_fundec_list ((yyvsp[-1].fundec), (yyvsp[0].fundeclist));
-    }
-#line 2268 "y.tab.c"
-    break;
-
-  case 86:
-#line 514 "tiger_grm.y"
-    {
-      (yyval.nametylist) = absyn_new_name_ty_list ((yyvsp[0].namety), NULL);
-    }
-#line 2276 "y.tab.c"
-    break;
-
-  case 87:
-#line 519 "tiger_grm.y"
-    {
-      (yyval.nametylist) = absyn_new_name_ty_list ((yyvsp[-1].namety), (yyvsp[0].nametylist));
-    }
-#line 2284 "y.tab.c"
-    break;
-
   case 88:
-#line 527 "tiger_grm.y"
+#line 424 "tiger_grm.y"
     {(yyval.namety) = absyn_new_namety ((yyvsp[-2].symbol), (yyvsp[0].ty));}
-#line 2290 "y.tab.c"
+#line 2266 "y.tab.c"
     break;
 
   case 89:
-#line 532 "tiger_grm.y"
+#line 429 "tiger_grm.y"
     {(yyval.ty) = absyn_new_name_ty (errm_tok_pos, (yyvsp[0].symbol));}
-#line 2296 "y.tab.c"
+#line 2272 "y.tab.c"
     break;
 
   case 90:
-#line 535 "tiger_grm.y"
+#line 432 "tiger_grm.y"
     {(yyval.ty) = (yyvsp[0].ty);}
-#line 2302 "y.tab.c"
+#line 2278 "y.tab.c"
     break;
 
   case 91:
-#line 538 "tiger_grm.y"
+#line 435 "tiger_grm.y"
     {(yyval.ty) = (yyvsp[0].ty);}
-#line 2308 "y.tab.c"
+#line 2284 "y.tab.c"
     break;
 
   case 92:
-#line 544 "tiger_grm.y"
+#line 441 "tiger_grm.y"
     {(yyval.ty) = absyn_new_array_ty (errm_tok_pos, (yyvsp[0].symbol));}
-#line 2314 "y.tab.c"
+#line 2290 "y.tab.c"
     break;
 
   case 93:
-#line 549 "tiger_grm.y"
+#line 446 "tiger_grm.y"
     {(yyval.ty) = absyn_new_record_ty (errm_tok_pos, (yyvsp[-1].fieldlist));}
-#line 2320 "y.tab.c"
+#line 2296 "y.tab.c"
     break;
 
   case 94:
-#line 552 "tiger_grm.y"
+#line 449 "tiger_grm.y"
     {(yyval.ty) = absyn_new_record_ty (errm_tok_pos, NULL);}
-#line 2326 "y.tab.c"
+#line 2302 "y.tab.c"
     break;
 
   case 95:
-#line 558 "tiger_grm.y"
+#line 455 "tiger_grm.y"
     {(yyval.fieldlist) = NULL;}
-#line 2332 "y.tab.c"
+#line 2308 "y.tab.c"
     break;
 
   case 96:
-#line 561 "tiger_grm.y"
+#line 458 "tiger_grm.y"
     {
       (yyval.fieldlist) = absyn_new_field_list ((yyvsp[0].field), NULL);
     }
-#line 2340 "y.tab.c"
+#line 2316 "y.tab.c"
     break;
 
   case 97:
-#line 566 "tiger_grm.y"
+#line 463 "tiger_grm.y"
     {
       (yyval.fieldlist) = absyn_new_field_list ((yyvsp[-2].field), (yyvsp[0].fieldlist));
     }
-#line 2348 "y.tab.c"
+#line 2324 "y.tab.c"
     break;
 
   case 98:
-#line 571 "tiger_grm.y"
+#line 468 "tiger_grm.y"
     {
       (yyval.fieldlist) = absyn_new_field_list (NULL, (yyvsp[0].fieldlist));
     }
-#line 2356 "y.tab.c"
+#line 2332 "y.tab.c"
     break;
 
   case 99:
-#line 579 "tiger_grm.y"
+#line 476 "tiger_grm.y"
     {(yyval.field) = absyn_new_field (errm_tok_pos, (yyvsp[-2].symbol), (yyvsp[0].symbol));}
-#line 2362 "y.tab.c"
+#line 2338 "y.tab.c"
     break;
 
   case 100:
-#line 584 "tiger_grm.y"
+#line 481 "tiger_grm.y"
     {(yyval.dec) = absyn_new_var_dec (errm_tok_pos, (yyvsp[-4].symbol), (yyvsp[-2].symbol), (yyvsp[0].exp));}
-#line 2368 "y.tab.c"
+#line 2344 "y.tab.c"
     break;
 
   case 101:
-#line 587 "tiger_grm.y"
+#line 484 "tiger_grm.y"
     {(yyval.dec) = absyn_new_var_dec (errm_tok_pos, (yyvsp[-2].symbol), NULL, (yyvsp[0].exp));}
-#line 2374 "y.tab.c"
+#line 2350 "y.tab.c"
     break;
 
   case 102:
-#line 593 "tiger_grm.y"
+#line 490 "tiger_grm.y"
     {(yyval.fundec) = absyn_new_fundec (errm_tok_pos, (yyvsp[-7].symbol), (yyvsp[-5].fieldlist), (yyvsp[-2].symbol), (yyvsp[0].exp));}
-#line 2380 "y.tab.c"
+#line 2356 "y.tab.c"
     break;
 
   case 103:
-#line 596 "tiger_grm.y"
+#line 493 "tiger_grm.y"
     {(yyval.fundec) = absyn_new_fundec (errm_tok_pos, (yyvsp[-5].symbol), (yyvsp[-3].fieldlist), NULL, (yyvsp[0].exp));}
-#line 2386 "y.tab.c"
+#line 2362 "y.tab.c"
     break;
 
   case 104:
-#line 599 "tiger_grm.y"
+#line 496 "tiger_grm.y"
     {(yyval.fundec) = absyn_new_fundec (errm_tok_pos, (yyvsp[-7].symbol), NULL, (yyvsp[-2].symbol), (yyvsp[0].exp));}
-#line 2392 "y.tab.c"
+#line 2368 "y.tab.c"
     break;
 
   case 105:
-#line 602 "tiger_grm.y"
+#line 499 "tiger_grm.y"
     {(yyval.fundec) = absyn_new_fundec (errm_tok_pos, (yyvsp[-5].symbol), NULL, NULL, (yyvsp[0].exp));}
-#line 2398 "y.tab.c"
+#line 2374 "y.tab.c"
     break;
 
   case 106:
-#line 608 "tiger_grm.y"
+#line 505 "tiger_grm.y"
     {(yyval.symbol) = sym_new_symbol((yyvsp[0].sval));}
-#line 2404 "y.tab.c"
+#line 2380 "y.tab.c"
     break;
 
 
-#line 2408 "y.tab.c"
+#line 2384 "y.tab.c"
 
       default: break;
     }
