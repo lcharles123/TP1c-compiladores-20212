@@ -8,27 +8,17 @@
 
 #include "tabela.h"
 
-/*
-typedef struct Exp *Exp_n; //Exp_nó é uma estrutura que será um nó na árvore
-
-typedef struct Var *var_n;
-typedef struct Dec *dec_n;
-typedef struct Tipo *tipo_n;
-typedef struct Const *const_n;*/
-typedef struct Exp_n Exp_n; //necessario para tipos recursivos
-typedef struct Var_n Var_n;
-typedef struct Dec_n Dec_n;
-typedef struct Tipo_n Tipo_n;
 
 typedef enum //usar esse enum para diferenciar entre os diversos tipos
 {
     //exp
+    nulo,
     exp_t = 1,
     lvalue_t, //exp
-    nil_t,
     expseq_t,
-    net_t,
-
+    neg_t, //op de negaçao
+    
+    nil_t,
     int_t,
     str_t,
     
@@ -37,6 +27,7 @@ typedef enum //usar esse enum para diferenciar entre os diversos tipos
     
     record_t, //tid
     atribui_t,
+    ifthen_t,
     if_t,
     while_t,
     for_t,
@@ -54,14 +45,47 @@ typedef enum //usar esse enum para diferenciar entre os diversos tipos
     ty_record,
     ty_arranjo,
     
-    normal_t, //tipo de variavel
-    func_t,
-    arranjo_t,
+    normalvar_t, //tipo de variavel
+    funcvar_t,
+    arranjovar_t, 
+    
+    var_nome, //nome do lvalue_t
+    var_interna,//variavel interna do
+    
+    args_t,
+    ideps_t,
     
     fundec_t, //decs
     vardec_t,
-    tydec
+    tydec_t
 } Tipo_e;
+
+
+typedef struct Exp_n Exp_n;  //Exp_nó é uma estrutura que será um nó na árvore
+typedef struct ExpSeq ExpSeq;
+typedef struct Var_n Var_n;
+typedef struct Dec_n Dec_n;
+typedef struct DecList DecList;
+typedef struct Tipo_n Tipo_n;
+typedef struct VarList VarList;
+
+typedef struct ExpSeq //listas encadeadas para expressoes
+{
+    Exp_n* elem;
+    ExpSeq* prox;
+}ExpSeq;
+
+typedef struct DecList //listas encadeadas para declaraçoes
+{
+    Dec_n* elem;
+    DecList* prox;
+}DecList;
+
+typedef struct VarList //listas encadeadas para declaraçoes
+{
+    Var_n* elem;
+    VarList* prox;
+}VarList;
 
 typedef struct Exp_n //estrutura para os tipos derivados do nao terminal exp
 {
@@ -69,65 +93,70 @@ typedef struct Exp_n //estrutura para os tipos derivados do nao terminal exp
     Tipo_e tipoExp;
 
     Var_n *var;
-    int nil;
-    int int_n;
-    char *str_n;
-
+    
     struct
     {
-      char* id;
-      Exp_n *args; //args eh um vetor do tipo Exp
+        int nil;
+        int int_v;
+        char *str_v;
+    }constante;
+    
+    struct
+    {
+      int idTab; //endereço na tabela
+      ExpSeq *args; //args eh um vetor do tipo Exp
+      
     } call; //chamada proc
 
-    struct
+    struct oper //todos os endpoints de exp estão nas structs abaixo, e os tipos serão unificados nessa struct Exp_n
     {
-        Tipo_e tipoOp;
-
         Exp_n* opEsq;
         Exp_n* opDir;
     } oper;
 
     struct
     {
-      Tipo_n* tipo;
-      Exp_n* expList;
+      Tipo_n* tipo; //vetor de tipos
+      Exp_n* ExpSeq;
     } record;
 
     struct
     {
-      Var_n *var;
-      Exp_n *exp;
+      Var_n *var; //variavel
+      Exp_n *exp; //exp lado dir
     } atribui;
 
     struct
     {
-      Exp_n *test;
-      Exp_n *then;
-      Exp_n *cc;
+      Exp_n *test; //test booleano
+      Exp_n *then; //corpo
+      Exp_n *cc;  // caso contrario
     } se;
 
     struct
     {
-      Exp_n *test;
+      Exp_n *test; //teste booleano
       Exp_n *body;
     } enquanto;
 
     struct
     {
-      Var_n *var; //symbol?
-      Exp_n *lo;
-      Exp_n *hi;
-      Exp_n *body;
-      int escape;
+      Var_n *var; //colocar na tabela de simbolos
+      Exp_n *lo;  //cond ini
+      Exp_n *hi;    //cond fin
+      Exp_n *body;  //corpo
+      int escape; //break
     } para;
     
     struct
-    { }quebrar; //precisa apenas de pos
+    { 
+        int quebrar; 
+    }quebrar; //break;
 
     struct
     {
-      Dec_n* decs;
-      Exp_n* body;
+      Dec_n* decs; //o programa : declaraçoes
+      Exp_n* body; //           : cor
     } let;
 
     struct
@@ -142,20 +171,20 @@ typedef struct Var_n
 {
     int pos;
     Tipo_e tipoVar;
-    
+
     struct
     {
-        Tabela* tab; //simbolo
+        int tab[2]; //pos,escopo
     }normalVar;
     
     struct
     {
-        Tabela* tab; //simbolo
+        int tab[2]; //pos,escopo
     }funcVar;
     
     struct
     {
-        Var_n* var; //simbolo
+        int tab[2]; //pos,escopo
         Exp_n* exp;
     }arranjoVar;
 }Var_n;
@@ -167,24 +196,27 @@ typedef struct Dec_n
     
     Dec_n* funDecList;
     Tipo_n* tylist;
-    struct
+    
+    struct //declaraçao var
     {
-        Tabela tab;
+        int simb[2]; //tupla(lina e escopo na tabela)
         Exp_n init;
         int escape;
     }varDec;
+    
     struct
     {
-        Tabela tab;
+        int simb[2]; //tupla(lina e escopo na tabela)
         Exp_n init;
         int escape;
-    }funDec;
+    }funDec; //declaraçao fun
+    
     struct
     {
-        Tabela tab;
+        int simb[2]; //tupla(lina e escopo na tabela)
         Exp_n init;
         int escape;
-    }tyDec;
+    }tyDec; //declaraçao tipo
     
     
 
@@ -203,6 +235,44 @@ typedef struct Tipo_n
 
 }Tipo_n;
 
+Exp_n* novo_call(int pos, Tipo_e tipo, char* idFun, Expseq* a, Tabela* t); //vale 
+
+Exp_n* novo_ifthen(int pos, Tipo_e tipo, Exp_n* e1, Exp_n* e2); //vale 
+
+Exp_n* novo_ifthenelse(int pos, Tipo_e tipo, Exp_n* e1, Exp_n* e2, Exp_n* e3); //vale 
+
+Exp_n* novo_while(int pos, Tipo_e tipo, Exp_n* e1, Exp_n* e2); //vale 
+
+Exp_n* novo_for(int pos, Tipo_e tipo, char* idVar, Exp_n* e1, Exp_n* e2, Exp_n* e3, Tabela* t); //vale 
+
+Exp_n* lvalue_to_exp(Tipo_e tipo, int** pos, Tabela* t);
+
+Exp_n* novo_atribuicao(int pos, Tipo_e tipo, int* end, Exp_n* e, Tabela* t);
+
+int* acessar_lvalue(int pos, Tipo_e tipo, Var_n* lv, char* idVar, Exp_n* e, Tabela* t);
+
+VarList* novo_varlist(int pos, Tipo_e tipo, char* varId, char* tyId, VarList* tl, Tabela* t);
+
+Tipo_n* novo_tipo(int pos, Tipo_e tipo );
+
+Dec_n* novo_tipodec(int pos, Tipo_e tipo, char* tyId, Tipo_n* tn, Tabela* t); //igual struct de C
+
+Dec_n* novo_vardec(int pos, Tipo_e tipo, char* varId, char* tyId, Exp_n* exp, Tabela* t); //simple var, record var, array var
+Dec_n* novo_fundec(int pos, Tipo_e tipo, char* funId, VarList* tl, char* tyId, Exp_n* e, Tabela* t);
+
+DecList* novo_declist(int pos, Tipo_e tipo, Dec_n* d, DecList* dl);
+
+ExpSeq* novo_expseq(int pos, Tipo_e tipo, Exp_n* e, ExpSeq* es);
+
+Exp_n* novo_const(int pos, Tipo_e tipo, int vi, char* vs);
+
+Exp_n* novo_exp_op(int pos, Tipo_e tipo, Exp_n* e1, Exp_n* e2); //vale 
+
+Var_n* novo_var(int pos, Tipo_e tipo );
+
+Exp_n* novo_let(int pos, Tipo_e tipo, DecList* dl, ExpSeq* es, Tabela* t); //; // FIXME colocar declist e explist
+
+Dec_n* novo_dec(int pos, Tipo_e tipo, Dec_n* d); //nao precisa
 
 
 

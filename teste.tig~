@@ -1,10 +1,2 @@
-/*5 + 6*/
-
-let
-    type a = array of int
-    type b = a
-    var arr1:a := b [6]
-in
-    arr1[2]
-end
+let nil in end
 

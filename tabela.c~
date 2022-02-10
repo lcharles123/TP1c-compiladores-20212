@@ -11,7 +11,7 @@ Tabela* T_init()
 {
     Tabela* t = malloc(sizeof(Tabela));
     t->linha = malloc(MAX * sizeof(Linha)); //alocar todas as linhas de uma vez
-    t->escopo = malloc(MAX * sizeof(int)); //guardar uma cópia de ponteiros para linha    
+    t->escopo = malloc(MAX * sizeof(int)); //indice para vetor linha acima linha    
     t->linha->nivel = 0;
     t->escopo[0] = 0; //& da primeira linha
     t->nivel = 0;
@@ -28,6 +28,9 @@ void T_entrar_bloco(Tabela* t)
 
 void T_sair_bloco(Tabela* t)
 {
+        
+    T_imprimir(t);
+    
     t->L = t->escopo[t->nivel];
     t->nivel--; //eliminar as linhas até chegar 
     assert(t->nivel >= 0);
@@ -45,7 +48,7 @@ int T_checar_existencia(Tabela* t, char* nome)
     return -1;
 }
 
-void T_instalar(Tabela* t, char* nome, int tipo, char* valor)
+char** T_instalar(Tabela* t, char* nome, int tipo, char* valor)
 {
     assert(t->L < MAX); //tabela cheia
     int k = t->L;
@@ -65,7 +68,19 @@ void T_instalar(Tabela* t, char* nome, int tipo, char* valor)
     strcpy(t->linha[t->L].valor, valor);
     t->linha[t->L].nivel = t->nivel;
     t->L++;
+    
+    char* str = malloc(2);    
+    int tam = sprintf(NULL, 0, "%d", t->L-1);
+    str[0] = malloc(tam + 1);
+    tam = sprintf(NULL, 0, "%d", t->nivel);
+    str[1] = malloc(tam + 1);
+        
+    sprintf(str[0], "%d", t->L-1);
+    sprintf(str[1], "%d", t->nivel);
+
+    return str;
 }
+
 
 void T_imprimir(Tabela* t)
 {
@@ -76,7 +91,7 @@ void T_imprimir(Tabela* t)
     }
     
     for(int i = 0; i <= t->nivel; i++) printf("%d ",t->escopo[i]); 
-    printf("\n%d\n",t->nivel); 
+    printf("\nNivel %d, L %d\n",t->nivel, t->L); 
 }
 
 void T_delete(Tabela* t)

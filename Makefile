@@ -13,8 +13,8 @@ clean:
 
 
 yacc: 
-	yacc -v tiger.y 
-
+	#yacc -v tiger.y 
+	yacc -d tiger.y 
 lex:
 	lex tiger.l
 

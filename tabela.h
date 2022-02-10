@@ -26,8 +26,8 @@ typedef struct Tabela
 {
     Linha* linha;//vetor das linhas da tabela
     int* escopo; //vetor de indices de linhas
-    int nivel;   //indice do vetor de escopo acima
-    int L;       //primeira linha vazia
+    int nivel;   //indice do vetor de escopo atual
+    int L;       //indice do primeira linha vazia
 }Tabela;
 
 Tabela* T_init();
@@ -38,7 +38,7 @@ void T_sair_bloco(Tabela* t);
 
 int T_checar_existencia(Tabela* t, char* nome);
 
-void T_instalar(Tabela* t, char* nome, int tipo, char* valor);
+void T_instalar(Tabela* t, char* nome, int tipo, char* valor); //retorna o endereço na tabela em formato char*
 
 void T_imprimir(Tabela* t);
 

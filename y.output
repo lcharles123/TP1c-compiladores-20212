@@ -5,10 +5,10 @@ Grammar
     1 inicio: exp
 
     2 exp: lvalue
-    3    | NIL
+    3    | NILT
     4    | ABREPAR expseq FECHAPAR
     5    | NUM
-    6    | STRING
+    6    | STRINGT
     7    | MENOS exp
     8    | ID ABREPAR args FECHAPAR
     9    | exp MAIS exp
@@ -87,8 +87,8 @@ Terminals, with rules where they appear
     $end (0) 0
     error (256)
     NUM <intVal> (258) 5
-    STRING <strVal> (259) 6
-    NIL <exp> (260) 3
+    NILT <exp> (259) 3
+    STRINGT <stringVal> (260) 6
     ABREPAR (261) 4 8 46 47
     FECHAPAR (262) 4 8 46 47
     ABRECHAV (263) 29 38
@@ -144,7 +144,7 @@ Nonterminals, with rules where they appear
     tid <tid> (49)
         on left: 29 30
         on right: 21
-    decs <decList> (50)
+    decs <declist> (50)
         on left: 31 32
         on right: 28 31
     dec <dec> (51)
@@ -171,13 +171,13 @@ Nonterminals, with rules where they appear
     lvalue <var> (58)
         on left: 48 49 50
         on right: 2 22 49 50
-    typeid <var> (59)
+    typeid <tab> (59)
         on left: 51
         on right: 38 40 42 45 47
-    expseq <expList> (60)
+    expseq <expseq> (60)
         on left: 52 53
         on right: 4 28
-    expseq1 <expList> (61)
+    expseq1 <expseq> (61)
         on left: 54 55
         on right: 52 54
     args <argsDec> (62)
@@ -196,8 +196,8 @@ State 0
     0 $accept: . inicio $end
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6
@@ -224,16 +224,16 @@ State 1
 
 State 2
 
-    6 exp: STRING .
+    3 exp: NILT .
 
-    $default  reduce using rule 6 (exp)
+    $default  reduce using rule 3 (exp)
 
 
 State 3
 
-    3 exp: NIL .
+    6 exp: STRINGT .
 
-    $default  reduce using rule 3 (exp)
+    $default  reduce using rule 6 (exp)
 
 
 State 4
@@ -241,8 +241,8 @@ State 4
     4 exp: ABREPAR . expseq FECHAPAR
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6
@@ -274,8 +274,8 @@ State 6
    30 tid: ABRECOL . exp FECHACOL OF exp
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6
@@ -297,8 +297,8 @@ State 7
     7 exp: MENOS . exp
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6
@@ -321,8 +321,8 @@ State 8
    24    | IF . exp THEN exp
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6
@@ -344,8 +344,8 @@ State 9
    25 exp: WHILE . exp DO exp
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6
@@ -708,8 +708,8 @@ State 34
     8 exp: ID ABREPAR . args FECHAPAR
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6
@@ -741,8 +741,8 @@ State 36
    10 exp: exp MENOS . exp
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6
@@ -764,8 +764,8 @@ State 37
     9 exp: exp MAIS . exp
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6
@@ -787,8 +787,8 @@ State 38
    11 exp: exp VEZES . exp
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6
@@ -810,8 +810,8 @@ State 39
    12 exp: exp DIVIDIR . exp
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6
@@ -833,8 +833,8 @@ State 40
    13 exp: exp IGUAL . exp
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6
@@ -856,8 +856,8 @@ State 41
    14 exp: exp DIFERENTE . exp
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6
@@ -879,8 +879,8 @@ State 42
    15 exp: exp MENOR . exp
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6
@@ -902,8 +902,8 @@ State 43
    17 exp: exp MENORIG . exp
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6
@@ -925,8 +925,8 @@ State 44
    16 exp: exp MAIOR . exp
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6
@@ -948,8 +948,8 @@ State 45
    18 exp: exp MAIORIG . exp
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6
@@ -971,8 +971,8 @@ State 46
    19 exp: exp E . exp
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6
@@ -994,8 +994,8 @@ State 47
    20 exp: exp OU . exp
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6
@@ -1017,8 +1017,8 @@ State 48
    50 lvalue: lvalue ABRECOL . exp FECHACOL
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6
@@ -1040,8 +1040,8 @@ State 49
    22 exp: lvalue ATRIBUI . exp
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6
@@ -1070,8 +1070,8 @@ State 51
    54 expseq1: PONTOVIRG . exp expseq1
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6
@@ -1107,8 +1107,8 @@ State 54
    29 tid: ABRECHAV ID IGUAL . exp idexps FECHACHAV
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6
@@ -1138,8 +1138,8 @@ State 56
    24    | IF exp THEN . exp
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6
@@ -1161,8 +1161,8 @@ State 57
    25 exp: WHILE exp DO . exp
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6
@@ -1184,8 +1184,8 @@ State 58
    26 exp: FOR ID ATRIBUI . exp TO exp DO exp
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6
@@ -1231,8 +1231,8 @@ State 62
    28 exp: LET decs IN . expseq END
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6
@@ -1779,8 +1779,8 @@ State 83
    30 tid: ABRECOL exp FECHACOL OF . exp
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6
@@ -1910,8 +1910,8 @@ State 88
    44 vardec: VAR ID ATRIBUI . exp
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6
@@ -1961,8 +1961,8 @@ State 92
    58 args1: VIRG . exp args1
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6
@@ -2058,8 +2058,8 @@ State 100
    23 exp: IF exp THEN exp ELSE . exp
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6
@@ -2081,8 +2081,8 @@ State 101
    26 exp: FOR ID ATRIBUI exp TO . exp DO exp
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6
@@ -2313,8 +2313,8 @@ State 119
    45 vardec: VAR ID DOISPONTOS typeid ATRIBUI . exp
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6
@@ -2361,8 +2361,8 @@ State 123
    60 idexps: VIRG ID IGUAL . exp idexps
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6
@@ -2384,8 +2384,8 @@ State 124
    26 exp: FOR ID ATRIBUI exp TO exp DO . exp
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6
@@ -2466,8 +2466,8 @@ State 129
    46 fundec: FUNCTION ID ABREPAR tyfields FECHAPAR IGUAL . exp
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6
@@ -2650,8 +2650,8 @@ State 141
    47 fundec: FUNCTION ID ABREPAR tyfields FECHAPAR DOISPONTOS typeid IGUAL . exp
 
     NUM       shift, and go to state 1
-    STRING    shift, and go to state 2
-    NIL       shift, and go to state 3
+    NILT      shift, and go to state 2
+    STRINGT   shift, and go to state 3
     ABREPAR   shift, and go to state 4
     ABRECHAV  shift, and go to state 5
     ABRECOL   shift, and go to state 6

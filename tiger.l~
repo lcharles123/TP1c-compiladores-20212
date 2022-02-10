@@ -54,7 +54,7 @@ then    { col += yyleng; return THEN;}
 else    { col += yyleng; return ELSE;}
 do      { col += yyleng; return DO;}
 of      { col += yyleng; return OF;}
-nil     { col += yyleng; return NIL;}
+nil     { col += yyleng; return NILT;}
 
 ","     { col += yyleng; return VIRG;}
 ":"     { col += yyleng; return DOISPONTOS;}
@@ -84,8 +84,8 @@ nil     { col += yyleng; return NIL;}
 
 [0-9]+\.[0-9]+ { col += yyleng; return NUM; } //nao existe float na linguagem
 
-[0-9]+        { yylval.intVal = atoi(yytext); col += yyleng; tokpos = prox(yyleng); return NUM; }
-\"[^\"]*\"  { col += yyleng; return STRING;}
+[0-9]+        { yylval.intval = atoi(yytext); col += yyleng; tokpos = prox(yyleng); return NUM; }
+\"[^\"]*\"  { col += yyleng; return STRINGT;}
 
 .           { printf("*** ERRO: Símbolo desconhecido. Linha %i, Coluna %i, Símbolo: '%s'\n", lin, col, yytext); exit(EXIT_FAILURE);  } // erro se chegar até aqui
 

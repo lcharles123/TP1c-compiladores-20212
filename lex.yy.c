@@ -957,7 +957,7 @@ YY_RULE_SETUP
 case 24:
 YY_RULE_SETUP
 #line 57 "tiger.l"
-{ col += yyleng; return NIL;}
+{ col += yyleng; return NILT;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
@@ -1093,7 +1093,7 @@ case 51:
 /* rule 51 can match eol */
 YY_RULE_SETUP
 #line 88 "tiger.l"
-{ col += yyleng; return STRING;}
+{ col += yyleng; return STRINGT;}
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
