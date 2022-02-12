@@ -10,7 +10,7 @@
 
 
 //retornar uma enum com o tipo retornado pelo checker, para guardar nas variáveis da ast
-Tipo_e chk_Exp(Exp_n* e, Tipo_e tipo, int pos)
+Tipo_e chk_Exp(Tipo_e t1, Tipo_e t2, Tipo_e t3)
 {
     switch(tipo)
     {
@@ -29,7 +29,7 @@ void chk_Var(Var_n* v, Tipo_e tipo, int pos)
     {
         case exp_t: puts("okexp");
         default:;
-    }    return NULL;
+    }   
 }
 
 void chk_Dec(Dec_n* d, Tipo_e tipo, int pos)
@@ -38,7 +38,7 @@ void chk_Dec(Dec_n* d, Tipo_e tipo, int pos)
     {
         case exp_t: puts("okdec");
         default:;
-    }    return NULL;
+    }    
 }
 
 void chk_Tipo(Tipo_n* t, Tipo_e tipo, int pos)

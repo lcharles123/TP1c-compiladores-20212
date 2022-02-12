@@ -1,8 +1,4 @@
- /* monta array de ints */
- /* cadeia aceita */
-let
-	type  arrtype = array of int
-	var arr1:arrtype := arrtype [10]
-in
-	arr1
-end
+/* programa correto */
+
+if 1 <> 2 then 3 else 5
+

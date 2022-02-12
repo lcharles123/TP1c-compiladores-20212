@@ -6,6 +6,8 @@
 #include <string.h>
 #include <assert.h>
 
+#include "tipos.h"
+
 #define MAX 128 //maximo de linhas na tabela
 #define NMAX 16 //num maximo caracteres do nome
 //organizaçao linear
@@ -17,9 +19,7 @@ typedef struct Linha
     
     char* nome;
     int tipo;
-    int endereco; //EM_tokPos
-    char* valor;
-    
+    Exp_n* atributo;
 }Linha;
 
 typedef struct Tabela
@@ -38,7 +38,9 @@ void T_sair_bloco(Tabela* t);
 
 int T_checar_existencia(Tabela* t, char* nome);
 
-void T_instalar(Tabela* t, char* nome, int tipo, char* valor); //retorna o endereço na tabela em formato char*
+Linha* T_obter_linha(Tabela* t, int pos);
+
+int* T_instalar(Tabela* t, char* nome, int tipo, Exp_n* atributo); //retorna o endereço na tabela em formato char*
 
 void T_imprimir(Tabela* t);
 

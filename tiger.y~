@@ -5,7 +5,6 @@
 
 #include "tabela.h"
 #include "absyn.h"
-#include "semantico.h"
 #include "imprimir.h" //imprime a arvore de sintaxe
 
 #include "y.tab.h"
@@ -51,16 +50,16 @@ https://www.ibm.com/docs/en/aix/7.2?topic=information-yacc-grammar-file-declarat
     char* stringVal;
     Exp_n* exp;
     ExpSeq* expseq;
-    
+    ExpSeq* argsDec;    
     Var_n* var;
     
     Dec_n* dec;
-    Dec_n* argsDec;
+
     DecList* declist;
     
     Tipo_n* tid;
     Tipo_n* ty;
-    TipoList* tyList;
+    DecList* tyList;
     Tabela* tab; // tabela de simbolos, typeid é o retorno do nome do id
 }
 
@@ -80,22 +79,19 @@ em %type, a tag é obrigatória ; nas outras %keywords, ela é opcional
 //endereço na tabela de simbolos
 // tipos de nao terminais 
 %type <exp> exp
-%type <expseq> expseq expseq1
+%type <expseq> expseq expseq1 idexps 
 
 %type <var> lvalue 
 %type <stringVal> typeid
 
 %type <dec> dec vardec tydec fundec
-%type <declist> decs
+%type <declist> decs tyfields tyfields1 ty 
 
 %type <argsDec> args args1
 %type <tid> tid
-%type <ty> ty
-%type <tyList> tyfields tyfields1 
 
 
 %token ABREPAR FECHAPAR ABRECHAV FECHACHAV ABRECOL FECHACOL MENOS MAIS VEZES DIVIDIR IGUAL DIFERENTE MENOR MENORIG MAIOR MAIORIG E OU OF ATRIBUI IF THEN ELSE WHILE DO FOR TO BREAK LET IN END TIPO DOISPONTOS VAR FUNCTION PONTO PONTOVIRG VIRG ARRAY
-/*%token ABREPAR FECHAPAR ABRECHAV FECHACHAV ABRECOL FECHACOL MENOS MAIS VEZES DIVIDIR IGUAL DIFERENTE MENOR MENORIG MAIOR MAIORIG E OU OF ATRIBUI IF THEN ELSE WHILE DO FOR TO BREAK LET IN END TIPO DOISPONTOS VAR FUNCTION PONTO PONTOVIRG VIRG ID <intVal> NUM STRINGT ARRAY*/
 
 %nonassoc OF IF THEN WHILE DO FOR TO ATRIBUI TIPO FUNCTION          /* menor precedencia */
 %nonassoc OU
@@ -113,20 +109,20 @@ em %type, a tag é obrigatória ; nas outras %keywords, ela é opcional
 
 %%
 
-inicio : exp                            { printf("inicio \t-> exp\n"); astRoot=$1; //imprimir(astRoot);
+inicio : exp                     { printf("inicio \t-> exp\n"); astRoot=$1; imprimir_exp(astRoot); T_sair_bloco(tab);
  };
 
-exp : lvalue                            { printf("exp \t-> lvalue\n"); $$=lvalue_to_exp(lvalue_t, $1, tab); } 
+exp : lvalue                            { printf("exp \t-> lvalue\n"); puts("lv");$$=lvalue_to_exp(lvalue_t, $1, tab); } 
 |     NILT                               { printf("exp \t-> NILT()\n"); $$=novo_const(tokpos, nil_t, 0, NULL);  }
-|     ABREPAR expseq FECHAPAR           { printf("exp \t-> ( expseq )\n"); }
+|     ABREPAR expseq FECHAPAR           { printf("exp \t-> ( expseq )\n"); $$=novo_expseqpar(tokpos, expseq_t, NULL, $2);}
 |     NUM                               { printf("exp \t-> NUM(%d)\n", yylval.intVal); $$=novo_const(tokpos, int_t, $1, NULL); }
-|     STRINGT                            { printf("exp \t-> STRINGT(%s)\n", yytext); $$=novo_const(tokpos, str_t, 0, $1); }
+|     STRINGT                            { printf("exp \t-> STRINGT(%s)\n", yyval.stringVal); $$=novo_const(tokpos, str_t, 0, $1); }
 |     MENOS exp                         { printf("exp \t-> - exp\n"); $$=novo_exp_op(tokpos, neg_t, $2, NULL); }
-|     ID ABREPAR args FECHAPAR          { printf("exp \t-> ID ( args )\n"); $$=novo_call(tokpos, call_t, $1, $3, tab); //vale  } //call
+|     ID ABREPAR args FECHAPAR          { printf("exp \t-> ID ( args )\n"); $$=novo_call(tokpos, call_t, $1, $3, tab); } //call
 |     exp MAIS exp                      { printf("exp \t-> exp + exp\n"); $$=novo_exp_op(tokpos, mais_op, $1, $3);} //op inicio
 |     exp MENOS exp                     { printf("exp \t-> exp - exp\n");  $$=novo_exp_op(tokpos, menos_op, $1, $3); }
 |     exp VEZES exp                     { printf("exp \t-> exp * exp\n"); $$=novo_exp_op(tokpos, vezes_op, $1, $3); }
-|     exp DIVIDIR exp                   { printf("exp \t-> exp / exp\n"); $$=novo_exp_op(tokpos, dividir_op, $1, $3); }
+|     exp DIVIDIR exp                   { printf("exp \t-> exp / exp\n"); $$=novo_exp_op(tokpos, dividir_op, $1, $3); }  
 |     exp IGUAL exp                     { printf("exp \t-> exp = exp\n");  $$=novo_exp_op(tokpos, igual_op, $1, $3);}
 |     exp DIFERENTE exp                 { printf("exp \t-> exp <> exp\n");  $$=novo_exp_op(tokpos, diferente_op, $1, $3);}
 |     exp MENOR exp                     { printf("exp \t-> exp < exp\n");  $$=novo_exp_op(tokpos, menor_op, $1, $3);}
@@ -136,15 +132,15 @@ exp : lvalue                            { printf("exp \t-> lvalue\n"); $$=lvalue
 |     exp E exp                         { printf("exp \t-> exp & exp\n"); $$=novo_exp_op(tokpos, e_op, $1, $3); }
 |     exp OU exp                        { printf("exp \t-> exp | exp\n"); $$=novo_exp_op(tokpos, ou_op, $1, $3);}      //op fim
 |     tid                               { printf("exp \t-> tid\n"); } /* FIXME modificaçao aqui*/
-//Exp_n* novo_atribuicao(int pos, Tipo_e tipo, int* end, Exp_n* e, Tabela* t);
+
 |     lvalue ATRIBUI exp                { printf("exp \t-> lvalue := exp\n");$$=novo_atribuicao(tokpos, atribui_t, $1, $3, tab); }
-//////////////////|     IF exp THEN exp ELSE exp          { printf("exp \t-> IF exp THEN exp ELSE exp\n");$$=novo_ifthenelse(tokpos, ifthen_t, $2, $4, $6); }
+|     IF exp THEN exp ELSE exp          { printf("exp \t-> IF exp THEN exp ELSE exp\n");$$=novo_ifthenelse(tokpos, ifthen_t, $2, $4, $6); }
 |     IF exp THEN exp                   { printf("exp \t-> IF exp THEN exp\n");$$=novo_ifthen(tokpos, if_t, $2, $4); }
 |     WHILE exp DO exp                  { printf("exp \t-> WHILE exp DO exp\n");$$=novo_while(tokpos, while_t, $2, $4); }
 |     FOR ID ATRIBUI exp TO exp DO exp  { printf("exp \t-> FOR ID := exp TO exp DO exp\n");$$=novo_for(tokpos, for_t, $2, $4, $6, $8, tab); }
-|     BREAK                             { printf("exp \t-> BREAK\n");$$=NULL }
-|     LET decs IN expseq END	        {printf("exp \t-> LETdecsINexpseqEND\n");$$=novo_let(tokpos, let_t, $2, $4, tab);};
-// declist e expseqOK    
+|     BREAK                             { printf("exp \t-> BREAK\n");$$=NULL; }
+|     LET decs IN expseq END	        {printf("exp \t-> LET decs IN expseq END\n");$$=novo_let(tokpos, let_t, $2, $4, tab);};
+
 
 tid:  
       ABRECHAV  ID IGUAL exp idexps FECHACHAV { printf("tid \t-> typeid { ID = exp idexps }\n");}
@@ -154,7 +150,7 @@ tid:
 
 decs :
     dec decs                            { printf("decs \t-> dec decs\n"); $$=novo_declist(tokpos, 0, $1, $2); }
-    |                                   { printf("decs \t-> ''\n");$$=NULL};
+    |                                   { printf("decs \t-> ''\n");$$=NULL;};
 
 dec : 
       tydec                             { printf("dec \t-> tydec\n");$$=$1;}
@@ -162,13 +158,13 @@ dec :
 |     fundec                            { printf("dec \t-> fundec\n");$$=$1;};
 
 tydec : 
-    TIPO ID IGUAL ty                    { printf("tydec \t-> TYPE ID = ty\n");$$=novo_tipodec(tokpos, tydec_t, $2, $4, tab)};
+    TIPO ID IGUAL ty                    { printf("tydec \t-> TYPE ID = ty\n");$$=novo_tipodec(tokpos, tydec_t, $2, $4, tab);};
 
 ty : 
       ID                                { printf("ty \t-> ID\n"); T_instalar(tab, $1, tydec_t, NULL); 
       $$=NULL;}                        
 |     ABRECHAV ID DOISPONTOS typeid tyfields1 FECHACHAV { printf("{ ty \t-> ID : typeid tyfields1 }\n");
-$$=novo_varlist(tokpos, ty_record, $2, $4, $5, tab);}} 
+$$=novo_varlist(tokpos, ty_record, $2, $4, $5, tab);} //records
 |     ARRAY OF ID                    { printf("ty \t-> ARRAY OF ID = ty\n"); T_instalar(tab, $3, ty_arranjo, NULL); 
       $$=NULL; };
 
@@ -180,14 +176,13 @@ tyfields1 :
     VIRG ID DOISPONTOS typeid tyfields1 { printf("tyfields1 \t-> , ID : typeid tyfields1\n");$$=novo_varlist(tokpos, ty_record, $2, $4, $5, tab);}
     |                                   { printf("tyfields1 \t-> ''\n"); $$=NULL; };
 
-
+//printf(">>>%s<<<  ", $2);
 
 vardec : 
-     VAR ID ATRIBUI exp             { printf("vardec \t-> VAR ID := exp\n");
-     $$=novo_vardec(tokpos, normalvar_t, $2, "0", $4, tab);}  //var sem tipo declarado
+     VAR ID ATRIBUI exp             { printf("vardec \t-> VAR ID := exp\n"); $$=novo_vardec(tokpos, vardec_t, $2, "0", $4, tab);}  //var sem tipo declarado
      
 |    VAR ID DOISPONTOS typeid ATRIBUI exp { printf("vardec \t-> VAR ID : typeid := exp\n");
-    $$=novo_vardec(tokpos, normalvar_t, $2, $4, $6, tab);}; //var com tipo
+    $$=novo_vardec(tokpos, vardec_t, $2, $4, $6, tab);}; //var com tipo
 
 fundec : 
     FUNCTION ID ABREPAR tyfields FECHAPAR IGUAL exp { printf("fundec \t-> FUNCTION ID ( tyfields ) = exp\n");
@@ -203,7 +198,7 @@ lvalue :  //aqui temos que buscar o endereço de lvalue na tabela de simbolos
 ;
 
 typeid : 
-    ID                                  { printf("typeid \t-> ID()\n"); T_instalar(tab, $1, ty_nome, NULL); }; //retornar o endereço em formato char* , evitar mexer na gramática
+    ID                                  { printf("typeid \t-> ID()\n"); T_instalar(tab, $1, ty_nome, NULL); $$=$1; }; //retornar o endereço em formato char* , evitar mexer na gramática
 
 expseq : 
     exp expseq1                         { printf("expseq \t-> exp expseq1\n");$$=novo_expseq(tokpos, expseq_t, $1, $2);}

@@ -7,10 +7,8 @@
 #include <assert.h>
 #include "absyn.h"
 
-
-
-//retornar uma enum com o tipo retornado pelo checker, para guardar nas variáveis da ast
-Tipo_e chk_Exp(Exp_n* e, Tipo_e tipo, int pos)
+//checa simbolos de terminais e nao terminais de acordo com os tipos
+Tipo_e chk_Exp(Tipo_e t1, Tipo_e t2, Tipo_e t3)
 {
     switch(tipo)
     {

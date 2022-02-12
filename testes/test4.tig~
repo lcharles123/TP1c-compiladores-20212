@@ -1,11 +1,7 @@
- /* monta array de ints */
- /* cadeia nao aceita */
-let
-    type  arrtype = array o f int 
-    var arr1:arrtype := arrtype [10] 
+/* programa incorreto - variavel ja existe */
+let 
+	var a := 3
+	var a := 5
 in
-    (arr1)
+ a
 end
-
-
-

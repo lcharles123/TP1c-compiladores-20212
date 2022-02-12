@@ -1,11 +1,11 @@
- /* funcao recursiva */
-  /* linguagem aceita */
+/* programa correto */
+
 let
-    function fat(n: int): int =
-        if  n = 0  
-        then 1
-		else n * fat(n-1)
-in
-	nfactor(10)
+    var a:= 0
+    var b:= 1
+    var c:= 2
+in 
+    for i:=0 to 100 do a:= a+1
 end
+
 

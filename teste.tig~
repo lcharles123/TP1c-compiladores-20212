@@ -1,2 +1,7 @@
-let nil in end
+/* programa correto */
+let
+in 
+    1 + 2
+
+end
 

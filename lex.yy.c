@@ -1077,7 +1077,7 @@ YY_RULE_SETUP
 case 48:
 YY_RULE_SETUP
 #line 83 "tiger.l"
-{  col += yyleng; return ID;}
+{  col += yyleng; yylval.stringVal = strdup(yytext); return ID;}
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
@@ -1093,7 +1093,7 @@ case 51:
 /* rule 51 can match eol */
 YY_RULE_SETUP
 #line 88 "tiger.l"
-{ col += yyleng; return STRINGT;}
+{ col += yyleng; yylval.stringVal = strdup(yytext); return STRINGT;}
 	YY_BREAK
 case 52:
 YY_RULE_SETUP

@@ -92,7 +92,7 @@ yyerror (char *s)
   if (b_msg != 0)
      s = b_msg;
   */
-  errm_printf (errm_tok_po, "%s", s);
+  errm_printf (errm_tok_pos, "%s", s);
 }
 
 /*

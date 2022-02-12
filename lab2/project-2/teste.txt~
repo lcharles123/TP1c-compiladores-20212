@@ -1,5 +1,9 @@
+
 /* programa correto */
+
 let 
+    var a := 2
+    var b := 5  
 in
     if 1 <> 2 then 3 else 5
 end

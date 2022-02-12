@@ -1,7 +1,7 @@
+/* programa incorreto - variavel ja existe */
 let 
-	function soma(x1: int, x2: int) : int = x1 + x2
-	var resultado : int := 0
-	var result_string : string := 5
+	var a := 3
+	var a := 5
 in
-	result_string := soma(2, 5)
-endd
+	a
+end

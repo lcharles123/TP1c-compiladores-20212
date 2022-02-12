@@ -1,9 +1,7 @@
 p: teste
 
-
 teste: compilar
 	./analisador.run teste.tig
-
 
 testes: compilar
 	for i in `ls -1 testes` ; do echo "<<<<prog $$i>>>>" ; ./analisador.run testes/$$i ; echo "" ; done
@@ -19,14 +17,14 @@ lex:
 	lex tiger.l
 
 compilar: lex yacc
-	gcc -g -Wall tabela.c absyn.c lex.yy.c y.tab.c -o analisador.run
+	gcc -g -Wall tabela.c absyn.c lex.yy.c y.tab.c imprimir.c -o analisador.run
 
 
 
 ajuda:
 	@echo "\n\tTP1 parte 3 - Compiladores I - UFMG 2021/2"
 	@echo "\n\tNomes: Breno Pimenta, Lécio Alves"
-	@echo "\tAnalisador Sintático\n"
+	@echo "\tCompilador com Analisadores sintático e semântico.\n"
 	@echo "\tForma de uso:"
 	@echo "\tmake [targets]\n"
 	@echo "\tLista de targets:"

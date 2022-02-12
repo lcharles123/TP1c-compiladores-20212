@@ -143,23 +143,23 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 48 "tiger.y"
+#line 47 "tiger.y"
 
     int intVal;
     char* tabend; 
     char* stringVal;
     Exp_n* exp;
     ExpSeq* expseq;
-    
+    ExpSeq* argsDec;    
     Var_n* var;
     
     Dec_n* dec;
-    Dec_n* argsDec;
+
     DecList* declist;
     
     Tipo_n* tid;
     Tipo_n* ty;
-    TipoList* tyList;
+    DecList* tyList;
     Tabela* tab; // tabela de simbolos, typeid é o retorno do nome do id
 
 #line 166 "y.tab.h"

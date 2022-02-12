@@ -74,7 +74,6 @@
 
 #include "tabela.h"
 #include "absyn.h"
-#include "semantico.h"
 #include "imprimir.h" //imprime a arvore de sintaxe
 
 #include "y.tab.h"
@@ -107,7 +106,7 @@ void yyerror(const char *str)
 int yywrap() { return 1; }
 
 
-#line 111 "y.tab.c"
+#line 110 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -249,26 +248,26 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 48 "tiger.y"
+#line 47 "tiger.y"
 
     int intVal;
     char* tabend; 
     char* stringVal;
     Exp_n* exp;
     ExpSeq* expseq;
-    
+    ExpSeq* argsDec;    
     Var_n* var;
     
     Dec_n* dec;
-    Dec_n* argsDec;
+
     DecList* declist;
     
     Tipo_n* tid;
     Tipo_n* ty;
-    TipoList* tyList;
+    DecList* tyList;
     Tabela* tab; // tabela de simbolos, typeid é o retorno do nome do id
 
-#line 272 "y.tab.c"
+#line 271 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -648,13 +647,13 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,   116,   116,   119,   120,   121,   122,   123,   124,   125,
-     126,   127,   128,   129,   130,   131,   132,   133,   134,   135,
-     136,   137,   138,   140,   141,   142,   143,   144,   145,   146,
-     150,   151,   156,   157,   160,   161,   162,   165,   168,   169,
-     170,   173,   174,   177,   178,   181,   184,   188,   190,   195,
-     196,   197,   202,   205,   206,   209,   210,   213,   214,   217,
-     218,   221,   222
+       0,   112,   112,   115,   116,   117,   118,   119,   120,   121,
+     122,   123,   124,   125,   126,   127,   128,   129,   130,   131,
+     132,   133,   134,   136,   137,   138,   139,   140,   141,   142,
+     146,   147,   152,   153,   156,   157,   158,   161,   164,   166,
+     168,   172,   173,   176,   177,   182,   184,   188,   190,   195,
+     196,   197,   201,   204,   205,   208,   209,   212,   213,   216,
+     217,   220,   221
 };
 #endif
 
@@ -1568,378 +1567,380 @@ yyreduce:
   switch (yyn)
     {
   case 2:
-#line 116 "tiger.y"
-                                        { printf("inicio \t-> exp\n"); astRoot=(yyvsp[0].exp); //imprimir(astRoot);
+#line 112 "tiger.y"
+                                 { printf("inicio \t-> exp\n"); astRoot=(yyvsp[0].exp); imprimir_exp(astRoot); T_sair_bloco(tab);
  }
-#line 1575 "y.tab.c"
+#line 1574 "y.tab.c"
     break;
 
   case 3:
-#line 119 "tiger.y"
-                                        { printf("exp \t-> lvalue\n");   }
-#line 1581 "y.tab.c"
+#line 115 "tiger.y"
+                                        { printf("exp \t-> lvalue\n"); puts("lv");(yyval.exp)=lvalue_to_exp(lvalue_t, (yyvsp[0].var), tab); }
+#line 1580 "y.tab.c"
     break;
 
   case 4:
-#line 120 "tiger.y"
+#line 116 "tiger.y"
                                          { printf("exp \t-> NILT()\n"); (yyval.exp)=novo_const(tokpos, nil_t, 0, NULL);  }
-#line 1587 "y.tab.c"
+#line 1586 "y.tab.c"
     break;
 
   case 5:
-#line 121 "tiger.y"
-                                        { printf("exp \t-> ( expseq )\n"); }
-#line 1593 "y.tab.c"
+#line 117 "tiger.y"
+                                        { printf("exp \t-> ( expseq )\n"); (yyval.exp)=novo_expseqpar(tokpos, expseq_t, (yyvsp[-1].expseq));}
+#line 1592 "y.tab.c"
     break;
 
   case 6:
-#line 122 "tiger.y"
+#line 118 "tiger.y"
                                         { printf("exp \t-> NUM(%d)\n", yylval.intVal); (yyval.exp)=novo_const(tokpos, int_t, (yyvsp[0].intVal), NULL); }
-#line 1599 "y.tab.c"
+#line 1598 "y.tab.c"
     break;
 
   case 7:
-#line 123 "tiger.y"
-                                         { printf("exp \t-> STRINGT(%s)\n", yytext); (yyval.exp)=novo_const(tokpos, str_t, 0, (yyvsp[0].stringVal)); }
-#line 1605 "y.tab.c"
+#line 119 "tiger.y"
+                                         { printf("exp \t-> STRINGT(%s)\n", yyval.stringVal); (yyval.exp)=novo_const(tokpos, str_t, 0, (yyvsp[0].stringVal)); }
+#line 1604 "y.tab.c"
     break;
 
   case 8:
-#line 124 "tiger.y"
+#line 120 "tiger.y"
                                         { printf("exp \t-> - exp\n"); (yyval.exp)=novo_exp_op(tokpos, neg_t, (yyvsp[0].exp), NULL); }
-#line 1611 "y.tab.c"
+#line 1610 "y.tab.c"
     break;
 
   case 9:
-#line 125 "tiger.y"
-                                        { printf("exp \t-> ID ( args )\n"); }
-#line 1617 "y.tab.c"
+#line 121 "tiger.y"
+                                        { printf("exp \t-> ID ( args )\n"); (yyval.exp)=novo_call(tokpos, call_t, (yyvsp[-3].stringVal), (yyvsp[-1].argsDec), tab); }
+#line 1616 "y.tab.c"
     break;
 
   case 10:
-#line 126 "tiger.y"
+#line 122 "tiger.y"
                                         { printf("exp \t-> exp + exp\n"); (yyval.exp)=novo_exp_op(tokpos, mais_op, (yyvsp[-2].exp), (yyvsp[0].exp));}
-#line 1623 "y.tab.c"
+#line 1622 "y.tab.c"
     break;
 
   case 11:
-#line 127 "tiger.y"
+#line 123 "tiger.y"
                                         { printf("exp \t-> exp - exp\n");  (yyval.exp)=novo_exp_op(tokpos, menos_op, (yyvsp[-2].exp), (yyvsp[0].exp)); }
-#line 1629 "y.tab.c"
+#line 1628 "y.tab.c"
     break;
 
   case 12:
-#line 128 "tiger.y"
+#line 124 "tiger.y"
                                         { printf("exp \t-> exp * exp\n"); (yyval.exp)=novo_exp_op(tokpos, vezes_op, (yyvsp[-2].exp), (yyvsp[0].exp)); }
-#line 1635 "y.tab.c"
+#line 1634 "y.tab.c"
     break;
 
   case 13:
-#line 129 "tiger.y"
+#line 125 "tiger.y"
                                         { printf("exp \t-> exp / exp\n"); (yyval.exp)=novo_exp_op(tokpos, dividir_op, (yyvsp[-2].exp), (yyvsp[0].exp)); }
-#line 1641 "y.tab.c"
+#line 1640 "y.tab.c"
     break;
 
   case 14:
-#line 130 "tiger.y"
+#line 126 "tiger.y"
                                         { printf("exp \t-> exp = exp\n");  (yyval.exp)=novo_exp_op(tokpos, igual_op, (yyvsp[-2].exp), (yyvsp[0].exp));}
-#line 1647 "y.tab.c"
+#line 1646 "y.tab.c"
     break;
 
   case 15:
-#line 131 "tiger.y"
+#line 127 "tiger.y"
                                         { printf("exp \t-> exp <> exp\n");  (yyval.exp)=novo_exp_op(tokpos, diferente_op, (yyvsp[-2].exp), (yyvsp[0].exp));}
-#line 1653 "y.tab.c"
+#line 1652 "y.tab.c"
     break;
 
   case 16:
-#line 132 "tiger.y"
+#line 128 "tiger.y"
                                         { printf("exp \t-> exp < exp\n");  (yyval.exp)=novo_exp_op(tokpos, menor_op, (yyvsp[-2].exp), (yyvsp[0].exp));}
-#line 1659 "y.tab.c"
+#line 1658 "y.tab.c"
     break;
 
   case 17:
-#line 133 "tiger.y"
+#line 129 "tiger.y"
                                         { printf("exp \t-> exp > exp\n");  (yyval.exp)=novo_exp_op(tokpos, maior_op, (yyvsp[-2].exp), (yyvsp[0].exp));}
-#line 1665 "y.tab.c"
+#line 1664 "y.tab.c"
     break;
 
   case 18:
-#line 134 "tiger.y"
+#line 130 "tiger.y"
                                         { printf("exp \t-> exp <= exp\n"); (yyval.exp)=novo_exp_op(tokpos, menorig_op, (yyvsp[-2].exp), (yyvsp[0].exp)); }
-#line 1671 "y.tab.c"
+#line 1670 "y.tab.c"
     break;
 
   case 19:
-#line 135 "tiger.y"
+#line 131 "tiger.y"
                                         { printf("exp \t-> exp >= exp\n"); (yyval.exp)=novo_exp_op(tokpos, maiorig_op, (yyvsp[-2].exp), (yyvsp[0].exp)); }
-#line 1677 "y.tab.c"
+#line 1676 "y.tab.c"
     break;
 
   case 20:
-#line 136 "tiger.y"
+#line 132 "tiger.y"
                                         { printf("exp \t-> exp & exp\n"); (yyval.exp)=novo_exp_op(tokpos, e_op, (yyvsp[-2].exp), (yyvsp[0].exp)); }
-#line 1683 "y.tab.c"
+#line 1682 "y.tab.c"
     break;
 
   case 21:
-#line 137 "tiger.y"
+#line 133 "tiger.y"
                                         { printf("exp \t-> exp | exp\n"); (yyval.exp)=novo_exp_op(tokpos, ou_op, (yyvsp[-2].exp), (yyvsp[0].exp));}
-#line 1689 "y.tab.c"
+#line 1688 "y.tab.c"
     break;
 
   case 22:
-#line 138 "tiger.y"
+#line 134 "tiger.y"
                                         { printf("exp \t-> tid\n"); }
-#line 1695 "y.tab.c"
+#line 1694 "y.tab.c"
     break;
 
   case 23:
-#line 140 "tiger.y"
-                                        { printf("exp \t-> lvalue := exp\n"); }
-#line 1701 "y.tab.c"
+#line 136 "tiger.y"
+                                        { printf("exp \t-> lvalue := exp\n");(yyval.exp)=novo_atribuicao(tokpos, atribui_t, (yyvsp[-2].var), (yyvsp[0].exp), tab); }
+#line 1700 "y.tab.c"
     break;
 
   case 24:
-#line 141 "tiger.y"
-                                        { printf("exp \t-> IF exp THEN exp ELSE exp\n"); }
-#line 1707 "y.tab.c"
+#line 137 "tiger.y"
+                                        { printf("exp \t-> IF exp THEN exp ELSE exp\n");(yyval.exp)=novo_ifthenelse(tokpos, ifthen_t, (yyvsp[-4].exp), (yyvsp[-2].exp), (yyvsp[0].exp)); }
+#line 1706 "y.tab.c"
     break;
 
   case 25:
-#line 142 "tiger.y"
-                                        { printf("exp \t-> IF exp THEN exp\n"); }
-#line 1713 "y.tab.c"
+#line 138 "tiger.y"
+                                        { printf("exp \t-> IF exp THEN exp\n");(yyval.exp)=novo_ifthen(tokpos, if_t, (yyvsp[-2].exp), (yyvsp[0].exp)); }
+#line 1712 "y.tab.c"
     break;
 
   case 26:
-#line 143 "tiger.y"
-                                        { printf("exp \t-> WHILE exp DO exp\n"); }
-#line 1719 "y.tab.c"
+#line 139 "tiger.y"
+                                        { printf("exp \t-> WHILE exp DO exp\n");(yyval.exp)=novo_while(tokpos, while_t, (yyvsp[-2].exp), (yyvsp[0].exp)); }
+#line 1718 "y.tab.c"
     break;
 
   case 27:
-#line 144 "tiger.y"
-                                        { printf("exp \t-> FOR ID := exp TO exp DO exp\n"); }
-#line 1725 "y.tab.c"
+#line 140 "tiger.y"
+                                        { printf("exp \t-> FOR ID := exp TO exp DO exp\n");(yyval.exp)=novo_for(tokpos, for_t, (yyvsp[-6].stringVal), (yyvsp[-4].exp), (yyvsp[-2].exp), (yyvsp[0].exp), tab); }
+#line 1724 "y.tab.c"
     break;
 
   case 28:
-#line 145 "tiger.y"
-                                        { printf("exp \t-> BREAK\n"); }
-#line 1731 "y.tab.c"
+#line 141 "tiger.y"
+                                        { printf("exp \t-> BREAK\n");(yyval.exp)=NULL; }
+#line 1730 "y.tab.c"
     break;
 
   case 29:
-#line 146 "tiger.y"
-                                        {printf("exp \t-> LETdecsINexpseqEND\n");(yyval.exp)=novo_let(tokpos, let_t, (yyvsp[-3].declist), (yyvsp[-1].expseq), tab);}
-#line 1737 "y.tab.c"
+#line 142 "tiger.y"
+                                        {printf("exp \t-> LET decs IN expseq END\n");(yyval.exp)=novo_let(tokpos, let_t, (yyvsp[-3].declist), (yyvsp[-1].expseq), tab);}
+#line 1736 "y.tab.c"
     break;
 
   case 30:
-#line 150 "tiger.y"
+#line 146 "tiger.y"
                                               { printf("tid \t-> typeid { ID = exp idexps }\n");}
-#line 1743 "y.tab.c"
+#line 1742 "y.tab.c"
     break;
 
   case 31:
-#line 151 "tiger.y"
+#line 147 "tiger.y"
                                        { printf("tid \t-> typeid [ exp ] OF exp\n");}
-#line 1749 "y.tab.c"
+#line 1748 "y.tab.c"
     break;
 
   case 32:
-#line 156 "tiger.y"
+#line 152 "tiger.y"
                                         { printf("decs \t-> dec decs\n"); (yyval.declist)=novo_declist(tokpos, 0, (yyvsp[-1].dec), (yyvsp[0].declist)); }
-#line 1755 "y.tab.c"
+#line 1754 "y.tab.c"
     break;
 
   case 33:
-#line 157 "tiger.y"
-                                        { printf("decs \t-> ''\n");}
-#line 1761 "y.tab.c"
+#line 153 "tiger.y"
+                                        { printf("decs \t-> ''\n");(yyval.declist)=NULL;}
+#line 1760 "y.tab.c"
     break;
 
   case 34:
-#line 160 "tiger.y"
-                                        { printf("dec \t-> tydec\n");(yyval.dec)=novo_dec(tokpos, fundec_t, (yyvsp[0].dec));}
-#line 1767 "y.tab.c"
+#line 156 "tiger.y"
+                                        { printf("dec \t-> tydec\n");(yyval.dec)=(yyvsp[0].dec);}
+#line 1766 "y.tab.c"
     break;
 
   case 35:
-#line 161 "tiger.y"
+#line 157 "tiger.y"
                                         { printf("dec \t-> vardec\n");(yyval.dec)=(yyvsp[0].dec);}
-#line 1773 "y.tab.c"
+#line 1772 "y.tab.c"
     break;
 
   case 36:
-#line 162 "tiger.y"
+#line 158 "tiger.y"
                                         { printf("dec \t-> fundec\n");(yyval.dec)=(yyvsp[0].dec);}
-#line 1779 "y.tab.c"
+#line 1778 "y.tab.c"
     break;
 
   case 37:
-#line 165 "tiger.y"
-                                        { printf("tydec \t-> TYPE ID = ty\n");(yyval.dec)=novo_dec(tokpos, tydec_t, NULL);}
-#line 1785 "y.tab.c"
+#line 161 "tiger.y"
+                                        { printf("tydec \t-> TYPE ID = ty\n");(yyval.dec)=novo_tipodec(tokpos, tydec_t, (yyvsp[-2].stringVal), (yyvsp[0].declist), tab);}
+#line 1784 "y.tab.c"
     break;
 
   case 38:
-#line 168 "tiger.y"
-                                        { printf("ty \t-> ID\n");}
+#line 164 "tiger.y"
+                                        { printf("ty \t-> ID\n"); T_instalar(tab, (yyvsp[0].stringVal), tydec_t, NULL); 
+      (yyval.declist)=NULL;}
 #line 1791 "y.tab.c"
     break;
 
   case 39:
-#line 169 "tiger.y"
-                                                        { printf("{ ty \t-> ID : typeid tyfields1 }\n");}
-#line 1797 "y.tab.c"
+#line 166 "tiger.y"
+                                                        { printf("{ ty \t-> ID : typeid tyfields1 }\n");
+(yyval.declist)=novo_varlist(tokpos, ty_record, (yyvsp[-4].stringVal), (yyvsp[-2].stringVal), (yyvsp[-1].declist), tab);}
+#line 1798 "y.tab.c"
     break;
 
   case 40:
-#line 170 "tiger.y"
-                                        { printf("ty \t-> ARRAY OF ID = ty\n");}
-#line 1803 "y.tab.c"
+#line 168 "tiger.y"
+                                     { printf("ty \t-> ARRAY OF ID = ty\n"); T_instalar(tab, (yyvsp[0].stringVal), ty_arranjo, NULL); 
+      (yyval.declist)=NULL; }
+#line 1805 "y.tab.c"
     break;
 
   case 41:
-#line 173 "tiger.y"
-                                        { printf("tyfields \t-> ID : typeid tyfields1\n");}
-#line 1809 "y.tab.c"
+#line 172 "tiger.y"
+                                        { printf("tyfields \t-> ID : typeid tyfields1\n");(yyval.declist)=novo_varlist(tokpos, ty_record, (yyvsp[-3].stringVal), (yyvsp[-1].stringVal), (yyvsp[0].declist), tab);}
+#line 1811 "y.tab.c"
     break;
 
   case 42:
-#line 174 "tiger.y"
-                                        { printf("tyfields \t-> ''\n");}
-#line 1815 "y.tab.c"
+#line 173 "tiger.y"
+                                        { printf("tyfields \t-> ''\n");(yyval.declist)=NULL;}
+#line 1817 "y.tab.c"
     break;
 
   case 43:
-#line 177 "tiger.y"
-                                        { printf("tyfields1 \t-> , ID : typeid tyfields1\n");}
-#line 1821 "y.tab.c"
+#line 176 "tiger.y"
+                                        { printf("tyfields1 \t-> , ID : typeid tyfields1\n");(yyval.declist)=novo_varlist(tokpos, ty_record, (yyvsp[-3].stringVal), (yyvsp[-1].stringVal), (yyvsp[0].declist), tab);}
+#line 1823 "y.tab.c"
     break;
 
   case 44:
-#line 178 "tiger.y"
-                                        { printf("tyfields1 \t-> ''\n");}
-#line 1827 "y.tab.c"
+#line 177 "tiger.y"
+                                        { printf("tyfields1 \t-> ''\n"); (yyval.declist)=NULL; }
+#line 1829 "y.tab.c"
     break;
 
   case 45:
-#line 181 "tiger.y"
-                                    { printf("vardec \t-> VAR ID := exp\n");
-     (yyval.dec)=novo_vardec(tokpos, normalvar_t, (yyvsp[-2].stringVal), "0", (yyvsp[0].exp), tab);}
-#line 1834 "y.tab.c"
+#line 182 "tiger.y"
+                                    { printf("vardec \t-> VAR ID := exp\n"); (yyval.dec)=novo_vardec(tokpos, vardec_t, (yyvsp[-2].stringVal), "0", (yyvsp[0].exp), tab);}
+#line 1835 "y.tab.c"
     break;
 
   case 46:
 #line 184 "tiger.y"
                                           { printf("vardec \t-> VAR ID : typeid := exp\n");
-    (yyval.dec)=novo_vardec(tokpos, normalvar_t, (yyvsp[-4].stringVal), (yyvsp[-2].stringVal), (yyvsp[0].exp), tab);}
-#line 1841 "y.tab.c"
+    (yyval.dec)=novo_vardec(tokpos, vardec_t, (yyvsp[-4].stringVal), (yyvsp[-2].stringVal), (yyvsp[0].exp), tab);}
+#line 1842 "y.tab.c"
     break;
 
   case 47:
 #line 188 "tiger.y"
                                                     { printf("fundec \t-> FUNCTION ID ( tyfields ) = exp\n");
-    (yyval.dec)=novo_fundec(tokpos, fundec_t, (yyvsp[-5].stringVal), (yyvsp[-3].tyList), NULL, (yyvsp[0].exp), tab); }
-#line 1848 "y.tab.c"
+    (yyval.dec)=novo_fundec(tokpos, fundec_t, (yyvsp[-5].stringVal), (yyvsp[-3].declist), NULL, (yyvsp[0].exp), tab); }
+#line 1849 "y.tab.c"
     break;
 
   case 48:
 #line 190 "tiger.y"
                                                                       { printf("fundec \t-> FUNCTION ID ( tyfields ) : typeid = exp\n");
-    (yyval.dec)=novo_fundec(tokpos, fundec_t, (yyvsp[-7].stringVal), (yyvsp[-5].tyList), (yyvsp[-2].stringVal), (yyvsp[0].exp), tab); }
-#line 1855 "y.tab.c"
+    (yyval.dec)=novo_fundec(tokpos, fundec_t, (yyvsp[-7].stringVal), (yyvsp[-5].declist), (yyvsp[-2].stringVal), (yyvsp[0].exp), tab); }
+#line 1856 "y.tab.c"
     break;
 
   case 49:
 #line 195 "tiger.y"
-                                        { printf("lvalue \t-> ID\n");}
-#line 1861 "y.tab.c"
+                            { printf("lvalue \t-> ID\n");(yyval.var)=acessar_lvalue(tokpos, var_nome, NULL, (yyvsp[0].stringVal), NULL, tab);}
+#line 1862 "y.tab.c"
     break;
 
   case 50:
 #line 196 "tiger.y"
-                                        { printf("lvalue \t-> lvalue . ID\n");}
-#line 1867 "y.tab.c"
+                                        { printf("lvalue \t-> lvalue . ID\n");(yyval.var)=acessar_lvalue(tokpos, var_interna, (yyvsp[-2].var), (yyvsp[0].stringVal), NULL, tab);}
+#line 1868 "y.tab.c"
     break;
 
   case 51:
 #line 197 "tiger.y"
-                                        { printf("lvalue \t-> lvalue [ exp ]\n");}
-#line 1873 "y.tab.c"
+                                        { printf("lvalue \t-> lvalue [ exp ]\n");(yyval.var)=acessar_lvalue(tokpos, arranjovar_t, (yyvsp[-3].var), NULL, (yyvsp[-1].exp), tab);}
+#line 1874 "y.tab.c"
     break;
 
   case 52:
-#line 202 "tiger.y"
-                                        { printf("typeid \t-> ID()\n"); T_instalar(tab, (yyvsp[0].stringVal), ty_nome, NULL); }
-#line 1879 "y.tab.c"
+#line 201 "tiger.y"
+                                        { printf("typeid \t-> ID()\n"); T_instalar(tab, (yyvsp[0].stringVal), ty_nome, NULL); (yyval.stringVal)=(yyvsp[0].stringVal); }
+#line 1880 "y.tab.c"
     break;
 
   case 53:
-#line 205 "tiger.y"
+#line 204 "tiger.y"
                                         { printf("expseq \t-> exp expseq1\n");(yyval.expseq)=novo_expseq(tokpos, expseq_t, (yyvsp[-1].exp), (yyvsp[0].expseq));}
-#line 1885 "y.tab.c"
+#line 1886 "y.tab.c"
     break;
 
   case 54:
-#line 206 "tiger.y"
-                                        { printf("expseq \t-> ''\n");}
-#line 1891 "y.tab.c"
+#line 205 "tiger.y"
+                                        { printf("expseq \t-> ''\n");(yyval.expseq)=NULL;}
+#line 1892 "y.tab.c"
     break;
 
   case 55:
-#line 209 "tiger.y"
+#line 208 "tiger.y"
                                         {printf("expseq1 \t-> ; exp expseq1\n");(yyval.expseq)=novo_expseq(tokpos, exp_t, (yyvsp[-1].exp), (yyvsp[0].expseq));}
-#line 1897 "y.tab.c"
+#line 1898 "y.tab.c"
     break;
 
   case 56:
-#line 210 "tiger.y"
-                                        { printf("expseq1 \t-> ''\n");}
-#line 1903 "y.tab.c"
+#line 209 "tiger.y"
+                                        { printf("expseq1 \t-> ''\n");(yyval.expseq)=NULL;}
+#line 1904 "y.tab.c"
     break;
 
   case 57:
-#line 213 "tiger.y"
-                                        { printf("args \t-> exp args1\n");}
-#line 1909 "y.tab.c"
+#line 212 "tiger.y"
+                                        { printf("args \t-> exp args1\n");(yyval.argsDec)=novo_expseq(tokpos, args_t, (yyvsp[-1].exp), (yyvsp[0].argsDec));}
+#line 1910 "y.tab.c"
     break;
 
   case 58:
-#line 214 "tiger.y"
-                                        { printf("args \t-> ''\n");}
-#line 1915 "y.tab.c"
+#line 213 "tiger.y"
+                                        { printf("args \t-> ''\n");(yyval.argsDec)=NULL;}
+#line 1916 "y.tab.c"
     break;
 
   case 59:
-#line 217 "tiger.y"
-                                        { printf("args1 \t-> , exp args1\n");}
-#line 1921 "y.tab.c"
+#line 216 "tiger.y"
+                                        { printf("args1 \t-> , exp args1\n");(yyval.argsDec)=novo_expseq(tokpos, args_t, (yyvsp[-1].exp), (yyvsp[0].argsDec));}
+#line 1922 "y.tab.c"
     break;
 
   case 60:
-#line 218 "tiger.y"
-                                        { printf("args1 \t-> ''\n");}
-#line 1927 "y.tab.c"
+#line 217 "tiger.y"
+                                        { printf("args1 \t-> ''\n");(yyval.argsDec)=NULL;}
+#line 1928 "y.tab.c"
     break;
 
   case 61:
-#line 221 "tiger.y"
-                                        { printf("idexps \t-> , ID = exp idexps\n");}
-#line 1933 "y.tab.c"
+#line 220 "tiger.y"
+                                        { printf("idexps \t-> , ID = exp idexps\n");(yyval.expseq)=novo_expseq(tokpos, ideps_t, (yyvsp[-1].exp), (yyvsp[0].expseq));}
+#line 1934 "y.tab.c"
     break;
 
   case 62:
-#line 222 "tiger.y"
-                                        { printf("idexps \t-> ''\n");}
-#line 1939 "y.tab.c"
+#line 221 "tiger.y"
+                                        { printf("idexps \t-> ''\n");(yyval.expseq)=NULL;}
+#line 1940 "y.tab.c"
     break;
 
 
-#line 1943 "y.tab.c"
+#line 1944 "y.tab.c"
 
       default: break;
     }
@@ -2171,7 +2172,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 224 "tiger.y"
+#line 223 "tiger.y"
 
 
 int main(int argc, char** argv)

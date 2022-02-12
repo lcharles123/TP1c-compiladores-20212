@@ -1,9 +1,8 @@
 #include "tabela.h"
+#include <unistd.h>
 
-char tipo[][27] = {"", "int", "string", "nil", 
-"var", "exp", "dec", "ty", 
-"decList", "expList", "field", "fieldList", "fundec", "fundecList", "namety", "nametyList", "efield", "efieldList", 
-"mais_op", "menos_op", "menos_un", "vezes_op", "dividr_op", "igual_op", "diff_op", "menorq_op", "menorig_op", "maiorq_op", "maiorig_op", "oper"};
+
+char tipo[][6] = {"nil", "int", "string"}; //usar [tipo - nil_t]
     //printf("%d\n",t->linha->nivel);
     //printf("%d\n",);
 
@@ -29,16 +28,21 @@ void T_entrar_bloco(Tabela* t)
 void T_sair_bloco(Tabela* t)
 {
         
-    T_imprimir(t);
+    //T_imprimir(t);
     
     t->L = t->escopo[t->nivel];
     t->nivel--; //eliminar as linhas até chegar 
     assert(t->nivel >= 0);
 }
 
+Linha* T_obter_linha(Tabela* t, int pos)
+{
+    return &t->linha[pos];
+}
+
 int T_checar_existencia(Tabela* t, char* nome)
 {
-   int k = t->L;
+    int k = t->L;
     while(k > 0)
     {
         k--;
@@ -48,9 +52,9 @@ int T_checar_existencia(Tabela* t, char* nome)
     return -1;
 }
 
-char** T_instalar(Tabela* t, char* nome, int tipo, char* valor)
+int* T_instalar(Tabela* t, char* nome, int tipo, Exp_n* atributo)
 {
-    assert(t->L < MAX); //tabela cheia
+    assert(t->L < MAX && nome != NULL); //tabela cheia ou parametro invalido
     int k = t->L;
     while(k > t->escopo[t->nivel])
     {
@@ -60,34 +64,37 @@ char** T_instalar(Tabela* t, char* nome, int tipo, char* valor)
             assert(0); //nome duplicado
         }
     }
+    
     //tudo certo, instalar
     t->linha[t->L].nome = malloc(NMAX * sizeof(char));
     strcpy(t->linha[t->L].nome, nome);
     t->linha[t->L].tipo = tipo;
-    t->linha[t->L].valor = malloc(64 * sizeof(char));
-    strcpy(t->linha[t->L].valor, valor);
+
+    t->linha[t->L].atributo = malloc(sizeof(struct Exp_n));
+    t->linha[t->L].atributo = atributo;
+    
     t->linha[t->L].nivel = t->nivel;
     t->L++;
+    int* pos = malloc(2*sizeof(int));
+    pos[0] = t->L-1;
+    pos[1] = t->nivel;
     
-    char* str = malloc(2);    
-    int tam = sprintf(NULL, 0, "%d", t->L-1);
-    str[0] = malloc(tam + 1);
-    tam = sprintf(NULL, 0, "%d", t->nivel);
-    str[1] = malloc(tam + 1);
-        
-    sprintf(str[0], "%d", t->L-1);
-    sprintf(str[1], "%d", t->nivel);
-
-    return str;
+    return pos;
 }
 
 
 void T_imprimir(Tabela* t)
 {
+    
     printf("Nome\tNivel\tTipo\tValor\n");
     for(int i = 0; i < t->L; i++)
     {
-        printf("%s\t%d\t%s\t%s\n",t->linha[i].nome, t->linha[i].nivel, tipo[t->linha[i].tipo], t->linha[i].valor);  
+        printf("%s\t%d\t%s\t",t->linha[i].nome, t->linha[i].nivel, tipo[t->linha[i].tipo - nil_t]);  
+        if(t->linha[i].atributo==NULL) printf("%s\n", "nil");
+        //t->linha[i].atributo->pos = 1; assert(0);
+        else if(t->linha[i].atributo->tipoExp == int_t) printf("%d\n", t->linha[i].atributo->constante.int_v);
+        else if(t->linha[i].atributo->tipoExp == str_t)  printf("%s\n", t->linha[i].atributo->constante.str_v);
+        //else assert(0);
     }
     
     for(int i = 0; i <= t->nivel; i++) printf("%d ",t->escopo[i]); 

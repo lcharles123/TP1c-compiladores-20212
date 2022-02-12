@@ -80,12 +80,12 @@ nil     { col += yyleng; return NILT;}
 "|"     { col += yyleng; return OU;}
 ":="    { col += yyleng; return ATRIBUI;}
 
-[a-z|A-Z]+[a-z|A-Z|0-9|_]*  {  col += yyleng; return ID;}
+[a-z|A-Z]+[a-z|A-Z|0-9|_]*  {  col += yyleng; yylval.stringVal = strdup(yytext); return ID;}
 
 [0-9]+\.[0-9]+ { col += yyleng; return NUM; } //nao existe float na linguagem
 
 [0-9]+        { yylval.intVal = atoi(yytext); col += yyleng; tokpos = prox(yyleng); return NUM; }
-\"[^\"]*\"  { col += yyleng; return STRINGT;}
+\"[^\"]*\"  { col += yyleng; yylval.stringVal = strdup(yytext); return STRINGT;}
 
 .           { printf("*** ERRO: Símbolo desconhecido. Linha %i, Coluna %i, Símbolo: '%s'\n", lin, col, yytext); exit(EXIT_FAILURE);  } // erro se chegar até aqui
 

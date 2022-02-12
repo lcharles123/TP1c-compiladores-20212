@@ -1,7 +1,2 @@
- /* linguagem nao aceita */
-let 
-function max(x: int, y: int) = 
-    if (x > y) then x else y   
-in
-    max(10, 1))
-end
+/* programa incorreto - variavel ja existe */
+1+"8"
