@@ -8,14 +8,13 @@ Exp_n* novo_expseqpar(int pos, Tipo_e tipo, ExpSeq* es)
     Exp_n* e = malloc(sizeof(Exp_n));
     e->tipoExp = tipo;
     e->espar = es;
-    return NULL;
+    return e;
 }
 
 Exp_n* novo_call(int pos, Tipo_e tipo, char* idFun, ExpSeq* a, Tabela* t)
 { 
     Exp_n* e = malloc(sizeof(Exp_n));
-    
-    
+
     return e;
 }  
 
@@ -154,7 +153,12 @@ Dec_n* novo_vardec(int pos, Tipo_e tipo, char* varId, char* tyId, Exp_n* exp, Ta
     Dec_n* d = malloc(sizeof(Dec_n));
     d->pos = pos;
     d->tipoDec = tipo;
-    if(-1 != T_checar_existencia(t, varId)) assert(0);//erro
+    if(-1 != T_checar_existencia(t, varId)) 
+    { 
+        char buff[64];
+        sprintf(buff, "\n*** Posição:%d erro: Variável '%s' já declarada.***\n", pos, varId);
+        erro(buff);//erro
+    }
     d->varDec.simb = T_instalar(t, varId, exp->tipoExp, exp);
     d->varDec.var = exp;
     d->varDec.nome = malloc(strlen(varId)+1);

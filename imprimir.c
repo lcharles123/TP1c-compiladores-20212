@@ -14,7 +14,8 @@ void imprimir_declist(DecList* d) //decs do let
 }
 
 void imprimir_expseq(ExpSeq* es) //exps do let
-{puts("imprimiu expseq");
+{
+    //puts("imprimiu expseq");
     if(es != NULL)
     {
         imprimir_exp(es->elem);

@@ -1,18 +1,6 @@
-/* programa correto */
-let
-in 
-    1 + 2; 
-    2 - 13;
-    6 * 5;
-    4 / 2;
-    5 >= 3;
-    8 <= 3;
-    4 & 4;
-    0 | 4;
-    4 < 4;
-    3 <> 3;
-    -12;
-     10;
-     "asdf"
+/* programa incorreto - variavel ja existe */
+let 
+	var b := 3
+	var b := 5
+in
 end
-

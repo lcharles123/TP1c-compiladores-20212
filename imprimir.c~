@@ -26,7 +26,7 @@ void imprimir_expseq(ExpSeq* es) //exps do let
 void imprimir_exp(Exp_n* e)
 {
     //printf("impressao\n");
-    //assert(e);
+    assert(e);
     switch(e->tipoExp)
     {
         case int_t:
