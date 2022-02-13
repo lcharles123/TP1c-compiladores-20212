@@ -37,24 +37,22 @@ typedef struct Var_n
 {
     int pos;
     Tipo_e tipoVar;
-
+    char* nome;
     struct
     {
-        char* nome;
+
         Exp_n* valor;
         int tab[2]; //pos,escopo
     }normalVar;
     
     struct
     {
-        char* nome;
         Exp_n* valor;
         int tab[2]; //pos,escopo
     }funcVar;
     
     struct
     {
-        char* nome;
         Exp_n* valor;
         int tab[2]; //pos,escopo
         Exp_n* exp;
@@ -137,12 +135,12 @@ DecList* novo_declist(int pos, Tipo_e tipo, Dec_n* d, DecList* dl);
 
 ExpSeq* novo_expseq(int pos, Tipo_e tipo, Exp_n* e, ExpSeq* es);
 
+Exp_n* novo_expseqpar(int pos, Tipo_e tipo, ExpSeq* es);
+
 Exp_n* novo_const(int pos, Tipo_e tipo, int vi, char* vs);
 
 Exp_n* novo_exp_op(int pos, Tipo_e tipo, Exp_n* e1, Exp_n* e2); //vale 
 
 Exp_n* novo_let(int pos, Tipo_e tipo, DecList* dl, ExpSeq* es, Tabela* t); 
-
-Dec_n* novo_dec(int pos, Tipo_e tipo, Dec_n* d); //nao precisa
 
 #endif

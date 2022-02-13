@@ -1,7 +1,10 @@
 #ifndef T_H
 #define T_H
 
-/** O Exp_n ficará nesse arquivo para ser usado nos módulos tabela.h e absyn.h evitando conflitos */
+/** O Exp_n ficará nesse arquivo 
+* pois é compartilhado recursivamente nos módulos tabela.h e absyn.h, assim evitamos conflitos 
+*/
+
 typedef struct Exp_n Exp_n;  //Apenas essa classe está definida neste header
 
 typedef struct ExpSeq ExpSeq; //Prototipos para serem incluídos em absyn.h
@@ -13,9 +16,8 @@ typedef struct VarList VarList;
 
 typedef enum //usar esse enum para diferenciar entre os diversos tipos
 {
-    //exp
-    nulo,
-    exp_t = 1,
+    nulo=0,
+    exp_t,
     lvalue_t, //exp
     expseq_t,
     neg_t, //op de negaçao
@@ -66,24 +68,24 @@ typedef struct Exp_n //estrutura para os tipos derivados do nao terminal exp
 {
     int pos; //posiçao no código
     Tipo_e tipoExp;
-
-    Var_n *var;
     
     struct
     {
         int nil;
         int int_v;
         char *str_v;
-    }constante;
+    } constante;
+    
+    ExpSeq* espar;   
     
     struct
     {
-      int idTab; //endereço na tabela
-      ExpSeq *args; //args eh um vetor do tipo Exp
+      int idTab;       //endereço na tabela
+      ExpSeq *args;   //args eh um vetor do tipo Exp
       
-    } call; //chamada proc
+    } call;           //chamada proc
 
-    struct oper //todos os endpoints de exp estão nas structs abaixo, e os tipos serão unificados nessa struct Exp_n
+    struct oper
     {
         Exp_n* opEsq;
         Exp_n* opDir;
@@ -91,22 +93,22 @@ typedef struct Exp_n //estrutura para os tipos derivados do nao terminal exp
 
     struct
     {
-      Tipo_n* tipo; //vetor de tipos
+      Tipo_n* tipo;   //vetor de tipos
       Exp_n* ExpSeq;
     } record;
 
     struct
     {
-      Var_n *var; //variavel
+      Var_n *var;     //variavel
       char* nome;
-      Exp_n *exp; //exp lado dir
+      Exp_n *exp;    //exp lado dir
     } atribui;
 
     struct
     {
-      Exp_n *teste; //test booleano
+      Exp_n *teste;//test booleano
       Exp_n *then; //corpo
-      Exp_n *cc;  // caso contrario
+      Exp_n *cc;   // caso contrario
     } se;
 
     struct
@@ -117,13 +119,13 @@ typedef struct Exp_n //estrutura para os tipos derivados do nao terminal exp
 
     struct
     {
-      char* varId; //nome da var
+      char* varId;  //nome da var
       int* simb;
       
       Exp_n *ini;  //cond ini
-      Exp_n *fin;    //cond fin
+      Exp_n *fin;  //cond fin
       Exp_n *exp;  //corpo
-      int escape; //break
+      int escape;  //break
     } para;
     
     struct
@@ -133,18 +135,16 @@ typedef struct Exp_n //estrutura para os tipos derivados do nao terminal exp
 
     struct
     {
-      DecList* declist; //o programa : declaraçoes
-      ExpSeq* expseq; //           : cor
+      DecList* declist; // decs 
+      ExpSeq* expseq;   // expseq
     } let;
 
     struct
     {
-      Tipo_n *typ;//sym
+      Tipo_n *typ; 
       int tamanho;
       Exp_n *init;
     } arranjo;
 }Exp_n;
-
-
 
 #endif

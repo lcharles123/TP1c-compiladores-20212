@@ -24,7 +24,6 @@ extern char* yytext; /* valor do token na entrada */
 extern int yyval;    /* valor de variaveis, atribuído no .l */
 
 Exp_n* astRoot; /** Árvore de derivação */
-
 Tabela* tab; // inicializado na main logo abaixo
 
 void yyerror(const char *str)
@@ -37,12 +36,7 @@ int yywrap() { return 1; }
 
 %}
 
-/* 
-https://stackoverflow.com/questions/43882160/bison-grammar-type-and-token
-palavras chave dessa seção
-https://www.ibm.com/docs/en/aix/7.2?topic=information-yacc-grammar-file-declarations
-*/
-%union //tipos dos tokens, usar uma declaraçao por linha
+%union //tipos dos simbolos da gramatica, usar uma declaraçao por linha
 {
     int intVal;
     char* tabend; 
@@ -74,20 +68,14 @@ em %type, a tag é obrigatória ; nas outras %keywords, ela é opcional
 %token <intVal> NUM 
 %token <exp> NILT
 %token <stringVal> STRINGT ID
-
-// tipos de nao terminais 
 %type <exp> exp
 %type <expseq> expseq expseq1 idexps 
-
 %type <var> lvalue 
 %type <stringVal> typeid
-
 %type <dec> dec vardec tydec fundec
 %type <declist> decs tyfields tyfields1 ty 
-
 %type <argsDec> args args1
 %type <tid> tid
-
 
 %token ABREPAR FECHAPAR ABRECHAV FECHACHAV ABRECOL FECHACOL MENOS MAIS VEZES DIVIDIR IGUAL DIFERENTE MENOR MENORIG MAIOR MAIORIG E OU OF ATRIBUI IF THEN ELSE WHILE DO FOR TO BREAK LET IN END TIPO DOISPONTOS VAR FUNCTION PONTO PONTOVIRG VIRG ARRAY
 
@@ -98,10 +86,6 @@ em %type, a tag é obrigatória ; nas outras %keywords, ela é opcional
 %left MAIS MENOS /* MENOS unário deve ter maior precedencia de todos*/
 %left VEZES DIVIDIR
 %left ELSE                                                          /*  maior precedencia */
-
-/* ver para terceira parte */
-/*https://www.gnu.org/software/bison/manual/html_node/Union-Decl.html*/
-/*https://www.classes.cs.uchicago.edu/archive/2003/spring/22600-1/docs/lexyacc.pdf*/
 
 %start inicio
 
@@ -223,35 +207,9 @@ int main(int argc, char** argv)
     
     fclose(yyin);
     T_delete(tab);
-    puts(""); //para nova linha
+    puts(""); //nova linha após a AST
 
     return 0;
 }
 
-/*
-Fez a análise Semântica completa [S, N, Mais ou Menos] (4 pontos)
-• Gerou código intermediário para declarações [S, N, Mais ou Menos] (3 pontos)
-• Gerou código intermediáriopara comandos [S, N, Mais ou Menos] (3 pontos) 
-• Gerou código intermediário para expresses [S, N, Mais ou Menos] (2 pontos)
-• EXTRA - 3 pontos
-• Apresentou os resultados da execução do(s) programas testes (convincentes) submetido(s) ao Com-
-pilador [S, N, Mais ou Menos] (2 pontos)
-• Apresentou as listagens dos programas fontes submetido(s) ao Compilador? [S, N, Mais ou Menos]
-(1 pontos
 
-*/
-/*
-TODO
-precisa de simbolos:
-exp->
-    chamada de funçao
-    record
-    for 
-    array
-dec->
-    todas as vars e tipos
-tipo-> 
-    nome
-
-
-*/

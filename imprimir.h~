@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <assert.h>
-#include "absyn.h" //para o enum principal
+#include "absyn.h" //para uso do Enum e Exp_n
 
 
 void imprimir_declist(DecList* d);
@@ -12,5 +12,6 @@ void imprimir_expseq(ExpSeq* es);
 
 void imprimir_exp(Exp_n* e);
 
+void imprimir_dec(Dec_n* d);
 
 #endif

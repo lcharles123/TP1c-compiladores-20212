@@ -5,16 +5,17 @@ static char oper[][12] = { "+", "-", "*", "/", "==", "!=", "<", ">", "<=", ">=",
 
 void imprimir_declist(DecList* d) //decs do let
 {
-    if(d != NULL) //ver o q fazer
+    if(d != NULL) 
     {
-        puts("imprimiu dec");
+        //puts("imprimiu dec");
         imprimir_dec(d->elem);
         imprimir_declist(d->prox);
     }  
 }
 
 void imprimir_expseq(ExpSeq* es) //exps do let
-{puts("imprimiu expseq");
+{
+    //puts("imprimiu expseq");
     if(es != NULL)
     {
         imprimir_exp(es->elem);

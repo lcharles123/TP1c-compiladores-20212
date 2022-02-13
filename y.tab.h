@@ -143,7 +143,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 47 "tiger.y"
+#line 46 "tiger.y"
 
     int intVal;
     char* tabend; 

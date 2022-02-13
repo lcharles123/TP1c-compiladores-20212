@@ -18,7 +18,7 @@ Tabela* T_init()
     return t;
 } 
 
-void T_entrar_bloco(Tabela* t)
+void T_entrar_bloco(Tabela* t) //conforme aula 17 min 30 ; slide comp-06
 {
     t->nivel++;
     assert(t->nivel < MAX); //impor limite aos escopos também
@@ -27,7 +27,7 @@ void T_entrar_bloco(Tabela* t)
 
 void T_sair_bloco(Tabela* t)
 {
-        
+    return;
     //T_imprimir(t);
     
     t->L = t->escopo[t->nivel];

@@ -1,20 +1,18 @@
 #include "absyn.h"	
 #include "erro.h"	
-/* O tipo será determinado pela gramática, aqui vamos verificar de acordo com a posição no código */
-/* valor é um apontador para int ou char* */
 
 Exp_n* novo_expseqpar(int pos, Tipo_e tipo, ExpSeq* es)
 {
     Exp_n* e = malloc(sizeof(Exp_n));
     e->tipoExp = tipo;
     e->espar = es;
-    return NULL;
+    return e;
 }
 
 Exp_n* novo_call(int pos, Tipo_e tipo, char* idFun, ExpSeq* a, Tabela* t)
 { 
     Exp_n* e = malloc(sizeof(Exp_n));
-
+   // e->
     return e;
 }  
 
@@ -203,12 +201,12 @@ Exp_n* novo_const(int pos, Tipo_e tipo, int vi, char* vs) //quebrar as funçoes 
     switch(tipo)
     {
         case int_t:
-        {printf("const %d,",vi);
+        {
             ne->constante.int_v = vi;
             return ne;
         }
         case str_t:
-        {printf("const %s,",vs);
+        {
             ne->constante.str_v = vs;
             return ne;
         }
@@ -263,17 +261,6 @@ Exp_n* novo_exp_op(int pos, Tipo_e tipo, Exp_n* e1, Exp_n* e2)
             }
             return ne;     
         }
-        case lvalue_t: //variavel ou funcao
-        {
-            
-            break;   
-        }
-        
-        case expseq_t: //varias exp entre parenteses
-        {
-         
-            break;   
-        }
         case neg_t: //negaçao unaria 
         {
             if(e1->tipoExp == int_t) //verificar se é int
@@ -291,81 +278,10 @@ Exp_n* novo_exp_op(int pos, Tipo_e tipo, Exp_n* e1, Exp_n* e2)
             }
             return ne;   
         }
-        case atribui_t: //atribuiçao
-        {
-         
-            break;   
-        }
-        case if_t: //bloco if then
-        {
-         
-            break;   
-        }
-        case ifthen_t: //bloco if then else
-        {
-         
-            break;   
-        }
-        case while_t: //bloco while
-        {
-         
-            break;   
-        }
-        case for_t: //bloco for
-        {
-         
-            break;   
-        }
-        case break_t: 
-        {
-         
-            break;   
-        }
-        case let_t: // de escopo e declaraçoes seguindo expressoes
-        {
-        
-            break;
-        }
-        default: assert(0);//erro exp tipo
+        default: assert(0);
     }
     
     return ne;
 }
-
-
-Dec_n* novo_dec(int pos, Tipo_e tipo, Dec_n* d)
-{
-  /*  Dec_n* nd = malloc(sizeof(Dec_n));//há vazamento de memória caso erro na compilaçao, mas economiza escrita
-    nd->tipoDec = tipo; //atribuir de uma vez em toda chamada, já que será atribuido em todo caso
-    
-    switch(var)
-    {
-        case : 
-        {
-         
-            return ;   
-        }
-        
-        default: assert(0);//erro var
-    }*/
-    return d;
-}
-
-Tipo_n* novo_tipo(int pos, Tipo_e tipo )
-{ 
-   /* Tipo_n* nt = malloc(sizeof(Tipo_n));//há vazamento de memória caso erro na compilaçao, mas economiza escrita
-    nt->tipoTipo = tipo; //atribuir de uma vez em toda chamada, já que será atribuido em todo caso
-  
-    switch(tipo)
-    {
-        case : 
-        {
-         
-            return ;   
-        }
-        
-        default: assert(0);//erro var
-    }*/ return NULL;
-} 
 
 
